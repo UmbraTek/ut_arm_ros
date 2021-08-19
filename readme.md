@@ -28,7 +28,7 @@ Please note that this readme instruction assumes the user continues to use '~/ca
 ## 3.2 Obtain the package
    ```bash
    cd ~/catkin_ws/src
-   git clone https://github.com/UmbraTek/utra_ros
+   git clone https://github.com/UmbraTek/utra_ros.git
    ```
 ## 3.3 Install other dependent packages:
    ```bash

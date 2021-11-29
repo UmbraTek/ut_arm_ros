@@ -16,14 +16,6 @@
   <build_export_depend>roscpp</build_export_depend>
   <exec_depend>roscpp</exec_depend>
 
-  <build_depend>rt</build_depend>
-  <build_export_depend>rt</build_export_depend>
-  <exec_depend>rt</exec_depend>
-
-  <build_depend>pthread</build_depend>
-  <build_export_depend>pthread</build_export_depend>
-  <exec_depend>pthread</exec_depend>
-
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

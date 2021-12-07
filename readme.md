@@ -17,6 +17,8 @@ Gazebo Tutorial: <http://gazebosim.org/tutorials>
 Gazebo ROS Control: <http://gazebosim.org/tutorials/?tut=ros_control>  
 Moveit Tutorial: <http://docs.ros.org/kinetic/api/moveit_tutorials/html/>  
 
+## 2.2 Install "mimic_joint_plugin"
+if you use Gripper in Gazebo, you need to install the [mimic_joint_plugin](https://github.com/roboticsgroup/roboticsgroup_gazebo_plugins) for make the mimic joints behave normally. if you use [new version](https://github.com/roboticsgroup/roboticsgroup_upatras_gazebo_plugins), please change "libroboticsgroup_gazebo_mimic_joint_plugin.so" to "libroboticsgroup_upatras_gazebo_mimic_joint_plugin.so" in file: utra_ros/utra_gripper/urdf/gripper.transmission.xacro
 
 # 3. Getting started with 'utra_ros'
    
@@ -28,7 +30,7 @@ Please note that this readme instruction assumes the user continues to use '~/ca
 ## 3.2 Obtain the package
    ```bash
    cd ~/catkin_ws/src
-   git clone https://github.com/UmbraTek/utra_ros.git
+   git clone https://github.com/UmbraTek/utra_ros
    ```
 ## 3.3 Install other dependent packages:
    ```bash
@@ -57,24 +59,39 @@ source ~/.bashrc
 # 4. Run in RViz
 Launch utra 550 rviz :
 ```bash
-roslaunch utra_description utra6_550_view.launch
+roslaunch utra_description utra6_550_view.launch [gripper:=true] [vacuum_gripper:=true]
 ```
 Launch utra 850 rviz :
 ```bash
-roslaunch utra_description utra6_850_view.launch
+roslaunch utra_description utra6_850_view.launch [gripper:=true] [vacuum_gripper:=true]
+```
+Launch utra 1000 rviz :
+```bash
+roslaunch utra_description utra6_1000_view.launch [gripper:=true] [vacuum_gripper:=true]
 ```
 
 # 5. Run in RViz  and Gazebo simulator
 You can launch Rviz and gazebo, and controll the arm in Rviz. When in first launch time, the arm is in vertical posture, it hard to plan trajectory, you can select the **init** posture in **MotionPlanning->Planning->Goal state** and click the **Plan & Execute** button to make arm go to the good posture.
 
-Launch utra 550 rviz and gazebo:
-```bash
-roslaunch utra6_550_gazebo bringup_moveit.launch
-```
 Launch utra 850 rviz and gazebo:
+1. Run gazebo first:
 ```bash
-roslaunch utra6_850_gazebo bringup_moveit.launch
+roslaunch utra6_850_gazebo gazebo.launch
 ```
+2. Then in another terminal:
+```bash
+roslaunch utra6_850_moveit_config moveit_planning_execution.launch
+```
+If launch with gripper,
+1. Run gazebo with gripper first:
+```bash
+roslaunch utra6_850_gazebo gazebo.launch gripper:=true
+```
+2. Then in another terminal:
+```bash
+roslaunch utra6_850_moveit_gripper_config moveit_planning_execution.launch
+```
+
 # 6. Run RViz and connect with utra
 You can connect with utra and controll it in rviz.
 **Pay Attention** you need to very be careful the **Trajectory planning** in rviz , you must **Play** before the **Excute** every time to make sure that the generated trajectory is not **Collision**. We suggest that make utra with a good posture by select the **init** posture in **MotionPlanning->Planning->Goal state**.
@@ -87,6 +104,12 @@ Launch the Rviz and connect the utra 850
 ```bash
 roslaunch utra6_850_moveit_config run_with_utra.launch utra_ip:="utra_ip_address"
 ```
+
+Launch the Rviz and connect the utra 1000
+```bash
+roslaunch utra6_1000_moveit_config run_with_utra.launch utra_ip:="utra_ip_address"
+```
+
 # 7. Excute the command to communicate with server 
 
 ## 7.1 Launch the server to connect the utra

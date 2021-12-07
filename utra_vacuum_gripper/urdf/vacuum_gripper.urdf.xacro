@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:macro name="vacuum_gripper" params="prefix parent *origin">         
+        <link name="${prefix}vauum_gripper_base">
+            <inertial>
+            <mass value="0.00001" />
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+            </inertial>
+            <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry> <mesh filename="package://utra_vacuum_gripper/meshes/vacuum_base.STL" /> </geometry>
+            <material name="Silver" />
+            </visual>
+            <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry> <mesh filename="package://utra_vacuum_gripper/meshes/vacuum_base.STL" /> </geometry>
+            </collision>
+        </link>
+        <joint name="$(arg prefix)vacuum_gripper_fix" type="fixed">
+            <parent link="${parent}"/>
+            <child link="$(arg prefix)vauum_gripper_base"/>
+            <xacro:insert_block name="origin"/>
+        </joint>
+        <link name="${prefix}vauum_gripper">
+            <inertial>
+            <mass value="0.00001" />
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+            </inertial>
+            <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry> <mesh filename="package://utra_vacuum_gripper/meshes/vacuum.STL" /> </geometry>
+            <material name="Silver" />
+            </visual>
+            <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry> <mesh filename="package://utra_vacuum_gripper/meshes/vacuum.STL" /> </geometry>
+            </collision>
+        </link> 
+        <joint name="${prefix}vacuum_gripper_joint" type="revolute">
+            <axis xyz="1 0 0" />
+            <parent link="${prefix}vauum_gripper_base" />
+            <child link="${prefix}vauum_gripper" />
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <limit effort="50" velocity="50" lower="0" upper="0" />
+            <dynamics damping="0.0" friction="10"/>
+        </joint>
+
+        <gazebo>
+            <plugin name="gazebo_ros_vacuum_gripper" filename="libgazebo_ros_vacuum_gripper.so">
+                <robotNamespace>/utra/vacuum_gripper</robotNamespace>
+                <bodyName>${prefix}vauum_gripper</bodyName>
+                <topicName>grasping</topicName>
+                <maxForce>50</maxForce>
+                <maxDistance>0.05</maxDistance>
+                <minDistance>0.01</minDistance>
+            </plugin>
+        </gazebo>
+        <gazebo reference="${prefix}vauum_gripper">
+                <mu1>50</mu1>
+                <mu2>50</mu2>
+    　　　　　 <minDepth>0.003</minDepth>
+                <maxVel>0</maxVel>
+                <kp>1000000.0</kp>
+                <kd>1.0</kd>
+                <material>Gazebo/Grey</material>
+        </gazebo>
+
+    </xacro:macro>    
+</robot>

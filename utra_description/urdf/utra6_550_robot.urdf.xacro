@@ -47,5 +47,4 @@
   <xacro:include filename="$(find utra_description)/urdf/utra6_550_common.gazebo.xacro" /> 
 
 
-
 </robot>

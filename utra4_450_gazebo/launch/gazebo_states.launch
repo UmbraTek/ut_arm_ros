@@ -1,0 +1,14 @@
+<launch>
+    <rosparam file="$(find utra4_450_gazebo)/config/utra4_450_gazebo_joint_states.yaml" command="load"/>
+
+    <node name="joint_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+          output="screen" ns="/utra4_450" args="joint_state_controller" />
+
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+        respawn="false" output="screen">
+        <remap from="/joint_states" to="/utra4_450/joint_states" />
+    </node>
+
+</launch>
+
+

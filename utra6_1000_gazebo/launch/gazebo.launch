@@ -1,0 +1,21 @@
+<launch>
+    <arg name="gripper" default="false"/>
+    <arg name="vacuum_gripper" default="false"/>
+    <!-- Launch Gazebo  -->
+    <include file="$(find utra6_1000_gazebo)/launch/gazebo_world.launch" >
+    <arg name="gripper" value="$(arg gripper)"/>
+    <arg name="vacuum_gripper" value="$(arg vacuum_gripper)"/>
+    </include>
+
+    <!-- ros_control arm launch file -->
+    <include file="$(find utra6_1000_gazebo)/launch/gazebo_states.launch" />   
+
+    <!-- ros_control trajectory control dof arm launch file -->
+    <include file="$(find utra6_1000_gazebo)/launch/trajectory_controller.launch" >
+    <arg name="gripper" value="$(arg gripper)"/>
+    </include>
+
+    <!-- moveit launch file -->
+    <!-- <include file="$(find utra6_1000_moveit_config)/launch/moveit_planning_execution.launch" /> -->
+
+</launch>

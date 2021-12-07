@@ -1,9 +1,11 @@
 <?xml version="1.0"?>
 <launch>
   <arg name="limited" default="True" doc="If true, limits joint range (-PI, PI) on all joints." />
-
+  <arg name="gripper" default="false"/>
   <include file="$(find utra_description)/launch/utra6_850_upload.launch" >
     <arg name="limited" value="$(arg limited)"/>
+    <arg name="gripper" value="$(arg gripper)"/>
+    <arg name="vacuum_gripper" value="$(arg vacuum_gripper)"/>
   </include>
 
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" >

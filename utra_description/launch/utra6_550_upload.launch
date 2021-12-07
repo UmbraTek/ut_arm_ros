@@ -1,12 +1,31 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="limited" default="false" doc="If true, limits joint range [-PI, PI] on all joints." />
+ <arg name="limited" default="false" doc="If true, limits joint range [-PI, PI] on all joints." />
   <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" />
+  <arg name="gripper" default="false"/>
+  <arg name="vacuum_gripper" default="false"/>
+
+  
+  <param name="robot_description"
+    command="$(find xacro)/xacro
+    --inorder '$(find utra_description)/urdf/utra6_550_robot_gripper.urdf.xacro'
+    limited:=$(arg limited)
+    transmission_hw_interface:=$(arg transmission_hw_interface)
+    " if="$(arg gripper)" />
+
+  <param name="robot_description"
+    command="$(find xacro)/xacro
+    --inorder '$(find utra_description)/urdf/utra6_550_robot_vacuum_gripper.urdf.xacro'
+    limited:=$(arg limited)
+    transmission_hw_interface:=$(arg transmission_hw_interface)
+    " if="$(arg vacuum_gripper)" />
 
   <param name="robot_description"
     command="$(find xacro)/xacro
     --inorder '$(find utra_description)/urdf/utra6_550_robot.urdf.xacro'
     limited:=$(arg limited)
-    transmission_hw_interface:=$(arg transmission_hw_interface)" />
+    transmission_hw_interface:=$(arg transmission_hw_interface)
+    " unless="$(eval arg('gripper') or arg('vacuum_gripper'))" />
+
 
 </launch>

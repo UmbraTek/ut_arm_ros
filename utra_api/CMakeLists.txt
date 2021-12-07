@@ -1,5 +1,6 @@
 # %Tag(FULLTEXT)%
 cmake_minimum_required(VERSION 2.8.3)
+SET(CMAKE_CXX_FLAGS "-std=c++11")
 project(utra_api)
 ## Find catkin and any catkin packages
 find_package(catkin REQUIRED COMPONENTS roscpp)

@@ -16,3 +16,9 @@ utra6_850:
       joint4:   {p: 1000.0, i: 0.0, d: 0.1, i_clamp: 0.0}
       joint5:   {p: 1000.0, i: 0.0, d: 0.1, i_clamp: 0.0}
       joint6:   {p: 1000.0, i: 0.0, d: 0.1, i_clamp: 0.0}
+  gripper_controller:
+    type: "position_controllers/JointTrajectoryController"
+    joints: 
+      - left_knuckle_joint
+    gains:
+      left_knuckle_joint:   {p: 1000.0, i: 0.0, d: 0.1, i_clamp: 0.0}

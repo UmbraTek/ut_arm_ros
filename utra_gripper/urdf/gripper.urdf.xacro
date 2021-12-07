@@ -1,0 +1,473 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+<xacro:include filename="$(find utra_gripper)/urdf/gripper.transmission.xacro" />
+    <xacro:macro name="gripper" params="prefix parent *origin">         
+        <joint name="${prefix}gripper_base_joint" type="fixed">
+            <parent link="${parent}"/>
+            <child link="${prefix}base_link_gripper"/>
+            <xacro:insert_block name="origin"/>
+        </joint>
+        <xacro:property name="mass_base"  value="0.00001" />
+        <link
+            name="base_link_gripper">
+            <inertial>
+            <origin
+                xyz="-0.016093 0.0024206 0.03061"
+                rpy="0 0 0" />
+            <mass
+                value="${mass_base}" />
+            <inertia
+                ixx="3.1219E-06"
+                ixy="-2.5375E-07"
+                ixz="8.5389E-07"
+                iyy="6.5006E-06"
+                iyz="-1.1996E-07"
+                izz="7.1641E-06" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://utra_gripper/meshes/base.stl" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="0.75294 0.75294 0.75294 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://utra_gripper/meshes/base.stl" />
+            </geometry>
+            </collision>
+        </link>
+
+
+
+        <gazebo reference="${prefix}base_link_gripper">
+            <implicitSpringDamper>1</implicitSpringDamper>
+            <mu1>100000</mu1>
+            <mu2>100000</mu2>
+            <kp>100000000.0</kp>
+            <kd>1.0</kd>
+        </gazebo> 
+
+        <link
+            name="left_knuckle_link">
+            <inertial>
+            <origin
+                xyz="0.0004174 0.0081181 0.00092142"
+                rpy="0 0 0" />
+            <mass
+                value="${mass_base}" />
+            <inertia
+                ixx="1.2495E-07"
+                ixy="2.3126E-09"
+                ixz="-5.8721E-10"
+                iyy="9.2991E-09"
+                iyz="2.9378E-08"
+                izz="1.1574E-07" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://utra_gripper/meshes/knuckle.stl" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="0.75294 0.75294 0.75294 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://utra_gripper/meshes/knuckle.stl" />
+            </geometry>
+            </collision>
+        </link>
+
+        <gazebo reference="${prefix}left_knuckle_link">
+            <implicitSpringDamper>1</implicitSpringDamper>
+            <mu1>100000</mu1>
+            <mu2>100000</mu2>
+            <kp>100000000.0</kp>
+            <kd>1.0</kd>
+        </gazebo> 
+
+        <joint
+            name="left_knuckle_joint"
+            type="revolute">
+            <origin
+            xyz="0 -0.033 0.063"
+            rpy="1.5708 0 1.50" />
+            <parent
+            link="base_link_gripper" />
+            <child
+            link="left_knuckle_link" />
+            <axis
+            xyz="0 0 1" />
+            <limit
+            lower="-1.57"
+            upper="1.57"
+            effort="1000"
+            velocity="2.0" />
+        </joint>
+        <link
+            name="right_knuckle_link">
+            <inertial>
+            <origin
+                xyz="0.00045059 0.0080041 0.0020288"
+                rpy="0 0 0" />
+            <mass
+                value="${mass_base}" />
+            <inertia
+                ixx="1.411E-07"
+                ixy="1.9567E-09"
+                ixz="5.9037E-10"
+                iyy="9.5283E-09"
+                iyz="-3.0312E-08"
+                izz="1.3178E-07" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://utra_gripper/meshes/knuckle.stl" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="0.75294 0.75294 0.75294 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://utra_gripper/meshes/knuckle.stl" />
+            </geometry>
+            </collision>
+        </link>
+
+        <gazebo reference="${prefix}right_knuckle_link">
+            <implicitSpringDamper>1</implicitSpringDamper>
+            <mu1>100000</mu1>
+            <mu2>100000</mu2>
+            <kp>100000000.0</kp>
+            <kd>1.0</kd>
+        </gazebo> 
+
+        <joint
+            name="right_knuckle_joint"
+            type="revolute">
+            <origin
+            xyz="0 0.033 0.063"
+            rpy="1.5708 0 -1.50" />
+            <parent
+            link="base_link_gripper" />
+            <child
+            link="right_knuckle_link" />
+            <axis
+            xyz="0 0 -1" />
+            <limit
+            lower="-1.57"
+            upper="1.57"
+            effort="1000"
+            velocity="2.0" />
+            <mimic joint="${prefix}left_knuckle_joint" multiplier="-1"/>
+        </joint>
+        <link
+            name="left_inner_knuckle_link">
+            <inertial>
+            <origin
+                xyz="-0.013801 1.3512E-10 -0.0091952"
+                rpy="0 0 0" />
+            <mass
+                value="${mass_base}" />
+            <inertia
+                ixx="2.6043E-08"
+                ixy="1.1504E-16"
+                ixz="-2.1172E-09"
+                iyy="1.3937E-07"
+                iyz="1.3652E-15"
+                izz="1.1332E-07" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://utra_gripper/meshes/inner_knuckle.stl" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="0.75294 0.75294 0.75294 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://utra_gripper/meshes/inner_knuckle.stl" />
+            </geometry>
+            </collision>
+        </link>
+
+        <gazebo reference="${prefix}left_inner_knuckle_link">
+            <implicitSpringDamper>1</implicitSpringDamper>
+            <mu1>100000</mu1>
+            <mu2>100000</mu2>
+            <kp>100000000.0</kp>
+            <kd>1.0</kd>
+        </gazebo> 
+
+        <joint
+            name="left_inner_knuckle_joint"
+            type="revolute">
+            <origin
+            xyz="0 -0.013 0.075"
+            rpy="1.5708 1.2 1.5708" />
+            <parent
+            link="base_link_gripper" />
+            <child
+            link="left_inner_knuckle_link" />
+            <axis
+            xyz="0 0 1" />
+            <limit
+            lower="-1.57"
+            upper="1.57"
+            effort="1000"
+            velocity="2.0" />
+            <mimic joint="${prefix}left_knuckle_joint" multiplier="1"/>
+        </joint>
+        <link
+            name="left_finger_link">
+            <inertial>
+            <origin
+                xyz="-0.0038459 0.0027734 -5.6082E-05"
+                rpy="0 0 0" />
+            <mass
+                value="${mass_base}" />
+            <inertia
+                ixx="1.0044E-07"
+                ixy="2.7289E-08"
+                ixz="-1.1114E-09"
+                iyy="1.5056E-08"
+                iyz="3.8024E-09"
+                izz="1.0134E-07" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://utra_gripper/meshes/finger.stl" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="0.75294 0.75294 0.75294 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://utra_gripper/meshes/finger.stl" />
+            </geometry>
+            </collision>
+        </link>
+        
+        <gazebo reference="${prefix}left_finger_link">
+            <implicitSpringDamper>1</implicitSpringDamper>
+            <mu1>100000</mu1>
+            <mu2>100000</mu2>
+            <kp>100000000.0</kp>
+            <kd>1.0</kd>
+        </gazebo> 
+
+        <joint
+            name="left_finger_joint"
+            type="revolute">
+            <origin
+            xyz="-0.058 0.005 0"
+            rpy="9.0533E-10 -1.7902E-09 1.2" />
+            <parent
+            link="left_inner_knuckle_link" />
+            <child
+            link="left_finger_link" />
+            <axis
+            xyz="0 0 1" />
+            <limit
+            lower="-1.57"
+            upper="1.57"
+            effort="1000"
+            velocity="2.0" />
+            <mimic joint="${prefix}left_knuckle_joint" multiplier="-1"/>
+        </joint>
+        <link
+            name="right_inner_knuckle_link">
+            <inertial>
+            <origin
+                xyz="-0.013801 4.8285E-11 0.0069248"
+                rpy="0 0 0" />
+            <mass
+                value="${mass_base}" />
+            <inertia
+                ixx="2.6043E-08"
+                ixy="-1.1384E-15"
+                ixz="-2.1172E-09"
+                iyy="1.3937E-07"
+                iyz="5.1669E-16"
+                izz="1.1332E-07" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://utra_gripper/meshes/inner_knuckle.stl" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="0.75294 0.75294 0.75294 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://utra_gripper/meshes/inner_knuckle.stl" />
+            </geometry>
+            </collision>
+        </link>
+
+        <gazebo reference="${prefix}right_inner_knuckle_link">
+            <implicitSpringDamper>1</implicitSpringDamper>
+            <mu1>100000</mu1>
+            <mu2>100000</mu2>
+            <kp>100000000.0</kp>
+            <kd>1.0</kd>
+        </gazebo> 
+
+        <joint
+            name="right_inner_knuckle_joint"
+            type="revolute">
+            <origin
+            xyz="0 0.016 0.075"
+            rpy="-1.5708 1.3 -1.5708" />
+            <parent
+            link="base_link_gripper" />
+            <child
+            link="right_inner_knuckle_link" />
+            <axis
+            xyz="0 0 1" />
+            <limit
+            lower="-1.57"
+            upper="1.57"
+            effort="1000"
+            velocity="2.0" />
+            <mimic joint="${prefix}left_knuckle_joint" multiplier="-1"/>
+        </joint>
+        <link
+            name="right_finger_link">
+            <inertial>
+            <origin
+                xyz="-0.0038459 0.0027734 0.0030561"
+                rpy="0 0 0" />
+            <mass
+                value="${mass_base}" />
+            <inertia
+                ixx="1.0044E-07"
+                ixy="2.7289E-08"
+                ixz="1.1114E-09"
+                iyy="1.5056E-08"
+                iyz="-3.8024E-09"
+                izz="1.0134E-07" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://utra_gripper/meshes/finger.stl" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="0.75294 0.75294 0.75294 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://utra_gripper/meshes/finger.stl" />
+            </geometry>
+            </collision>
+        </link>
+        
+        <gazebo reference="${prefix}right_finger_link">
+            <implicitSpringDamper>1</implicitSpringDamper>
+            <mu1>100000</mu1>
+            <mu2>100000</mu2>
+            <kp>100000000.0</kp>
+            <kd>1.0</kd>
+        </gazebo> 
+
+        <joint
+            name="right_finger_joint"
+            type="revolute">
+            <origin
+            xyz="-0.058 0 0"
+            rpy="-3.1416 1.7902E-09 -1.275" />
+            <parent
+            link="right_inner_knuckle_link" />
+            <child
+            link="right_finger_link" />
+            <axis
+            xyz="0 0 -1" />
+            <limit
+            lower="-1.57"
+            upper="1.57"
+            effort="1000"
+            velocity="2.0" />
+            <mimic joint="${prefix}left_knuckle_joint" multiplier="1"/>
+        </joint>
+
+        <xacro:gripper_transmission prefix="${prefix}"/>
+
+    </xacro:macro>    
+</robot>

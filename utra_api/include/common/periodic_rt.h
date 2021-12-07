@@ -13,10 +13,10 @@
 #include <cstring>
 #include <thread>
 #include <vector>
-#ifdef linux
+// #ifdef linux
 #include <sys/prctl.h>
 #include <sys/timerfd.h>
-#endif
+// #endif
 
 #include "timer.h"
 
@@ -111,7 +111,7 @@ class RtTask {
 
     // timerFd 定时器
     int seconds = (int)period_s_;
-    int nanoseconds = (int)(1e9 * std::fmod(period_s_, 1.f));
+    int nanoseconds = (int)(1e9 * fmod(period_s_, 1.f));
     itimerspec timerSpec;
     timerSpec.it_value.tv_sec = seconds;
     timerSpec.it_value.tv_nsec = nanoseconds;

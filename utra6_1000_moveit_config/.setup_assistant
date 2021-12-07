@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: utra_description
+    relative_path: urdf/utra6_1000_robot.urdf.xacro
+    xacro_args: "--inorder "
+  SRDF:
+    relative_path: config/utra6_1000.srdf
+  CONFIG:
+    author_name: hsp
+    author_email: johnson@umbratek.com
+    generated_timestamp: 1619151129

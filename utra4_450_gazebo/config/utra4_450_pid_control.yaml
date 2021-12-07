@@ -1,0 +1,20 @@
+utra4_450:  
+  gazebo_ros_control:
+    pid_gains:
+      joint1:
+        p: 100.0
+        i: 0.01 
+        d: 10.0
+      joint2:
+        p: 100.0
+        i: 0.01 
+        d: 10.0
+      joint3:
+        p: 100.0
+        i: 0.01 
+        d: 10.0
+      joint4:
+        p: 100.0
+        i: 0.01 
+        d: 10.0
+

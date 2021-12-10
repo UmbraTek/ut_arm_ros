@@ -53,6 +53,7 @@ class ArmApiBase {
   int moveto_joint_circle(void);
   int moveto_home_p2p(float mvvelo, float mvacc, float mvtime);
   int moveto_servoj(float* mvjoint, float mvvelo, float mvacc, float mvtime);
+  int moveto_servo_joint(int frames_num, float* mvjoint, float* mvtime);
   int move_sleep(float time);
   int plan_sleep(float time);
 

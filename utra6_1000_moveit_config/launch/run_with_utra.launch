@@ -1,5 +1,5 @@
 <launch>
-    <arg  name="utra_ip" />
+    <arg  name="utra_ip" default=""/>
     <include file="$(find utra_controller)/launch/joint_trajectory_850.launch">
         <arg name="utra_ns" value="utra6_1000/arm_joint_controller/follow_joint_trajectory" />
         <arg name="utra_ip" value="$(arg utra_ip)" />
@@ -11,6 +11,7 @@
     </include>
 
     <include file="$(find utra6_1000_moveit_config)/launch/demo.launch">
+        <arg name="ompl" value="ompl_s"/>
     </include>
     
 </launch>

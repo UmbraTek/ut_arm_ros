@@ -53,6 +53,7 @@ class ARM_REG {
   const uint8_t MOVEJ_HOME[5] = {0x3A, ' ', ' ', 12, 4};
   const uint8_t MOVE_SLEEP[5] = {0x3B, ' ', ' ', 4, 4};
   const uint8_t MOVE_SERVOJ[5] = {0x3C, ' ', ' ', (uint8_t)((AXIS + 3) * 4), 4};
+  uint8_t MOVES_JOINT[5] = {0x3D, ' ', ' ', 0x55, 4};
   const uint8_t PLAN_SLEEP[5] = {0x3F, ' ', ' ', 4, 4};
 
   const uint8_t TCP_JERK[5] = {0x40, 0, 4, 4, 4};
@@ -72,9 +73,8 @@ class ARM_REG {
   const uint8_t IS_JOINT_LIMIT[5] = {0x54, (uint8_t)(AXIS * 4), 1, ' ', ' '};
   const uint8_t IS_TCP_LIMIT[5] = {0x55, 24, 1, ' ', ' '};
 
-  const uint8_t UTRC_INT32_NOW[5] = {0x61, 3, 8, 7, 1};
-
   const uint8_t UTRC_INT8_NOW[5] = {0x60, 3, 2, 4, 1};
+  const uint8_t UTRC_INT32_NOW[5] = {0x61, 3, 8, 7, 1};
   const uint8_t UTRC_FP32_NOW[5] = {0x62, 3, 8, 7, 1};
   const uint8_t UTRC_INT8N_NOW[5] = {0x63, 4, 0x55, 0x55, 1};
 
@@ -85,6 +85,12 @@ class ARM_REG {
 
   const uint8_t PASS_RS485_NOW[5] = {0x68, ' ', ' ', 0x55, 0x55};
   const uint8_t PASS_RS485_QUE[5] = {0x69, ' ', ' ', 0x55, 0};
+
+  const uint8_t UTRC_U8FP32_NOW[5] = {0x6A, 4, 8, 8, 1};
+  const uint8_t GPIO_IN[5] = {0x6E, 2, 0x55, ' ', ' '};
+  const uint8_t GPIO_OU[5] = {0x6F, 2, 0x55, ' ', ' '};
+
+  const uint8_t FRICTION[5] = {0x70, 2, 16, 2 + 16, 0};
 };
 
 #endif

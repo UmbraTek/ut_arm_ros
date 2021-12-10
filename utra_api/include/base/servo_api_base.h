@@ -63,10 +63,12 @@ class ServoApiBase {
   int set_pos_limit_max_(int id, float pos);
   int get_pos_limit_diff_(int id, float* pos);
   int set_pos_limit_diff_(int id, float pos);
-  int get_pos_pidp_(int id, int* p);
-  int set_pos_pidp_(int id, int p);
+  int get_pos_pidp_(int id, float* p);
+  int set_pos_pidp_(int id, float p);
   int get_pos_smooth_cyc_(int id, uint8_t* cyc);
   int set_pos_smooth_cyc_(int id, uint8_t cyc);
+  int get_pos_adrc_param_(int id, uint8_t i, float* param);
+  int set_pos_adrc_param_(int id, uint8_t i, float param);
   int pos_cal_zero_(int id);
 
   int get_vel_target_(int id, float* vel);
@@ -78,12 +80,14 @@ class ServoApiBase {
   int set_vel_limit_max_(int id, float vel);
   int get_vel_limit_diff_(int id, float* vel);
   int set_vel_limit_diff_(int id, float vel);
-  int get_vel_pidp_(int id, int* p);
-  int set_vel_pidp_(int id, int p);
-  int get_vel_pidi_(int id, int* i);
-  int set_vel_pidi_(int id, int i);
+  int get_vel_pidp_(int id, float* p);
+  int set_vel_pidp_(int id, float p);
+  int get_vel_pidi_(int id, float* i);
+  int set_vel_pidi_(int id, float i);
   int get_vel_smooth_cyc_(int id, uint8_t* cyc);
   int set_vel_smooth_cyc_(int id, uint8_t cyc);
+  int get_vel_adrc_param_(int id, uint8_t i, float* param);
+  int set_vel_adrc_param_(int id, uint8_t i, float param);
 
   int get_tau_target_(int id, float* tau);
   int set_tau_target_(int id, float tau);
@@ -94,12 +98,14 @@ class ServoApiBase {
   int set_tau_limit_max_(int id, float tau);
   int get_tau_limit_diff_(int id, float* tau);
   int set_tau_limit_diff_(int id, float tau);
-  int get_tau_pidp_(int id, int* p);
-  int set_tau_pidp_(int id, int p);
-  int get_tau_pidi_(int id, int* i);
-  int set_tau_pidi_(int id, int i);
+  int get_tau_pidp_(int id, float* p);
+  int set_tau_pidp_(int id, float p);
+  int get_tau_pidi_(int id, float* i);
+  int set_tau_pidi_(int id, float i);
   int get_tau_smooth_cyc_(int id, uint8_t* cyc);
   int set_tau_smooth_cyc_(int id, uint8_t cyc);
+  int get_tau_adrc_param_(int id, uint8_t i, float* param);
+  int set_tau_adrc_param_(int id, uint8_t i, float param);
 
   int set_cpos_target_(uint8_t sid, uint8_t eid, float* pos);
   int get_spostau_current_(int id, int* num, float* pos, float* tau);

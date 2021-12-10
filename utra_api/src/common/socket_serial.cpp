@@ -17,8 +17,7 @@
 #include "common/linuxcvl.h"
 #include "common/print.h"
 
-SocketSerial::SocketSerial(const char *port, int baud, int rxque_max, SerialDecode *decode, int rxlen_max,
-                           int priority) {
+SocketSerial::SocketSerial(const char *port, int baud, int rxque_max, SerialDecode *decode, int rxlen_max, int priority) {
   int ret = init_serial(port, baud);
   if (ret != 0) {
     printf("[SockeSer] Error serial init failed, ret = %d\n", ret);
@@ -36,8 +35,7 @@ SocketSerial::SocketSerial(const char *port, int baud, int rxque_max, SerialDeco
     is_decode_ = true;
 
   flush();
-  recv_task_ =
-      new RtPeriodicMemberFun<SocketSerial>(0, "recv_task", 1024 * 1024, priority, &SocketSerial::recv_proc, this);
+  recv_task_ = new RtPeriodicMemberFun<SocketSerial>(0, "recv_task", 1024 * 1024, priority, &SocketSerial::recv_proc, this);
   recv_task_->start();
 }
 

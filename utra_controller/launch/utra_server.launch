@@ -11,5 +11,13 @@
     output="screen"
     >
     </node>
+  <node
+    name="utra_publish"
+    pkg="utra_controller"
+    type="utra_publish"
+    respawn="false"
+    output="screen"
+    >
+    </node>
     
 </launch>

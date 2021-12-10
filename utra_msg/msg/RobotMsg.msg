@@ -1,0 +1,12 @@
+uint16 len
+uint8 axis
+uint8 motion_status
+uint8 motion_mode
+uint32 mt_brake
+uint32 mt_able
+uint8 err_code
+uint8 war_code
+uint16 cmd_num
+float32[32] joint
+float32[6] pose
+float32[32] tau

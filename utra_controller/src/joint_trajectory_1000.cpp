@@ -23,7 +23,9 @@
 #include <unistd.h>
 #include <iostream>
 #include <sstream>
-#include "utra/utra_api_tcp.h"
+#include "utra_msg/Mservojoint.h"
+
+ros::ServiceClient Mservojoint_client;
 
 using namespace std;
 
@@ -43,38 +45,26 @@ float cp4;
 float cp5;
 float cp6;
 
-UtraApiTcp* utra = NULL;
-
 void execute(const control_msgs::FollowJointTrajectoryGoalConstPtr& goal, Server* as) {
-  // ros::Rate rate(1);
-
-  Link1 = goal->trajectory.joint_names[0];
-  Link2 = goal->trajectory.joint_names[1];
-  Link3 = goal->trajectory.joint_names[2];
-  Link4 = goal->trajectory.joint_names[3];
-  Link5 = goal->trajectory.joint_names[4];
-  Link6 = goal->trajectory.joint_names[5];
-  float speed = 0.4;
-  float acc = 60;
-  int ret = -1;
+  utra_msg::Mservojoint srv;
+  srv.request.axiz = 6;
+  srv.request.num = goal->trajectory.points.size();
+  srv.request.time = 0.1;
   for (int i = 0; i < goal->trajectory.points.size(); i++) {
-    cp1 = goal->trajectory.points[i].positions[0];
-    cp2 = goal->trajectory.points[i].positions[1];
-    cp3 = goal->trajectory.points[i].positions[2];
-    cp4 = goal->trajectory.points[i].positions[3];
-    cp5 = goal->trajectory.points[i].positions[4];
-    cp6 = goal->trajectory.points[i].positions[5];
-    ROS_INFO("goal=[%f,%f,%f,%f,%f,%f]\n", cp1, cp2, cp3, cp4, cp5, cp6);
-    float joint[6] = {cp1, cp2, cp3, cp4, cp5, cp6};
-    ret = utra->moveto_joint_p2p(joint, speed, acc, 0);
-    printf("moveto_joint_p2p  : %d\n", ret);
+    for (size_t j = 0; j < 6; j++)
+    {
+      srv.request.frames.push_back(goal->trajectory.points[i].positions[j]);
+    }
   }
 
-  // control_msgs::FollowJointTrajectoryFeedback feedback;
-  // feedback = NULL;
-  // as->publishFeedback(feedback);
-
-  // printf("goal=[%f,%f,%f,%f,%f,%f]\n",tp1,tp2,tp3,tp4,tp5,tp6);
+  if (Mservojoint_client.call(srv))
+  {
+    ROS_INFO("call ret: %d", srv.response.ret);
+  }
+  else
+  {
+    ROS_ERROR("Failed to call service ");
+  }
   ROS_INFO("Recieve action successful!");
   as->setSucceeded();
 }
@@ -89,22 +79,8 @@ int main(int argc, char** argv) {
     ROS_ERROR("Failed to get param 'utra_ns'");
     return -1;
   }
-  std::string utra_ip;
-  if (nh.getParam("utra_ip", utra_ip)) {
-    ROS_INFO("Got param: %s", utra_ip.c_str());
-  } else {
-    ROS_ERROR("Failed to get param 'utra_ip'");
-    return -1;
-  }
-  char* ip = new char[utra_ip.length() + 1];
-  std::strcpy(ip, utra_ip.c_str());
-  utra = new UtraApiTcp(ip);
-  int ret = utra->set_motion_mode(1);
-  ROS_INFO("set_motion_mode   : %d\n", ret);
-  ret = utra->set_motion_enable(8, 1);
-  ROS_INFO("set_motion_enable : %d\n", ret);
-  ret = utra->set_motion_status(0);
-  printf("set_motion_status : %d\n", ret);
+ 
+  Mservojoint_client = nh.serviceClient<utra_msg::Mservojoint>("utra/mv_servo_joint");
 
   char* cstr = new char[utra_ns.length() + 1];
   std::strcpy(cstr, utra_ns.c_str());

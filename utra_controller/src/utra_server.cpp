@@ -6,12 +6,18 @@
  ============================================================================*/
 #include "ros/ros.h"
 #include "utra/utra_api_tcp.h"
-#include "utra_controller/Api.h"
+
+#include "utra_msg/Api.h"
+#include "utra_msg/Connect.h"
+#include "utra_msg/Disconnect.h"
+#include "utra_msg/Checkconnect.h"
+#include "utra_msg/Mservojoint.h"
 
 UtraApiTcp *utra = NULL;
+std::string utra_ip = "";
 
 constexpr unsigned int hash(const char *s, int off = 0) { return !s[off] ? 5381 : (hash(s, off + 1) * 33) ^ s[off]; }
-bool check_connect(utra_controller::Api::Response &res) {
+bool check_connect(utra_msg::Api::Response &res) {
   if (utra == NULL) {
     res.rets.push_back("-1");
     res.rets.push_back("controller have not connect utra");
@@ -20,7 +26,7 @@ bool check_connect(utra_controller::Api::Response &res) {
     return true;
   }
 }
-bool check_arg_count(utra_controller::Api::Request &req, utra_controller::Api::Response &res, int count) {
+bool check_arg_count(utra_msg::Api::Request &req, utra_msg::Api::Response &res, int count) {
   if (req.args.size() < count) {
     res.rets.push_back("-1");
     char str[25];
@@ -31,42 +37,60 @@ bool check_arg_count(utra_controller::Api::Request &req, utra_controller::Api::R
     return true;
   }
 }
-void connect(utra_controller::Api::Request &req, utra_controller::Api::Response &res) {
+bool connect_api(utra_msg::Connect::Request &req, utra_msg::Connect::Response &res) {
   if (utra != NULL) {
-    res.rets.push_back("0");
-    res.rets.push_back("server have connected adra");
-    return;
+    res.ret=0;
+    res.message="server have connected utra";
+    return true;
   }
-  if (check_arg_count(req, res, 1) == false) return;
-
-  char *ip = new char[req.args[0].length() + 1];
-  std::strcpy(ip, req.args[0].c_str());
+  utra_ip = req.ip_address;
+  char *ip = new char[req.ip_address.length() + 1];
+  std::strcpy(ip, req.ip_address.c_str());
   utra = new UtraApiTcp(ip);
   uint8_t axis;
   int ret = utra->get_axis(&axis);
+  res.ret=ret;
   if (ret == -3) {
-    res.rets.push_back("-3");
-    res.rets.push_back("can not connect the utra");
-    return;
+    res.message="can not connect the utra";
   } else {
-    res.rets.push_back("0");
-    res.rets.push_back("connect seccess");
+    res.message="connect seccess";
   }
+  return true;
 }
 
-void disconnect(utra_controller::Api::Response &res) {
-  if (utra != NULL) {
-    delete utra;
-    utra = NULL;
-    res.rets.push_back("0");
-    res.rets.push_back("disconnect seccess");
-    return;
+bool disconnect_api(utra_msg::Disconnect::Request &req, utra_msg::Disconnect::Response &res) {
+  if(utra == NULL){
+    res.ret=0;
+    res.message="server have not connected utra";
+    return true;
   }
-  res.rets.push_back("-1");
-  res.rets.push_back("server have not connect utra");
+  res.ret=0;
+  res.message="utra have disconnected";
+  delete utra;
+  utra = NULL;
+  return true;
 }
 
-void move_joints(utra_controller::Api::Request &req, utra_controller::Api::Response &res) {
+bool check_c_api(utra_msg::Checkconnect::Request &req, utra_msg::Checkconnect::Response &res) {
+  if(utra == NULL){
+    res.ret=-3;
+    res.ip_address = "";
+    res.message="server have not connected utra";
+    return true;
+  }
+  uint8_t axis;
+  int ret = utra->get_axis(&axis);
+  res.ip_address = utra_ip;
+  res.ret=ret;
+  if (ret == -3) {
+    res.message="can not connect the utra";
+  } else {
+    res.message="connect seccess";
+  }
+  return true;
+}
+
+void move_joints(utra_msg::Api::Request &req, utra_msg::Api::Response &res) {
   if (check_connect(res) == false) return;
   if (check_arg_count(req, res, 8) == false) return;
 
@@ -83,7 +107,7 @@ void move_joints(utra_controller::Api::Request &req, utra_controller::Api::Respo
   int ret = utra->moveto_joint_p2p(joint, speed, acc, 0);
   res.rets.push_back(std::to_string(ret));
 }
-void move_line(utra_controller::Api::Request &req, utra_controller::Api::Response &res) {
+void move_line(utra_msg::Api::Request &req, utra_msg::Api::Response &res) {
   if (check_connect(res) == false) return;
   if (check_arg_count(req, res, 8) == false) return;
 
@@ -100,7 +124,7 @@ void move_line(utra_controller::Api::Request &req, utra_controller::Api::Respons
   res.rets.push_back(std::to_string(ret));
 }
 
-void get_motion_enable(utra_controller::Api::Request &req, utra_controller::Api::Response &res) {
+void get_motion_enable(utra_msg::Api::Request &req, utra_msg::Api::Response &res) {
   if (check_connect(res) == false) return;
   int able = -1;
   int ret = utra->get_motion_enable(&able);
@@ -118,7 +142,7 @@ void get_motion_enable(utra_controller::Api::Request &req, utra_controller::Api:
   }
   return;
 }
-void set_motion_enable(utra_controller::Api::Request &req, utra_controller::Api::Response &res) {
+void set_motion_enable(utra_msg::Api::Request &req, utra_msg::Api::Response &res) {
   if (check_connect(res) == false) return;
   if (check_arg_count(req, res, 1) == false) return;
   int en = std::stoi(req.args[0].c_str());
@@ -126,7 +150,7 @@ void set_motion_enable(utra_controller::Api::Request &req, utra_controller::Api:
   res.rets.push_back(std::to_string(ret));
 }
 
-void get_motion_status(utra_controller::Api::Request &req, utra_controller::Api::Response &res) {
+void get_motion_status(utra_msg::Api::Request &req, utra_msg::Api::Response &res) {
   if (check_connect(res) == false) return;
   uint8_t status = -1;
   int ret = utra->get_motion_status(&status);
@@ -161,7 +185,73 @@ void get_motion_status(utra_controller::Api::Request &req, utra_controller::Api:
   return;
 }
 
-void set_motion_status(utra_controller::Api::Request &req, utra_controller::Api::Response &res) {
+void print_joints(float* frames,int con)
+{
+  for (size_t j = 0; j < con; j++)
+  { 
+    ROS_INFO("%f %f %f %f %f %f",frames[j*6],frames[j*6+1],frames[j*6+2],frames[j*6+3],frames[j*6+4],frames[j*6+5]);
+  }
+}
+
+bool mv_servo_joint(utra_msg::Mservojoint::Request &req, utra_msg::Mservojoint::Response &res) {
+  if(utra == NULL){
+    res.ret=-3;
+    res.message="server have not connected utra";
+    return true;
+  }
+  int axiz = req.axiz;
+  int CON = 3;
+  if(axiz == 6){
+    int frames_num = req.num;
+    ROS_INFO("mv_servo_joint %d %f",frames_num,req.time);
+    
+    float frames[CON*6] = {0};
+    float mvtime[CON] = {0};
+    for (size_t i = 0; i < CON; i++)
+    {
+      mvtime[i] = req.time;
+    }
+    
+
+    int have_CON_s = frames_num/CON;
+    int have_CON_m = frames_num%CON;
+
+    int req_frames_index = 0;
+    int ret = 0;
+  //    for (size_t j = 0; j < frames_num; j++)
+  // { 
+  //   ROS_INFO("%f %f %f %f %f %f",req.frames[j*6],req.frames[j*6+1],req.frames[j*6+2],req.frames[j*6+3],frames[j*6+4],req.frames[j*6+5]);
+  // }
+    //for run have_CON_s time send
+    for (size_t i = 0; i < have_CON_s; i++)
+    {
+      for (size_t j = 0; j < CON*6; j++)
+      { 
+        frames[j] = req.frames[req_frames_index+j];
+      }
+      print_joints(frames,CON);
+      req_frames_index = req_frames_index + CON*6;
+      ret = utra->moveto_servo_joint(CON, frames, mvtime);
+      ROS_INFO("req_frames_index %d ret %d",req_frames_index,ret);
+    }
+    
+    //last time send
+    for (size_t i = 0; i < have_CON_m*6; i++)
+    { 
+      frames[i] = req.frames[req_frames_index+i];
+    }
+    print_joints(frames,have_CON_m);
+    ret = utra->moveto_servo_joint(have_CON_m, frames, mvtime);
+
+    ROS_INFO("ret %d",ret);
+    res.ret=ret;
+    res.message="send cmd success";
+    return true;
+  }
+  return true;
+}
+
+void set_motion_status(utra_msg::Api::Request &req, utra_msg::Api::Response &res) {
   if (check_connect(res) == false) return;
   if (check_arg_count(req, res, 1) == false) return;
   int status = std::stoi(req.args[0].c_str());
@@ -169,63 +259,37 @@ void set_motion_status(utra_controller::Api::Request &req, utra_controller::Api:
   res.rets.push_back(std::to_string(ret));
 }
 
-bool api(utra_controller::Api::Request &req, utra_controller::Api::Response &res) {
-  ROS_INFO("request: api_name=%s", req.api_name.c_str());
-  switch (hash(req.api_name.c_str())) {
-    case hash("connect"):
-      connect(req, res);
-      break;
-    case hash("disconnect"):
-      disconnect(res);
-      break;
-    case hash("get_motion_enable"):
-      get_motion_enable(req, res);
-      break;
-    case hash("set_motion_enable"):
-      set_motion_enable(req, res);
-      break;
-    case hash("get_motion_status"):
-      get_motion_status(req, res);
-      break;
-    case hash("set_motion_status"):
-      set_motion_status(req, res);
-      break;
-    case hash("move_joints"):
-      move_joints(req, res);
-      break;
-    case hash("move_line"):
-      move_line(req, res);
-      break;
-    default:
-      break;
-  }
-  return true;
-}
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "utra_server");
   ros::NodeHandle nh;
 
-  std::string utra_ip;
+  
   if (nh.getParam("utra_ip", utra_ip)) {
     ROS_INFO("Got param: %s", utra_ip.c_str());
   } else {
     ROS_ERROR("Failed to get param 'utra_ip'");
-    return -1;
+    utra_ip="";
+    // return -1;
   }
-  char *ip = new char[utra_ip.length() + 1];
-  std::strcpy(ip, utra_ip.c_str());
-  utra = new UtraApiTcp(ip);
-  uint8_t axis;
-  int ret = utra->get_axis(&axis);
-  ROS_INFO("ret %d", ret);
-  if (ret == -3) {
-    ROS_ERROR("can not connect the utra");
-    return -1;
+  if(utra_ip != ""){
+    char *ip = new char[utra_ip.length() + 1];
+    std::strcpy(ip, utra_ip.c_str());
+    utra = new UtraApiTcp(ip);
+    uint8_t axis;
+    int ret = utra->get_axis(&axis);
+    ROS_INFO("ret %d", ret);
+    if (ret == -3) {
+      ROS_ERROR("can not connect the utra");
+      // return -1;
+    }
   }
 
-  ros::ServiceServer service = nh.advertiseService("utra_server", api);
+  ros::ServiceServer connect = nh.advertiseService("utra/connect", connect_api);
+  ros::ServiceServer disconnect = nh.advertiseService("utra/disconnect", disconnect_api);
+  ros::ServiceServer check_c = nh.advertiseService("utra/check_connect", check_c_api);
+  ros::ServiceServer mservojoint = nh.advertiseService("utra/mv_servo_joint", mv_servo_joint);
 
-  ROS_INFO("Ready for adra server.");
+  ROS_INFO("Ready for utra server.");
   ros::spin();
 }

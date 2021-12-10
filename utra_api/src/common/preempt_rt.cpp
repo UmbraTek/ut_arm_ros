@@ -55,8 +55,8 @@ int LinuxCvl::rt_task_create(rt_task_t *task, long stk_size, long prio) {
   int ret;
   ret = pthread_attr_init(&task->attr);
   ret = pthread_attr_setdetachstate(&task->attr, PTHREAD_CREATE_JOINABLE);  // 线程分离属性
-  ret = pthread_attr_setschedpolicy(&task->attr, SCHED_FIFO);  //线程调度策略,允许被高优先级抢占
-  ret = pthread_attr_setstacksize(&task->attr, stk_size);      //线程栈大小
+  ret = pthread_attr_setschedpolicy(&task->attr, SCHED_FIFO);               //线程调度策略,允许被高优先级抢占
+  ret = pthread_attr_setstacksize(&task->attr, stk_size);                   //线程栈大小
 
   struct sched_param sched_para;
   sched_para.sched_priority = prio;
@@ -98,9 +98,7 @@ void LinuxCvl::rt_task_delete(rt_task_t *task) {
  * @return                 [description]
  */
 
-signed long long LinuxCvl::tv2us(const struct timespec *tv) {
-  return (tv->tv_sec * NSEC_PER_SEC + tv->tv_nsec) * 0.001;
-}
+signed long long LinuxCvl::tv2us(const struct timespec *tv) { return (tv->tv_sec * NSEC_PER_SEC + tv->tv_nsec) * 0.001; }
 
 signed long long LinuxCvl::tv2ns(const struct timespec *tv) {
   return (tv->tv_sec * NSEC_PER_SEC + tv->tv_nsec);  //
@@ -155,8 +153,7 @@ void LinuxCvl::ns_to_str(signed long long ns, char *str) {
   s = ms / 1000;
   m = s / 60;
   h = m / 60;
-  sprintf((char *)str, "%5lldh%2lldm%2llds:%3lldms:%3lldus:%3lldns", h, m % 60, s % 60, ms % 1000, us % 1000,
-          ns % 1000);
+  sprintf((char *)str, "%5lldh%2lldm%2llds:%3lldms:%3lldus:%3lldns", h, m % 60, s % 60, ms % 1000, us % 1000, ns % 1000);
 }
 
 /**

@@ -1,0 +1,9 @@
+ <library path="lib/libutra_rviz">
+    <class name="utra_rviz_space/utra_control"
+            type="utra_rviz_space::utra_rviz"
+            base_class_type="rviz::Panel">
+    <description>
+        A panel widget Control for Utra
+    </description>
+    </class>
+</library>

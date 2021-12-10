@@ -92,15 +92,17 @@ int ServoApiBase::set_reg_int32(int id, int value, const uint8_t reg[5]) {
 
 int ServoApiBase::get_reg_fp32(int id, float* value, const uint8_t reg[5]) {
   int ret = sendpend(id, SERVO_RW::R, reg, NULL);
-  int32_t value_int = HexData::hex_to_int32_big(&utrc_rx_.data[0]);
-  *value = SERVO_INT_TO_FP(value_int);
+  // int32_t value_int = HexData::hex_to_int32_big(&utrc_rx_.data[0]);
+  // *value = SERVO_INT_TO_FP(value_int);
+  HexData::hex_to_fp32_big(&utrc_rx_.data[0], value, 1);
   return ret;
 }
 
 int ServoApiBase::set_reg_fp32(int id, float value, const uint8_t reg[5]) {
   uint8_t data[4];
-  int32_t value_int = SERVO_FP_TO_INT(value);
-  HexData::int32_to_hex_big(value_int, data);
+  // int32_t value_int = SERVO_FP_TO_INT(value);
+  // HexData::int32_to_hex_big(value_int, data);
+  HexData::fp32_to_hex_big(value, data);
   int ret = sendpend(id, SERVO_RW::W, reg, data);
   return ret;
 }
@@ -203,10 +205,23 @@ int ServoApiBase::get_pos_limit_max_(int id, float* pos) { return get_reg_fp32(i
 int ServoApiBase::set_pos_limit_max_(int id, float pos) { return set_reg_fp32(id, pos, reg_.POS_LIMIT_MAX); }
 int ServoApiBase::get_pos_limit_diff_(int id, float* pos) { return get_reg_fp32(id, pos, reg_.POS_LIMIT_DIFF); }
 int ServoApiBase::set_pos_limit_diff_(int id, float pos) { return set_reg_fp32(id, pos, reg_.POS_LIMIT_DIFF); }
-int ServoApiBase::get_pos_pidp_(int id, int* p) { return get_reg_int32(id, p, reg_.POS_PIDP); }
-int ServoApiBase::set_pos_pidp_(int id, int p) { return set_reg_int32(id, p, reg_.POS_PIDP); }
+int ServoApiBase::get_pos_pidp_(int id, float* p) { return get_reg_fp32(id, p, reg_.POS_PIDP); }
+int ServoApiBase::set_pos_pidp_(int id, float p) { return set_reg_fp32(id, p, reg_.POS_PIDP); }
 int ServoApiBase::get_pos_smooth_cyc_(int id, uint8_t* cyc) { return get_reg_int8(id, cyc, reg_.POS_SMOOTH_CYC); }
 int ServoApiBase::set_pos_smooth_cyc_(int id, uint8_t cyc) { return set_reg_int8(id, cyc, reg_.POS_SMOOTH_CYC); }
+int ServoApiBase::get_pos_adrc_param_(int id, uint8_t i, float* param) {
+  uint8_t data[1] = {i};
+  int ret = sendpend(id, SERVO_RW::R, reg_.POS_ADRC_PARAM, data);
+  HexData::hex_to_fp32_big(&utrc_rx_.data[0], param, 1);
+  return ret;
+}
+int ServoApiBase::set_pos_adrc_param_(int id, uint8_t i, float param) {
+  uint8_t data[4];
+  HexData::fp32_to_hex_big(param, data);
+  uint8_t txdata[5] = {i, data[0], data[1], data[2], data[3]};
+  int ret = sendpend(id, SERVO_RW::W, reg_.POS_ADRC_PARAM, txdata);
+  return ret;
+}
 int ServoApiBase::pos_cal_zero_(int id) { return set_reg_int8(id, reg_.POS_CAL_ZERO[0], reg_.POS_CAL_ZERO); }
 
 // vel
@@ -219,12 +234,25 @@ int ServoApiBase::get_vel_limit_max_(int id, float* vel) { return get_reg_fp32(i
 int ServoApiBase::set_vel_limit_max_(int id, float vel) { return set_reg_fp32(id, vel, reg_.VEL_LIMIT_MAX); }
 int ServoApiBase::get_vel_limit_diff_(int id, float* vel) { return get_reg_fp32(id, vel, reg_.VEL_LIMIT_DIFF); }
 int ServoApiBase::set_vel_limit_diff_(int id, float vel) { return set_reg_fp32(id, vel, reg_.VEL_LIMIT_DIFF); }
-int ServoApiBase::get_vel_pidp_(int id, int* p) { return get_reg_int32(id, p, reg_.VEL_PIDP); }
-int ServoApiBase::set_vel_pidp_(int id, int p) { return set_reg_int32(id, p, reg_.VEL_PIDP); }
-int ServoApiBase::get_vel_pidi_(int id, int* i) { return get_reg_int32(id, i, reg_.VEL_PIDI); }
-int ServoApiBase::set_vel_pidi_(int id, int i) { return set_reg_int32(id, i, reg_.VEL_PIDI); }
+int ServoApiBase::get_vel_pidp_(int id, float* p) { return get_reg_fp32(id, p, reg_.VEL_PIDP); }
+int ServoApiBase::set_vel_pidp_(int id, float p) { return set_reg_fp32(id, p, reg_.VEL_PIDP); }
+int ServoApiBase::get_vel_pidi_(int id, float* i) { return get_reg_fp32(id, i, reg_.VEL_PIDI); }
+int ServoApiBase::set_vel_pidi_(int id, float i) { return set_reg_fp32(id, i, reg_.VEL_PIDI); }
 int ServoApiBase::get_vel_smooth_cyc_(int id, uint8_t* cyc) { return get_reg_int8(id, cyc, reg_.VEL_SMOOTH_CYC); }
 int ServoApiBase::set_vel_smooth_cyc_(int id, uint8_t cyc) { return set_reg_int8(id, cyc, reg_.VEL_SMOOTH_CYC); }
+int ServoApiBase::get_vel_adrc_param_(int id, uint8_t i, float* param) {
+  uint8_t data[1] = {i};
+  int ret = sendpend(id, SERVO_RW::R, reg_.VEL_ADRC_PARAM, data);
+  HexData::hex_to_fp32_big(&utrc_rx_.data[0], param, 1);
+  return ret;
+}
+int ServoApiBase::set_vel_adrc_param_(int id, uint8_t i, float param) {
+  uint8_t data[4];
+  HexData::fp32_to_hex_big(param, data);
+  uint8_t txdata[5] = {i, data[0], data[1], data[2], data[3]};
+  int ret = sendpend(id, SERVO_RW::W, reg_.VEL_ADRC_PARAM, txdata);
+  return ret;
+}
 
 // tau
 int ServoApiBase::get_tau_target_(int id, float* tau) { return get_reg_fp32(id, tau, reg_.TAU_TARGET); }
@@ -236,12 +264,25 @@ int ServoApiBase::get_tau_limit_max_(int id, float* tau) { return get_reg_fp32(i
 int ServoApiBase::set_tau_limit_max_(int id, float tau) { return set_reg_fp32(id, tau, reg_.TAU_LIMIT_MAX); }
 int ServoApiBase::get_tau_limit_diff_(int id, float* tau) { return get_reg_fp32(id, tau, reg_.TAU_LIMIT_DIFF); }
 int ServoApiBase::set_tau_limit_diff_(int id, float tau) { return set_reg_fp32(id, tau, reg_.TAU_LIMIT_DIFF); }
-int ServoApiBase::get_tau_pidp_(int id, int* p) { return get_reg_int32(id, p, reg_.TAU_PIDP); }
-int ServoApiBase::set_tau_pidp_(int id, int p) { return set_reg_int32(id, p, reg_.TAU_PIDP); }
-int ServoApiBase::get_tau_pidi_(int id, int* i) { return get_reg_int32(id, i, reg_.TAU_PIDI); }
-int ServoApiBase::set_tau_pidi_(int id, int i) { return set_reg_int32(id, i, reg_.TAU_PIDI); }
+int ServoApiBase::get_tau_pidp_(int id, float* p) { return get_reg_fp32(id, p, reg_.TAU_PIDP); }
+int ServoApiBase::set_tau_pidp_(int id, float p) { return set_reg_fp32(id, p, reg_.TAU_PIDP); }
+int ServoApiBase::get_tau_pidi_(int id, float* i) { return get_reg_fp32(id, i, reg_.TAU_PIDI); }
+int ServoApiBase::set_tau_pidi_(int id, float i) { return set_reg_fp32(id, i, reg_.TAU_PIDI); }
 int ServoApiBase::get_tau_smooth_cyc_(int id, uint8_t* cyc) { return get_reg_int8(id, cyc, reg_.TAU_SMOOTH_CYC); }
 int ServoApiBase::set_tau_smooth_cyc_(int id, uint8_t cyc) { return set_reg_int8(id, cyc, reg_.TAU_SMOOTH_CYC); }
+int ServoApiBase::get_tau_adrc_param_(int id, uint8_t i, float* param) {
+  uint8_t data[1] = {i};
+  int ret = sendpend(id, SERVO_RW::R, reg_.TAU_ADRC_PARAM, data);
+  HexData::hex_to_fp32_big(&utrc_rx_.data[0], param, 1);
+  return ret;
+}
+int ServoApiBase::set_tau_adrc_param_(int id, uint8_t i, float param) {
+  uint8_t data[4];
+  HexData::fp32_to_hex_big(param, data);
+  uint8_t txdata[5] = {i, data[0], data[1], data[2], data[3]};
+  int ret = sendpend(id, SERVO_RW::W, reg_.TAU_ADRC_PARAM, txdata);
+  return ret;
+}
 
 int ServoApiBase::set_cpos_target_(uint8_t sid, uint8_t eid, float* pos) {
   int num = eid - sid + 1;
@@ -266,11 +307,13 @@ int ServoApiBase::set_cpos_target_(uint8_t sid, uint8_t eid, float* pos) {
 int ServoApiBase::get_spostau_current_(int id, int* num, float* pos, float* tau) {
   int ret = sendpend(id, SERVO_RW::R, reg_.SPOSTAU_CURRENT, NULL);
   *num = utrc_rx_.data[0];
-  int32_t pos_int = HexData::hex_to_int32_big(&utrc_rx_.data[1]);
-  int32_t tau_int = HexData::hex_to_int32_big(&utrc_rx_.data[5]);
+  HexData::hex_to_fp32_big(&utrc_rx_.data[1], pos, 1);
+  HexData::hex_to_fp32_big(&utrc_rx_.data[5], tau, 1);
+  // int32_t pos_int = HexData::hex_to_int32_big(&utrc_rx_.data[1]);
+  // int32_t tau_int = HexData::hex_to_int32_big(&utrc_rx_.data[5]);
 
-  *pos = SERVO_INT_TO_FP(pos_int);
-  *tau = SERVO_INT_TO_FP(tau_int);
+  // *pos = SERVO_INT_TO_FP(pos_int);
+  // *tau = SERVO_INT_TO_FP(tau_int);
   return ret;
 }
 

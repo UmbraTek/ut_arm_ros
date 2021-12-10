@@ -43,30 +43,33 @@ class SERVO_REG {
 
   const uint8_t POS_TARGET[5] = {0x30, 0, 4, 4, 0};
   const uint8_t POS_CURRENT[5] = {0x31, 0, 4, 0, 0};
-  const uint8_t POS_LIMIT_MIN[5] = {0x32, 0, 4, 4, 0};
-  const uint8_t POS_LIMIT_MAX[5] = {0x33, 0, 4, 4, 0};
+  const uint8_t POS_LIMIT_MAX[5] = {0x32, 0, 4, 4, 0};
+  const uint8_t POS_LIMIT_MIN[5] = {0x33, 0, 4, 4, 0};
   const uint8_t POS_LIMIT_DIFF[5] = {0x34, 0, 4, 4, 0};
   const uint8_t POS_PIDP[5] = {0x35, 0, 4, 4, 0};
   const uint8_t POS_SMOOTH_CYC[5] = {0x36, 0, 1, 1, 0};
+  const uint8_t POS_ADRC_PARAM[5] = {0x39, 1, 4, 5, 0};
   const uint8_t POS_CAL_ZERO[5] = {0x3F, ' ', ' ', 1, 0};
 
   const uint8_t VEL_TARGET[5] = {0x40, 0, 4, 4, 0};
   const uint8_t VEL_CURRENT[5] = {0x41, 0, 4, 0, 0};
-  const uint8_t VEL_LIMIT_MIN[5] = {0x42, 0, 4, 4, 0};
-  const uint8_t VEL_LIMIT_MAX[5] = {0x43, 0, 4, 4, 0};
+  const uint8_t VEL_LIMIT_MAX[5] = {0x42, 0, 4, 4, 0};
+  const uint8_t VEL_LIMIT_MIN[5] = {0x43, 0, 4, 4, 0};
   const uint8_t VEL_LIMIT_DIFF[5] = {0x44, 0, 4, 4, 0};
   const uint8_t VEL_PIDP[5] = {0x45, 0, 4, 4, 0};
   const uint8_t VEL_PIDI[5] = {0x46, 0, 4, 4, 0};
   const uint8_t VEL_SMOOTH_CYC[5] = {0x47, 0, 1, 1, 0};
+  const uint8_t VEL_ADRC_PARAM[5] = {0x49, 1, 4, 5, 0};
 
   const uint8_t TAU_TARGET[5] = {0x50, 0, 4, 4, 0};
   const uint8_t TAU_CURRENT[5] = {0x51, 0, 4, 0, 0};
-  const uint8_t TAU_LIMIT_MIN[5] = {0x52, 0, 4, 4, 0};
-  const uint8_t TAU_LIMIT_MAX[5] = {0x53, 0, 4, 4, 0};
+  const uint8_t TAU_LIMIT_MAX[5] = {0x52, 0, 4, 4, 0};
+  const uint8_t TAU_LIMIT_MIN[5] = {0x53, 0, 4, 4, 0};
   const uint8_t TAU_LIMIT_DIFF[5] = {0x54, 0, 4, 4, 0};
   const uint8_t TAU_PIDP[5] = {0x55, 0, 4, 4, 0};
   const uint8_t TAU_PIDI[5] = {0x56, 0, 4, 4, 0};
   const uint8_t TAU_SMOOTH_CYC[5] = {0x57, 0, 1, 1, 0};
+  const uint8_t TAU_ADRC_PARAM[5] = {0x59, 1, 4, 5, 0};
 
   uint8_t CPOS_TARGET[5] = {0x60, ' ', ' ', 0, ' '};
   const uint8_t SPOSTAU_CURRENT[5] = {0x68, 0, 8 + 1, ' ', ' '};

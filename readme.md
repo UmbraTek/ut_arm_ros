@@ -10,6 +10,7 @@ This repository contains the 3D models of utra series and demo packages for ROS 
 gazebo_ros_pkgs: <http://gazebosim.org/tutorials?tut=ros_installing> (if use Gazebo)   
 ros_control: <http://wiki.ros.org/ros_control> (remember to select your correct ROS distribution)  
 moveit_core: <https://moveit.ros.org/install/>  
+ros_industrial: <https://github.com/ros-industrial/industrial_core>(remember to select your correct ROS distribution)  
    
 ## 2.2 Go through the official tutorial documents
 ROS Wiki: <http://wiki.ros.org/>  
@@ -96,53 +97,33 @@ roslaunch utra6_850_moveit_gripper_config moveit_planning_execution.launch
 You can connect with utra and controll it in rviz.
 **Pay Attention** you need to very be careful the **Trajectory planning** in rviz , you must **Play** before the **Excute** every time to make sure that the generated trajectory is not **Collision**. We suggest that make utra with a good posture by select the **init** posture in **MotionPlanning->Planning->Goal state**.
 
-Launch the Rviz and connect the utra 550
-```bash
-roslaunch utra6_550_moveit_config run_with_utra.launch utra_ip:="utra_ip_address"
-```
-Launch the Rviz and connect the utra 850
-```bash
-roslaunch utra6_850_moveit_config run_with_utra.launch utra_ip:="utra_ip_address"
-```
-
-Launch the Rviz and connect the utra 1000
-```bash
-roslaunch utra6_1000_moveit_config run_with_utra.launch utra_ip:="utra_ip_address"
-```
-
-# 7. Excute the command to communicate with server 
-
-## 7.1 Launch the server to connect the utra
+## 6.1 Launch the server to connect the utra
 
 ```bash
 roslaunch utra_controller utra_server.launch utra_ip:="utra_ip_address"   //utra_ip_address like 192.168.1.234
 ```
-## 7.2 Communication with utra through the rosservice command
+## 6.2 Enable the utra
 
-Server's communication interface is below:
+you need open the utra studio to enable the utra 
 
+## 6.3 Open the Rviz
+
+please install the ros_industrial: <https://github.com/ros-industrial/industrial_core>(remember to select your correct ROS distribution) 
+
+Launch the Rviz and connect the utra 550
+```bash
+roslaunch utra6_550_moveit_config run_with_utra.launch 
 ```
-string api_name
-string[] args
----
-string[] rets
-
+Launch the Rviz and connect the utra 850
+```bash
+roslaunch utra6_850_moveit_config run_with_utra.launch 
 ```
 
-
-There are the server call examle below:
-
+Launch the Rviz and connect the utra 1000
+```bash
+roslaunch utra6_1000_moveit_config run_with_utra.launch 
 ```
-rosservice call /utra_server "connect" "['192.168.1.234']" //arg: [IP]. first time you roslaunch the server,it will connect automatic, so you don't need to connec again.
-rosservice call /utra_server "disconnect" "[]"  
 
-rosservice call /utra_server "get_motion_enable" "[]"
-rosservice call /utra_server "set_motion_enable" "['1']"     //set motion enable arg is '1' or '0'
+# 7. Excute the command to communicate with server 
 
-rosservice call /utra_server "get_motion_status" "[]"
-rosservice call /utra_server "set_motion_status" "['0']"  //0  :normal 1  : move  2  :sleep  3  :pause 4  : stop
 
-rosservice call /utra_server "move_joints" "['1.2','1.2','1.2','0.2','0.2','0.2','0.4','60']"  //set utra move to joints [j1,j2,j3,j4,j5,j6,velicity,acceleration] joint's unit is rad, velicity is rad/s, acceleration is rad/s²
-
-rosservice call /utra_server "move_line" "[x,y,z,roll,pitch,yaw,velicity,acceleration]" x,y,z unit is mm, roll, pitch, yaw unit is rad, velecity unit is mm/s, acceleration unit is mm/s²
-```

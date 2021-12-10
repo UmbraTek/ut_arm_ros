@@ -4,14 +4,25 @@ SET(CMAKE_CXX_FLAGS "-std=c++11")
 project(utra_controller)
 
 ## Find catkin and any catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs genmsg actionlib control_msgs utra_api)
+find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs genmsg actionlib control_msgs utra_api utra_msg)
 
 ## Declare ROS messages and services
-# add_message_files(FILES AdraMsg.msg)
-add_service_files(FILES Api.srv)
+# add_message_files(
+#     FILES 
+#     RobotMsg.msg
+#     )
+
+# add_service_files(
+#     FILES 
+#     Api.srv
+#     Connect.srv
+#     Disconnect.srv
+#     Checkconnect.srv
+#     )
 
 ## Generate added messages and services
-generate_messages(DEPENDENCIES std_msgs)
+generate_messages(DEPENDENCIES std_msgs )
+
 
 ## Declare a catkin package
 # catkin_package(INCLUDE_DIRS src/utapi)
@@ -58,5 +69,9 @@ add_dependencies(joint_trajectory_1000 utra_controller_gencpp)
 add_executable(utra_server src/utra_server.cpp)
 target_link_libraries(utra_server ${catkin_LIBRARIES} utra_api)
 add_dependencies(utra_server utra_server_gencpp)
+
+add_executable(utra_publish src/utra_publish.cpp)
+target_link_libraries(utra_publish ${catkin_LIBRARIES} utra_api)
+add_dependencies(utra_publish utra_publish_gencpp)
 
 

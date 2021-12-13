@@ -125,5 +125,33 @@ roslaunch utra6_1000_moveit_config run_with_utra.launch
 ```
 
 # 7. Excute the command to communicate with server 
+All servers are implemented in utra_server.cpp of utra_controller package.
+
+All msg are in utra_msg package.
+
+## 7.1 Communication with utra through the rosservice command
 
 
+Connect service, refer to [Connect.srv](/utra_msg/srv/Connect.srv),[Disconnect.srv](/utra_msg/srv/Disconnect.srv),[Checkconnect.srv](/utra_msg/srv/Checkconnect.srv)
+
+```
+rosservice call /utra/connect "192.168.1.234" 
+rosservice call /utra/disconnect 
+rosservice call /utra/check_connect 
+```
+
+Gripper service, refer to [GripperStateSet.srv](/utra_msg/srv/GripperStateSet.srv),[GripperStateGet.srv](/utra_msg/srv/GripperStateGet.srv),[Grippermv.srv](/utra_msg/srv/Grippermv.srv)
+
+```
+rosservice call /utra/gripper_state_set 1  
+rosservice call /utra/gripper_state_get 
+rosservice call /utra/gripper_mv 20
+```
+
+# 8. Utra Rviz plugin
+
+you can open the utra rviz plugin by select Menu->Panels->utra_rviz->utra_panel
+![RVIZ1](./doc/rviz1.png)  
+
+In this panel, you can enable the utra and set the gripper more easy.
+![RVIZ2](./doc/rviz2.png)  

@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rviz
   std_msgs
+  utra_msg
 )
 
 ## System dependencies are found with CMake's conventions

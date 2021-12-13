@@ -30,6 +30,7 @@ add_library(${PROJECT_NAME} STATIC
     src/utra/utra_api_tcp.cpp
     src/utra/utra_report_status.cpp
     src/utra/utra_report_config.cpp
+    src/utra/utra_flxie_api.cpp
     )
 
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} rt pthread)

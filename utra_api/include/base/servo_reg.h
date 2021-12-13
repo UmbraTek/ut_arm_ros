@@ -35,7 +35,7 @@ class SERVO_REG {
   const uint8_t MOTION_ENABLE[5] = {0x21, 0, 1, 1, 0};
   const uint8_t BRAKE_ENABLE[5] = {0x22, 0, 1, 1, 0};
   const uint8_t TEMP_DRIVER[5] = {0x28, 0, 4, ' ', ' '};
-  const uint8_t TEMP_MOTO[5] = {0x29, 0, 4, ' ', ' '};
+  const uint8_t TEMP_MOTOR[5] = {0x29, 0, 4, ' ', ' '};
   const uint8_t BUS_VOLT[5] = {0x2A, 0, 4, ' ', ' '};
   const uint8_t BUS_CURR[5] = {0x2B, 0, 4, ' ', ' '};
   const uint8_t MULTI_VOLT[5] = {0x2C, 0, 4, ' ', ' '};

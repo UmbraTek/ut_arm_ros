@@ -43,7 +43,7 @@ class ArmApiBase {
   int set_cmd_num(int num);
 
   int moveto_cartesian_line(float* mvpose, float mvvelo, float mvacc, float mvtime);
-  int moveto_cartesian_line(float* mvpose, float mvvelo, float mvacc, float mvtime, float mvradii);
+  int moveto_cartesian_lineb(float* mvpose, float mvvelo, float mvacc, float mvtime, float mvradii);
   int moveto_cartesian_p2p(void);
   int moveto_cartesian_p2pb(void);
   int moveto_cartesian_circle(float* pose1, float* pose2, float mvvelo, float mvacc, float mvtime, float percent);
@@ -83,6 +83,46 @@ class ArmApiBase {
   int get_fk(void);
   int is_joint_limit(void);
   int is_tcp_limit(void);
+
+  int get_friction(uint8_t axis, float* value);
+  int set_friction(uint8_t axis, float* fri);
+
+  int get_utrc_int8_now(uint8_t line, uint8_t id, uint8_t reg, uint8_t* value);
+  int set_utrc_int8_now(uint8_t line, uint8_t id, uint8_t reg, uint8_t value);
+  int get_utrc_int32_now(uint8_t line, uint8_t id, uint8_t reg, int32_t* value);
+  int set_utrc_int32_now(uint8_t line, uint8_t id, uint8_t reg, int32_t value);
+  int get_utrc_float_now(uint8_t line, uint8_t id, uint8_t reg, float* value);
+  int set_utrc_float_now(uint8_t line, uint8_t id, uint8_t reg, float value);
+  int get_utrc_int8n_now(uint8_t line, uint8_t id, uint8_t reg, uint8_t* data, uint8_t rx_len);
+  int set_utrc_int8n_now(uint8_t line, uint8_t id, uint8_t reg, uint8_t* data, uint8_t tx_len);
+
+  int set_utrc_int8_que(uint8_t line, uint8_t id, uint8_t reg, uint8_t value);
+  int set_utrc_int32_que(uint8_t line, uint8_t id, uint8_t reg, int32_t value);
+  int set_utrc_float_que(uint8_t line, uint8_t id, uint8_t reg, float value);
+  int set_utrc_int8n_que(uint8_t line, uint8_t id, uint8_t reg, uint8_t* data, uint8_t tx_len);
+
+  int set_pass_rs485_now(uint8_t line, uint8_t timeout_ms, uint8_t tx_len, uint8_t rx_len, uint8_t* tx_data, uint8_t* rx_data);
+  int set_pass_rs485_que(uint8_t line, uint8_t tx_len, uint8_t* tx_data);
+
+  int get_utrc_u8float_now(uint8_t line, uint8_t id, uint8_t reg, uint8_t num, float* value);
+  int set_utrc_u8float_now(uint8_t line, uint8_t id, uint8_t reg, uint8_t num, float value);
+
+  int get_gpio_in(uint8_t line, uint8_t id, int32_t* fun, int32_t* digit, int* adc_num, float* adc_value);
+  int get_tgpio_in(int32_t* fun, int32_t* digit, int* adc_num, float* adc_value);
+  int get_cgpio_in(int32_t* fun, int32_t* digit, int* adc_num, float* adc_value);
+  int get_gpio_out(uint8_t line, uint8_t id, int32_t* fun, int32_t* digit, int* adc_num, float* adc_value);
+  int get_tgpio_out(int32_t* fun, int32_t* digit, int* adc_num, float* adc_value);
+  int get_cgpio_out(int32_t* fun, int32_t* digit, int* adc_num, float* adc_value);
+
+  int set_tgpio_digit_out(int value);
+  int set_cgpio_digit_out(int value);
+
+  int get_cgpio_uuid(uint8_t* value);
+  int get_cgpio_sw_version(uint8_t* value);
+  int get_cgpio_hw_version(uint8_t* value);
+  int get_tgpio_uuid(uint8_t* value);
+  int get_tgpio_sw_version(uint8_t* value);
+  int get_tgpio_hw_version(uint8_t* value);
 
  protected:
   ARM_REG* reg_;

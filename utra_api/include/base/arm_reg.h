@@ -11,9 +11,9 @@
 
 class RS485_LINE {
  public:
-  const uint8_t SERVO = 92;
-  const uint8_t TGPIO = 2;
-  const uint8_t CGPIO = 3;
+  static const uint8_t SERVO = 92;
+  static const uint8_t TGPIO = 2;
+  static const uint8_t CGPIO = 3;
 };
 
 class ARM_REG {
@@ -76,15 +76,15 @@ class ARM_REG {
   const uint8_t UTRC_INT8_NOW[5] = {0x60, 3, 2, 4, 1};
   const uint8_t UTRC_INT32_NOW[5] = {0x61, 3, 8, 7, 1};
   const uint8_t UTRC_FP32_NOW[5] = {0x62, 3, 8, 7, 1};
-  const uint8_t UTRC_INT8N_NOW[5] = {0x63, 4, 0x55, 0x55, 1};
+  uint8_t UTRC_INT8N_NOW[5] = {0x63, 4, 0x55, 0x55, 1};
 
   const uint8_t UTRC_INT8_QUE[5] = {0x64, ' ', ' ', 4, 0};
   const uint8_t UTRC_INT32_QUE[5] = {0x65, ' ', ' ', 7, 0};
   const uint8_t UTRC_FP32_QUE[5] = {0x66, ' ', ' ', 7, 0};
-  const uint8_t UTRC_INT8N_QUE[5] = {0x67, ' ', ' ', 0x55, 0};
+  uint8_t UTRC_INT8N_QUE[5] = {0x67, ' ', ' ', 0x55, 0};
 
-  const uint8_t PASS_RS485_NOW[5] = {0x68, ' ', ' ', 0x55, 0x55};
-  const uint8_t PASS_RS485_QUE[5] = {0x69, ' ', ' ', 0x55, 0};
+  uint8_t PASS_RS485_NOW[5] = {0x68, ' ', ' ', 0x55, 0x55};
+  uint8_t PASS_RS485_QUE[5] = {0x69, ' ', ' ', 0x55, 0};
 
   const uint8_t UTRC_U8FP32_NOW[5] = {0x6A, 4, 8, 8, 1};
   const uint8_t GPIO_IN[5] = {0x6E, 2, 0x55, ' ', ' '};

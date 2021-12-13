@@ -6,37 +6,30 @@
  ============================================================================*/
 #include "ros/ros.h"
 #include "utra/utra_api_tcp.h"
+#include "utra/utra_flxie_api.h"
 
-#include "utra_msg/Api.h"
 #include "utra_msg/Connect.h"
 #include "utra_msg/Disconnect.h"
 #include "utra_msg/Checkconnect.h"
 #include "utra_msg/Mservojoint.h"
+#include "utra_msg/Grippermv.h"
+#include "utra_msg/EnableGet.h"
+#include "utra_msg/EnableSet.h"
+#include "utra_msg/StatusGet.h"
+#include "utra_msg/StatusSet.h"
+#include "utra_msg/ModeGet.h"
+#include "utra_msg/ModeSet.h"
+#include "utra_msg/GripperStateGet.h"
+#include "utra_msg/GripperStateSet.h"
 
 UtraApiTcp *utra = NULL;
+UtraFlxiE2Api *fixi = NULL;
+
 std::string utra_ip = "";
 
 constexpr unsigned int hash(const char *s, int off = 0) { return !s[off] ? 5381 : (hash(s, off + 1) * 33) ^ s[off]; }
-bool check_connect(utra_msg::Api::Response &res) {
-  if (utra == NULL) {
-    res.rets.push_back("-1");
-    res.rets.push_back("controller have not connect utra");
-    return false;
-  } else {
-    return true;
-  }
-}
-bool check_arg_count(utra_msg::Api::Request &req, utra_msg::Api::Response &res, int count) {
-  if (req.args.size() < count) {
-    res.rets.push_back("-1");
-    char str[25];
-    sprintf(str, "args's count must, %d", count);
-    res.rets.push_back(str);
-    return false;
-  } else {
-    return true;
-  }
-}
+
+
 bool connect_api(utra_msg::Connect::Request &req, utra_msg::Connect::Response &res) {
   if (utra != NULL) {
     res.ret=0;
@@ -90,100 +83,40 @@ bool check_c_api(utra_msg::Checkconnect::Request &req, utra_msg::Checkconnect::R
   return true;
 }
 
-void move_joints(utra_msg::Api::Request &req, utra_msg::Api::Response &res) {
-  if (check_connect(res) == false) return;
-  if (check_arg_count(req, res, 8) == false) return;
+// void move_joints(utra_msg::Api::Request &req, utra_msg::Api::Response &res) {
+//   if (check_connect(res) == false) return;
+//   if (check_arg_count(req, res, 8) == false) return;
 
-  float j1 = std::stof(req.args[0].c_str());
-  float j2 = std::stof(req.args[1].c_str());
-  float j3 = std::stof(req.args[2].c_str());
-  float j4 = std::stof(req.args[3].c_str());
-  float j5 = std::stof(req.args[4].c_str());
-  float j6 = std::stof(req.args[5].c_str());
-  float speed = std::stof(req.args[6].c_str());
-  float acc = std::stof(req.args[7].c_str());
-  float joint[6] = {j1, j2, j3, j4, j5, j6};
-  ROS_INFO("move_joints");
-  int ret = utra->moveto_joint_p2p(joint, speed, acc, 0);
-  res.rets.push_back(std::to_string(ret));
-}
-void move_line(utra_msg::Api::Request &req, utra_msg::Api::Response &res) {
-  if (check_connect(res) == false) return;
-  if (check_arg_count(req, res, 8) == false) return;
+//   float j1 = std::stof(req.args[0].c_str());
+//   float j2 = std::stof(req.args[1].c_str());
+//   float j3 = std::stof(req.args[2].c_str());
+//   float j4 = std::stof(req.args[3].c_str());
+//   float j5 = std::stof(req.args[4].c_str());
+//   float j6 = std::stof(req.args[5].c_str());
+//   float speed = std::stof(req.args[6].c_str());
+//   float acc = std::stof(req.args[7].c_str());
+//   float joint[6] = {j1, j2, j3, j4, j5, j6};
+//   ROS_INFO("move_joints");
+//   int ret = utra->moveto_joint_p2p(joint, speed, acc, 0);
+//   res.rets.push_back(std::to_string(ret));
+// }
+// void move_line(utra_msg::Api::Request &req, utra_msg::Api::Response &res) {
+//   if (check_connect(res) == false) return;
+//   if (check_arg_count(req, res, 8) == false) return;
 
-  float x = std::stof(req.args[0].c_str());
-  float y = std::stof(req.args[1].c_str());
-  float z = std::stof(req.args[2].c_str());
-  float roll = std::stof(req.args[3].c_str());
-  float pitch = std::stof(req.args[4].c_str());
-  float yaw = std::stof(req.args[5].c_str());
-  float speed = std::stof(req.args[6].c_str());
-  float acc = std::stof(req.args[7].c_str());
-  float pos[6] = {x, y, z, roll, pitch, yaw};
-  int ret = utra->moveto_cartesian_line(pos, speed, acc, 0);
-  res.rets.push_back(std::to_string(ret));
-}
+//   float x = std::stof(req.args[0].c_str());
+//   float y = std::stof(req.args[1].c_str());
+//   float z = std::stof(req.args[2].c_str());
+//   float roll = std::stof(req.args[3].c_str());
+//   float pitch = std::stof(req.args[4].c_str());
+//   float yaw = std::stof(req.args[5].c_str());
+//   float speed = std::stof(req.args[6].c_str());
+//   float acc = std::stof(req.args[7].c_str());
+//   float pos[6] = {x, y, z, roll, pitch, yaw};
+//   int ret = utra->moveto_cartesian_line(pos, speed, acc, 0);
+//   res.rets.push_back(std::to_string(ret));
+// }
 
-void get_motion_enable(utra_msg::Api::Request &req, utra_msg::Api::Response &res) {
-  if (check_connect(res) == false) return;
-  int able = -1;
-  int ret = utra->get_motion_enable(&able);
-  if (ret == -3) {
-    res.rets.push_back("-3");
-    res.rets.push_back("can not connect the utra");
-    return;
-  }
-  if (able == 63) {
-    res.rets.push_back(std::to_string(ret));
-    res.rets.push_back("motion is enable");
-  } else {
-    res.rets.push_back(std::to_string(ret));
-    res.rets.push_back("motion is disable");
-  }
-  return;
-}
-void set_motion_enable(utra_msg::Api::Request &req, utra_msg::Api::Response &res) {
-  if (check_connect(res) == false) return;
-  if (check_arg_count(req, res, 1) == false) return;
-  int en = std::stoi(req.args[0].c_str());
-  int ret = utra->set_motion_enable(100, en);
-  res.rets.push_back(std::to_string(ret));
-}
-
-void get_motion_status(utra_msg::Api::Request &req, utra_msg::Api::Response &res) {
-  if (check_connect(res) == false) return;
-  uint8_t status = -1;
-  int ret = utra->get_motion_status(&status);
-  if (ret == -3) {
-    res.rets.push_back("-3");
-    res.rets.push_back("can not connect the utra");
-    return;
-  }
-  // #set 4 to stop motion ,it will clear all move cammand
-  // #set 3 to pause motion,it can play again
-  // # 2 is sleep
-  // # 1 is move
-  // # 0 is NORMAL
-  res.rets.push_back(std::to_string(ret));
-  switch (status) {
-    case 0:
-      res.rets.push_back("current status is normal");
-      break;
-    case 1:
-      res.rets.push_back("current status is moving");
-      break;
-    case 2:
-      res.rets.push_back("current status is sleeping");
-      break;
-    case 3:
-      res.rets.push_back("current status is pause");
-      break;
-    case 4:
-      res.rets.push_back("current status is stop");
-      break;
-  }
-  return;
-}
 
 void print_joints(float* frames,int con)
 {
@@ -251,15 +184,137 @@ bool mv_servo_joint(utra_msg::Mservojoint::Request &req, utra_msg::Mservojoint::
   return true;
 }
 
-void set_motion_status(utra_msg::Api::Request &req, utra_msg::Api::Response &res) {
-  if (check_connect(res) == false) return;
-  if (check_arg_count(req, res, 1) == false) return;
-  int status = std::stoi(req.args[0].c_str());
-  int ret = utra->set_motion_status(status);
-  res.rets.push_back(std::to_string(ret));
+
+bool gripper_state_set(utra_msg::GripperStateSet::Request &req, utra_msg::GripperStateSet::Response &res) {
+  ROS_INFO("state value: %d",req.state);
+  if(utra == NULL){
+    res.ret=-3;
+    res.message="server have not connected utra";
+    return true;
+  }
+  if(req.state == 1){
+    if(fixi == NULL){
+      fixi = new UtraFlxiE2Api(utra, 101);
+    }
+    int ret = fixi->set_motion_mode(1);
+    ROS_INFO("set_motion_mode: %d\n", ret);
+    ret = fixi->set_motion_enable(1);
+    printf("set_motion_enable: %d\n", ret);
+    float value;
+    ret = fixi->get_pos_target(&value);
+    res.pos = value;
+    res.message="OK";
+    return true;
+  }
+  if(req.state == 0){
+    if(fixi == NULL){
+      res.ret=0;
+      res.message="server have not connected gripper";
+      return true;
+    }else{
+      int ret = fixi->set_motion_mode(0);
+      ROS_INFO("set_motion_mode: %d\n", ret);
+      ret = fixi->set_motion_enable(0);
+      printf("set_motion_enable: %d\n", ret);
+      res.ret=ret;
+      res.message="OK";
+      return true;
+    }
+  }
+  return true;
+}
+bool gripper_state_get(utra_msg::GripperStateGet::Request &req, utra_msg::GripperStateGet::Response &res) {
+    if(fixi == NULL){
+      res.ret=-3;
+      res.enable=0;
+      res.message="server have not connected gripper";
+      return true;
+    }else{
+      float value;
+      int ret = fixi->get_pos_target(&value);
+      uint8_t enable;
+      ret = fixi->get_motion_enable(&enable);
+      res.ret=ret;
+      res.enable=enable;
+      res.pos=value;
+      res.message="OK";
+      return true;
+    }
+  
+  return true;
+}
+bool gripper_mv(utra_msg::Grippermv::Request &req, utra_msg::Grippermv::Response &res) {
+  if(utra == NULL || fixi == NULL){
+    res.ret=-3;
+    res.message="server have not connected utra or gripper";
+    return true;
+  }
+  int ret = fixi->set_pos_target(req.pos);
+  res.ret=ret;
+  res.message="OK";
+  return true;
 }
 
-
+bool status_set(utra_msg::StatusSet::Request &req, utra_msg::StatusSet::Response &res) {
+  if(utra == NULL)
+  {
+    res.ret=-3;
+  }
+  int ret = utra->set_motion_status(req.status);
+  res.ret=ret;
+  return true;
+}
+bool status_get(utra_msg::StatusGet::Request &req, utra_msg::StatusGet::Response &res) {
+  if(utra == NULL)
+  {
+    res.ret=-3;
+  }
+  uint8_t status;
+  int ret = utra->get_motion_status(&status);
+  res.ret=ret;
+  res.status = status;
+  return true;
+}
+bool mode_set(utra_msg::ModeSet::Request &req, utra_msg::ModeSet::Response &res) {
+  if(utra == NULL)
+  {
+    res.ret=-3;
+  }
+  int ret = utra->set_motion_mode(req.mode);
+  res.ret=ret;
+  return true;
+}
+bool mode_get(utra_msg::ModeGet::Request &req, utra_msg::ModeGet::Response &res) {
+  if(utra == NULL)
+  {
+    res.ret=-3;
+  }
+  uint8_t mode;
+  int ret = utra->get_motion_mode(&mode);
+  res.ret=ret;
+  res.mode = mode;
+  return true;
+}
+bool enable_set(utra_msg::EnableSet::Request &req, utra_msg::EnableSet::Response &res) {
+  if(utra == NULL)
+  {
+    res.ret=-3;
+  }
+  int ret = utra->set_motion_enable(req.axis,req.enable);
+  res.ret=ret;
+  return true;
+}
+bool enable_get(utra_msg::EnableGet::Request &req, utra_msg::EnableGet::Response &res) {
+  if(utra == NULL)
+  {
+    res.ret=-3;
+  }
+  int enable;
+  int ret = utra->get_motion_enable(&enable);
+  res.ret=ret;
+  res.enable = enable;
+  return true;
+}
 int main(int argc, char **argv) {
   ros::init(argc, argv, "utra_server");
   ros::NodeHandle nh;
@@ -289,6 +344,17 @@ int main(int argc, char **argv) {
   ros::ServiceServer disconnect = nh.advertiseService("utra/disconnect", disconnect_api);
   ros::ServiceServer check_c = nh.advertiseService("utra/check_connect", check_c_api);
   ros::ServiceServer mservojoint = nh.advertiseService("utra/mv_servo_joint", mv_servo_joint);
+  
+  ros::ServiceServer statusset = nh.advertiseService("utra/status_set", status_set);
+  ros::ServiceServer statusget = nh.advertiseService("utra/status_get", status_get);
+  ros::ServiceServer modeset = nh.advertiseService("utra/mode_set", mode_set);
+  ros::ServiceServer modeget = nh.advertiseService("utra/mode_get", mode_get);
+  ros::ServiceServer enableset = nh.advertiseService("utra/enable_set", enable_set);
+  ros::ServiceServer enableget = nh.advertiseService("utra/enable_get", enable_get);
+
+  ros::ServiceServer grippermv = nh.advertiseService("utra/gripper_mv", gripper_mv);
+  ros::ServiceServer gripperstateset = nh.advertiseService("utra/gripper_state_set", gripper_state_set);
+  ros::ServiceServer gripperstateget = nh.advertiseService("utra/gripper_state_get", gripper_state_get);
 
   ROS_INFO("Ready for utra server.");
   ros::spin();

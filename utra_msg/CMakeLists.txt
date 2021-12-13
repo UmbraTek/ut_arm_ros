@@ -54,11 +54,19 @@ add_message_files(
 
 add_service_files(
     FILES 
-    Api.srv
     Connect.srv
     Disconnect.srv
     Checkconnect.srv
     Mservojoint.srv
+    Grippermv.srv
+    StatusGet.srv
+    StatusSet.srv
+    EnableGet.srv
+    EnableSet.srv
+    ModeGet.srv
+    ModeSet.srv
+    GripperStateSet.srv
+    GripperStateGet.srv
     )
 
 ## Generate actions in the 'action' folder

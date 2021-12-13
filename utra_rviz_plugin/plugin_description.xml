@@ -1,5 +1,5 @@
  <library path="lib/libutra_rviz">
-    <class name="utra_rviz_space/utra_control"
+    <class name="utra_rviz_space/utra_panel"
             type="utra_rviz_space::utra_rviz"
             base_class_type="rviz::Panel">
     <description>

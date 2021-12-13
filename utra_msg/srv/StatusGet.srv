@@ -1,0 +1,7 @@
+#Service name: utra/status_get
+
+---
+# response: get utra status 0:nomal 1:moveing 2:sleep 3:pause 4:stop
+
+int16 ret
+int16 status

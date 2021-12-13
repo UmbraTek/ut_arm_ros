@@ -189,7 +189,7 @@ int ServoApiBase::get_brake_enable_(int id, uint8_t* able) { return get_reg_int8
 int ServoApiBase::set_brake_enable_(int id, uint8_t able) { return set_reg_int8(id, able, reg_.BRAKE_ENABLE); }
 
 int ServoApiBase::get_temp_driver_(int id, float* temp) { return get_reg_fp32(id, temp, reg_.TEMP_DRIVER); }
-int ServoApiBase::get_temp_motor_(int id, float* temp) { return get_reg_fp32(id, temp, reg_.TEMP_MOTO); }
+int ServoApiBase::get_temp_motor_(int id, float* temp) { return get_reg_fp32(id, temp, reg_.TEMP_MOTOR); }
 int ServoApiBase::get_bus_volt_(int id, float* volt) { return get_reg_fp32(id, volt, reg_.BUS_VOLT); }
 int ServoApiBase::get_bus_curr_(int id, float* curr) { return get_reg_fp32(id, curr, reg_.BUS_CURR); }
 int ServoApiBase::get_multi_volt_(int id, float* volt) { return get_reg_fp32(id, volt, reg_.MULTI_VOLT); }

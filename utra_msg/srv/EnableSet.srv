@@ -1,0 +1,9 @@
+#Service name: utra/enable_set
+# request: set utra enable 
+#    axis (int): Joint axis, if it is greater than the maximum number of joints, set all joints
+#    en (bool): 1-enable, 0-disable
+
+int16 axis
+int16 enable
+---
+int16 ret

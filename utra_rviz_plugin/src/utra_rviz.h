@@ -20,6 +20,7 @@
 #include <QDebug>
 #include <QCheckBox>
 #include <QSlider>
+#include <utra_msg/RobotMsg.h>
 namespace utra_rviz_space {
 class utra_rviz:public rviz::Panel
 {
@@ -32,12 +33,17 @@ public:
     virtual void save( rviz::Config config ) const;
     void move_base(char k,float speed_linear,float speed_trun);
 public Q_SLOTS:
-    void slot_utra_rviz();
-    void on_Slider_raw_valueChanged(int);
+    void set_gripper_pos();
+    void enable_gripper();
+    void resumeState();
+    void enable();
+    void e_stop();
+    void check_connect();
     // 内部变量.
 protected:
-    QLineEdit* ip_addrees;
-    QPushButton* connectButton;
+    QLabel* ip_lable;
+    QLabel* ip_addrees;
+    QPushButton* checkConnect;
 
     QLabel* utraStatus;
     QCheckBox* utraEnable;
@@ -45,22 +51,35 @@ protected:
     QPushButton* resume;
 
     QLabel* gripperLabel;
+    QCheckBox* gripperEnable;
     QLineEdit* gripperEdit;
     QPushButton* gripperButton;
 
     QSlider* yaw_slider;
     QSlider* linera_slider;
     // ROS的publisher，用来发布速度topic
-    ros::Publisher velocity_publisher_;
-    QString output_topic_="cmd_vel";
+    // ros::Publisher velocity_publisher_;
+    // QString output_topic_="cmd_vel";
 
     // The ROS node handle.
     ros::NodeHandle nh_;
+    ros::ServiceClient Grippermv_client;
+    ros::ServiceClient Gripperstate_get;
+    ros::ServiceClient Gripperstate_set;
+    ros::Subscriber utra_states_sub;
+
+    ros::ServiceClient status_set_client;
+    ros::ServiceClient mode_set_client;
+    ros::ServiceClient enable_set_client;
+    ros::ServiceClient checkconnect_client;
 
     // 当前保存的线速度和角速度值
     float linear_velocity_;
     float angular_velocity_;
 
+    void refreshUI();
+    void statesCallback(const utra_msg::RobotMsg &msg);
+    
 };
 }
 

@@ -15,11 +15,11 @@
 #include "utra_msg/GripperStateGet.h"
 #include "utra_msg/GripperStateSet.h"
 #include "utra_msg/Grippermv.h"
-#include "utra_msg/StatusSet.h"
-#include "utra_msg/ModeSet.h"
 #include "utra_msg/EnableSet.h"
 #include "utra_msg/Checkconnect.h"
 #include <utra_msg/RobotMsg.h>
+#include "utra_msg/SetInt16.h"
+#include "utra_msg/GetInt16.h"
 
 
 
@@ -216,15 +216,15 @@ void utra_rviz::enable_gripper(){
     }
 }
 void utra_rviz::resumeState(){
-    utra_msg::ModeSet srv1;
-    srv1.request.mode = 0;
+    utra_msg::SetInt16 srv1;
+    srv1.request.data = 0;
     if(mode_set_client.call(srv1))
     {
         ROS_INFO("mode_set ret %d,",srv1.response.ret);
     }
 
-    utra_msg::StatusSet srv;
-    srv.request.status = 0;
+    utra_msg::SetInt16 srv;
+    srv.request.data = 0;
     if(status_set_client.call(srv))
     {
         ROS_INFO("status_set ret %d,",srv.response.ret);
@@ -248,15 +248,15 @@ void utra_rviz::enable(){
     }
 }
 void utra_rviz::e_stop(){
-    utra_msg::ModeSet srv1;
-    srv1.request.mode = 0;
+    utra_msg::SetInt16 srv1;
+    srv1.request.data = 0;
     if(mode_set_client.call(srv1))
     {
         ROS_INFO("mode_set ret %d,",srv1.response.ret);
     }
 
-    utra_msg::StatusSet srv;
-    srv.request.status = 4;
+    utra_msg::SetInt16 srv;
+    srv.request.data = 4;
     if(status_set_client.call(srv))
     {
         ROS_INFO("status_set ret %d,",srv.response.ret);

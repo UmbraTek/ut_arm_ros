@@ -147,6 +147,7 @@ rosservice call /utra/gripper_state_set 1
 rosservice call /utra/gripper_state_get 
 rosservice call /utra/gripper_mv 20
 ```
+more service introduction [service.md](/utra_controller/readme.md)
 
 # 8. Utra Rviz plugin
 

@@ -59,14 +59,11 @@ add_service_files(
     Checkconnect.srv
     Mservojoint.srv
     Grippermv.srv
-    StatusGet.srv
-    StatusSet.srv
-    EnableGet.srv
     EnableSet.srv
-    ModeGet.srv
-    ModeSet.srv
     GripperStateSet.srv
     GripperStateGet.srv
+    GetInt16.srv
+    SetInt16.srv
     )
 
 ## Generate actions in the 'action' folder

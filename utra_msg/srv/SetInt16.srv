@@ -1,10 +1,18 @@
-#Service name: utra/mode_set
+# Service name: utra/status_set
+# request: set utra status 0:nomal 3:pause 4:stop
+
+# Service name: utra/mode_set
 # request: set utra mode 
 #        0: position control mode
 #        1: servo motion mode, users must set to this mode first before using the moveto_servoj interface.
 #        2: joint teaching mode
 #        3: cartesian teaching mode (NOT used in current version)
 
-int16 mode
+int16 data
+
 ---
+
+# response: 
+#	ret is 0: successful  -3:disconnect  other:have error
+
 int16 ret

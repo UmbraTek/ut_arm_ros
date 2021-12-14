@@ -1,6 +1,0 @@
-#Service name: utra/status_set
-# request: set utra status 0:nomal 3:pause 4:stop
-
-int16 status
----
-int16 ret

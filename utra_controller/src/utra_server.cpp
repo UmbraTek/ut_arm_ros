@@ -13,14 +13,11 @@
 #include "utra_msg/Checkconnect.h"
 #include "utra_msg/Mservojoint.h"
 #include "utra_msg/Grippermv.h"
-#include "utra_msg/EnableGet.h"
 #include "utra_msg/EnableSet.h"
-#include "utra_msg/StatusGet.h"
-#include "utra_msg/StatusSet.h"
-#include "utra_msg/ModeGet.h"
-#include "utra_msg/ModeSet.h"
 #include "utra_msg/GripperStateGet.h"
 #include "utra_msg/GripperStateSet.h"
+#include "utra_msg/GetInt16.h"
+#include "utra_msg/SetInt16.h"
 
 UtraApiTcp *utra = NULL;
 UtraFlxiE2Api *fixi = NULL;
@@ -255,16 +252,16 @@ bool gripper_mv(utra_msg::Grippermv::Request &req, utra_msg::Grippermv::Response
   return true;
 }
 
-bool status_set(utra_msg::StatusSet::Request &req, utra_msg::StatusSet::Response &res) {
+bool status_set(utra_msg::SetInt16::Request &req, utra_msg::SetInt16::Response &res) {
   if(utra == NULL)
   {
     res.ret=-3;
   }
-  int ret = utra->set_motion_status(req.status);
+  int ret = utra->set_motion_status(req.data);
   res.ret=ret;
   return true;
 }
-bool status_get(utra_msg::StatusGet::Request &req, utra_msg::StatusGet::Response &res) {
+bool status_get(utra_msg::GetInt16::Request &req, utra_msg::GetInt16::Response &res) {
   if(utra == NULL)
   {
     res.ret=-3;
@@ -272,19 +269,19 @@ bool status_get(utra_msg::StatusGet::Request &req, utra_msg::StatusGet::Response
   uint8_t status;
   int ret = utra->get_motion_status(&status);
   res.ret=ret;
-  res.status = status;
+  res.data = status;
   return true;
 }
-bool mode_set(utra_msg::ModeSet::Request &req, utra_msg::ModeSet::Response &res) {
+bool mode_set(utra_msg::SetInt16::Request &req, utra_msg::SetInt16::Response &res) {
   if(utra == NULL)
   {
     res.ret=-3;
   }
-  int ret = utra->set_motion_mode(req.mode);
+  int ret = utra->set_motion_mode(req.data);
   res.ret=ret;
   return true;
 }
-bool mode_get(utra_msg::ModeGet::Request &req, utra_msg::ModeGet::Response &res) {
+bool mode_get(utra_msg::GetInt16::Request &req, utra_msg::GetInt16::Response &res) {
   if(utra == NULL)
   {
     res.ret=-3;
@@ -292,7 +289,7 @@ bool mode_get(utra_msg::ModeGet::Request &req, utra_msg::ModeGet::Response &res)
   uint8_t mode;
   int ret = utra->get_motion_mode(&mode);
   res.ret=ret;
-  res.mode = mode;
+  res.data = mode;
   return true;
 }
 bool enable_set(utra_msg::EnableSet::Request &req, utra_msg::EnableSet::Response &res) {
@@ -304,7 +301,7 @@ bool enable_set(utra_msg::EnableSet::Request &req, utra_msg::EnableSet::Response
   res.ret=ret;
   return true;
 }
-bool enable_get(utra_msg::EnableGet::Request &req, utra_msg::EnableGet::Response &res) {
+bool enable_get(utra_msg::GetInt16::Request &req, utra_msg::GetInt16::Response &res) {
   if(utra == NULL)
   {
     res.ret=-3;
@@ -312,7 +309,7 @@ bool enable_get(utra_msg::EnableGet::Request &req, utra_msg::EnableGet::Response
   int enable;
   int ret = utra->get_motion_enable(&enable);
   res.ret=ret;
-  res.enable = enable;
+  res.data = enable;
   return true;
 }
 int main(int argc, char **argv) {

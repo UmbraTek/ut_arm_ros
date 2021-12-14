@@ -22,6 +22,7 @@
 UtraApiTcp *utra = NULL;
 UtraFlxiE2Api *fixi = NULL;
 
+
 std::string utra_ip = "";
 
 constexpr unsigned int hash(const char *s, int off = 0) { return !s[off] ? 5381 : (hash(s, off + 1) * 33) ^ s[off]; }
@@ -130,7 +131,7 @@ bool mv_servo_joint(utra_msg::Mservojoint::Request &req, utra_msg::Mservojoint::
     return true;
   }
   int axiz = req.axiz;
-  int CON = 3;
+  int CON = 3; //how many points with one time to send
   if(axiz == 6){
     int frames_num = req.num;
     ROS_INFO("mv_servo_joint %d %f",frames_num,req.time);
@@ -153,6 +154,7 @@ bool mv_servo_joint(utra_msg::Mservojoint::Request &req, utra_msg::Mservojoint::
   //   ROS_INFO("%f %f %f %f %f %f",req.frames[j*6],req.frames[j*6+1],req.frames[j*6+2],req.frames[j*6+3],frames[j*6+4],req.frames[j*6+5]);
   // }
     //for run have_CON_s time send
+    utra->plan_sleep(0.2); // set utra sleep 0.1s to wait for command 
     for (size_t i = 0; i < have_CON_s; i++)
     {
       for (size_t j = 0; j < CON*6; j++)
@@ -229,6 +231,11 @@ bool gripper_state_get(utra_msg::GripperStateGet::Request &req, utra_msg::Grippe
     }else{
       float value;
       int ret = fixi->get_pos_target(&value);
+      if(ret != -3){
+        ros::NodeHandle n;
+        float pos = (value/100)-0.4;
+        n.setParam("utra_gripper_pos",pos);
+      }
       uint8_t enable;
       ret = fixi->get_motion_enable(&enable);
       res.ret=ret;
@@ -247,6 +254,11 @@ bool gripper_mv(utra_msg::Grippermv::Request &req, utra_msg::Grippermv::Response
     return true;
   }
   int ret = fixi->set_pos_target(req.pos);
+  if(ret != -3){
+    ros::NodeHandle n;
+    float pos = (req.pos/100)-0.4;
+    n.setParam("utra_gripper_pos",pos);
+  }
   res.ret=ret;
   res.message="OK";
   return true;
@@ -315,7 +327,6 @@ bool enable_get(utra_msg::GetInt16::Request &req, utra_msg::GetInt16::Response &
 int main(int argc, char **argv) {
   ros::init(argc, argv, "utra_server");
   ros::NodeHandle nh;
-
   
   if (nh.getParam("utra_ip", utra_ip)) {
     ROS_INFO("Got param: %s", utra_ip.c_str());

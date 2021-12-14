@@ -12,7 +12,7 @@
     <group name="manipulator">
         <chain base_link="base_link" tip_link="link_6" />
     </group>
-    <group name="gripper">
+    <group name="zgripper">
         <link name="left_knuckle_link" />
     </group>
     <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
@@ -32,14 +32,14 @@
         <joint name="joint5" value="0" />
         <joint name="joint6" value="0" />
     </group_state>
-    <group_state name="close" group="gripper">
+    <group_state name="close" group="zgripper">
         <joint name="left_knuckle_joint" value="-0.4" />
     </group_state>
-    <group_state name="open" group="gripper">
+    <group_state name="open" group="zgripper">
         <joint name="left_knuckle_joint" value="0.5" />
     </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
-    <end_effector name="gripper" parent_link="base_link_gripper" group="gripper" />
+    <end_effector name="gripper" parent_link="base_link_gripper" group="zgripper" />
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="base_link" link2="link_1" reason="Adjacent" />
     <disable_collisions link1="base_link" link2="link_2" reason="Never" />

@@ -1,0 +1,14 @@
+<launch>
+
+  <arg  name="utra_ns" />
+  <param name = "utra_ns_gripper" type="str" value = "$(arg utra_ns)"/>
+  <node
+    name="ut_gripper_trajectory"
+    pkg="utra_gripper"
+    type="gripper_trajectory"
+    respawn="false"
+    output="screen"
+    >
+    </node>
+    
+</launch>

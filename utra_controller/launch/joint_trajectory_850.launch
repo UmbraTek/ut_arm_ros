@@ -2,8 +2,6 @@
 
   <arg  name="utra_ns" />
   <param name = "utra_ns" type="str" value = "$(arg utra_ns)"/>
-  <arg  name="utra_ip" />
-  <param name = "utra_ip" type="str" value = "$(arg utra_ip)"/>
   <node
     name="ut_joint_trajectory"
     pkg="utra_controller"

@@ -1,7 +1,7 @@
 <launch>
 
-  <arg  name="utra_ip" default=""/>
-  <param name = "utra_ip" type="str" value = "$(arg utra_ip)"/>
+  <arg  name="gripper" default="false"/>
+  <param name = "gripper" type="bool" value = "$(arg gripper)"/>
   <node
     name="ut_joint_publisher"
     pkg="utra_controller"

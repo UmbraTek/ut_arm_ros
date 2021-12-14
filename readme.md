@@ -124,6 +124,22 @@ Launch the Rviz and connect the utra 1000
 roslaunch utra6_1000_moveit_config run_with_utra.launch 
 ```
 
+## 6.3 Open the Rviz with gripper
+
+Launch the Rviz and connect the utra 550
+```bash
+roslaunch utra6_550_moveit_config run_with_utra.launch 
+```
+Launch the Rviz and connect the utra 850
+```bash
+roslaunch utra6_850_moveit_config run_with_utra.launch 
+```
+
+Launch the Rviz and connect the utra 1000
+```bash
+roslaunch utra6_1000_moveit_gripper_config run_with_utra.launch 
+```
+
 # 7. Excute the command to communicate with server 
 All servers are implemented in utra_server.cpp of utra_controller package.
 

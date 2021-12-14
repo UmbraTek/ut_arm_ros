@@ -1,12 +1,10 @@
 <launch>
     <include file="$(find utra_controller)/launch/joint_trajectory_550.launch">
         <arg name="utra_ns" value="utra6_550/arm_joint_controller/follow_joint_trajectory" />
-        <arg name="utra_ip" value="" />
     </include>
 
     
     <include file="$(find utra_controller)/launch/joint_publisher_550.launch">
-        <arg name="utra_ip" value="" />
     </include>
 
     <include file="$(find utra6_550_moveit_config)/launch/demo.launch">

@@ -21,8 +21,11 @@ find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs genmsg actionlib c
 #     )
 
 ## Generate added messages and services
-generate_messages(DEPENDENCIES std_msgs )
 
+
+catkin_package(
+  CATKIN_DEPENDS roscpp  utra_msg
+)
 
 ## Declare a catkin package
 # catkin_package(INCLUDE_DIRS src/utapi)
@@ -35,36 +38,36 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_executable(joint_publisher_450 src/joint_publisher_450.cpp)
 target_link_libraries(joint_publisher_450 ${catkin_LIBRARIES} utra_api)
-add_dependencies(joint_publisher_450 utra_controller_gencpp)
+add_dependencies(joint_publisher_450 utra_controller_gencpp utra_msg_generate_messages_cpp)
 
 add_executable(joint_trajectory_450 src/joint_trajectory_450.cpp)
 target_link_libraries(joint_trajectory_450 ${catkin_LIBRARIES} utra_api)
-add_dependencies(joint_trajectory_450 utra_controller_gencpp)
+add_dependencies(joint_trajectory_450 utra_controller_gencpp utra_msg_generate_messages_cpp)
 
 add_executable(joint_publisher_550 src/joint_publisher_550.cpp)
 target_link_libraries(joint_publisher_550 ${catkin_LIBRARIES} utra_api)
-add_dependencies(joint_publisher_550 utra_controller_gencpp)
+add_dependencies(joint_publisher_550 utra_controller_gencpp utra_msg_generate_messages_cpp)
 
 add_executable(joint_trajectory_550 src/joint_trajectory_550.cpp)
 target_link_libraries(joint_trajectory_550 ${catkin_LIBRARIES} utra_api)
-add_dependencies(joint_trajectory_550 utra_controller_gencpp)
+add_dependencies(joint_trajectory_550 utra_controller_gencpp utra_msg_generate_messages_cpp)
 
 
 add_executable(joint_publisher_850 src/joint_publisher_850.cpp)
 target_link_libraries(joint_publisher_850 ${catkin_LIBRARIES} utra_api)
-add_dependencies(joint_publisher_850 utra_controller_gencpp)
+add_dependencies(joint_publisher_850 utra_controller_gencpp utra_msg_generate_messages_cpp)
 
 add_executable(joint_trajectory_850 src/joint_trajectory_850.cpp)
 target_link_libraries(joint_trajectory_850 ${catkin_LIBRARIES} utra_api)
-add_dependencies(joint_trajectory_850 utra_controller_gencpp)
+add_dependencies(joint_trajectory_850 utra_controller_gencpp utra_msg_generate_messages_cpp)
 
 add_executable(joint_publisher_1000 src/joint_publisher_1000.cpp)
 target_link_libraries(joint_publisher_1000 ${catkin_LIBRARIES} utra_api)
-add_dependencies(joint_publisher_1000 utra_controller_gencpp)
+add_dependencies(joint_publisher_1000 utra_controller_gencpp utra_msg_generate_messages_cpp)
 
 add_executable(joint_trajectory_1000 src/joint_trajectory_1000.cpp)
 target_link_libraries(joint_trajectory_1000 ${catkin_LIBRARIES} utra_api)
-add_dependencies(joint_trajectory_1000 utra_controller_gencpp)
+add_dependencies(joint_trajectory_1000 utra_controller_gencpp utra_msg_generate_messages_cpp)
 
 add_executable(utra_server src/utra_server.cpp)
 target_link_libraries(utra_server ${catkin_LIBRARIES} utra_api)

@@ -106,8 +106,8 @@ utra_rviz::utra_rviz(QWidget* parent)
     Grippermv_client = nh_.serviceClient<utra_msg::Grippermv>("utra/gripper_mv");
     Gripperstate_get = nh_.serviceClient<utra_msg::GripperStateGet>("utra/gripper_state_get");
     Gripperstate_set = nh_.serviceClient<utra_msg::GripperStateSet>("utra/gripper_state_set");
-    status_set_client = nh_.serviceClient<utra_msg::StatusSet>("utra/status_set");
-    mode_set_client = nh_.serviceClient<utra_msg::ModeSet>("utra/mode_set");
+    status_set_client = nh_.serviceClient<utra_msg::SetInt16>("utra/status_set");
+    mode_set_client = nh_.serviceClient<utra_msg::SetInt16>("utra/mode_set");
     enable_set_client = nh_.serviceClient<utra_msg::EnableSet>("utra/enable_set");
     checkconnect_client = nh_.serviceClient<utra_msg::Checkconnect>("utra/check_connect");
 

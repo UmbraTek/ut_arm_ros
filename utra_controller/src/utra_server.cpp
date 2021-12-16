@@ -20,6 +20,7 @@
 #include "utra_msg/SetInt16.h"
 #include "utra_msg/GetFloat32.h"
 #include "utra_msg/SetFloat32.h"
+#include "utra_msg/GetUInt16A.h"
 
 UtraApiTcp *utra = NULL;
 UtraFlxiE2Api *fixi = NULL;
@@ -348,6 +349,36 @@ bool gripper_vel_get(utra_msg::GetFloat32::Request &req, utra_msg::GetFloat32::R
   res.data = value;
   return true;
 }
+
+bool get_error_code(utra_msg::GetUInt16A::Request &req, utra_msg::GetUInt16A::Response &res) {
+  if(utra == NULL){
+    res.ret=-3;
+    return true;
+  }
+  uint8_t array[24] = {0};
+  int ret = utra->get_error_code(array);
+  res.ret=ret;
+  for (size_t j = 0; j < 24; j++)
+    {
+      res.data.push_back(array[j]);
+    }
+  return true;
+}
+bool get_servo_msg(utra_msg::GetUInt16A::Request &req, utra_msg::GetUInt16A::Response &res) {
+  if(utra == NULL){
+    res.ret=-3;
+    return true;
+  }
+  uint8_t array[24] = {0};
+  int ret = utra->get_servo_msg(array);
+  res.ret=ret;
+  for (size_t j = 0; j < 24; j++)
+    {
+      res.data.push_back(array[j]);
+    }
+  return true;
+}
+
 int main(int argc, char **argv) {
   ros::init(argc, argv, "utra_server");
   ros::NodeHandle nh;
@@ -389,6 +420,9 @@ int main(int argc, char **argv) {
   ros::ServiceServer gripperstateget = nh.advertiseService("utra/gripper_state_get", gripper_state_get);
   ros::ServiceServer grippervelset = nh.advertiseService("utra/gripper_vel_set", gripper_vel_set);
   ros::ServiceServer grippervelget = nh.advertiseService("utra/gripper_vel_get", gripper_vel_get);
+
+  ros::ServiceServer geterrorcode = nh.advertiseService("utra/get_error_code", get_error_code);
+  ros::ServiceServer getservomsg = nh.advertiseService("utra/get_servo_msg", get_servo_msg);
 
   ROS_INFO("Ready for utra server.");
   ros::spin();

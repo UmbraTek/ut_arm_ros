@@ -24,8 +24,10 @@
 #include <iostream>
 #include <sstream>
 #include "utra_msg/Mservojoint.h"
+#include "utra_msg/GetInt16.h"
 
 ros::ServiceClient Mservojoint_client;
+ros::ServiceClient status_get_client;
 
 using namespace std;
 
@@ -54,7 +56,30 @@ void execute(const control_msgs::FollowJointTrajectoryGoalConstPtr& goal, Server
     ROS_ERROR("Failed to call service ");
   }
   ROS_INFO("Recieve action successful!");
-  as->setSucceeded();
+
+  ros::Duration(0.2).sleep();
+  utra_msg::GetInt16 srv1;
+  while (1)
+  {
+    
+    if (status_get_client.call(srv1))
+    {
+      if(srv1.response.ret == -3)
+      {
+        as->setAborted();
+        return;
+      }else if(srv1.response.data != 1){
+        as->setSucceeded();
+        ROS_INFO("moveing finish!!");
+        return;
+      }
+    }else{
+      as->setAborted();
+      return;
+    }
+    ros::Duration(0.1).sleep();
+  }
+  
 }
 
 int main(int argc, char** argv) {
@@ -69,6 +94,7 @@ int main(int argc, char** argv) {
   }
  
   Mservojoint_client = nh.serviceClient<utra_msg::Mservojoint>("utra/mv_servo_joint");
+  status_get_client = nh.serviceClient<utra_msg::GetInt16>("utra/status_get");
 
   char* cstr = new char[utra_ns.length() + 1];
   std::strcpy(cstr, utra_ns.c_str());

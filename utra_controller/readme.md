@@ -12,6 +12,15 @@ rosservice call /utra/status_set 0      #status 0:nomal 3:pause 4:stop
 rosservice call /utra/status_get        #status 0:nomal 1:moveing 2:sleep 3:pause 4:stop
 ```
 
+## Get Error
+get utra error and servos msg with this service
+refer to [GetUInt16A.srv](../utra_msg/srv/GetUInt16A.srv)
+
+```
+rosservice call /utra/get_error_code 
+rosservice call /utra/get_servo_msg  
+```
+
 ## Mode 
 refer to [SetInt16.srv](../utra_msg/srv/SetInt16.srv),[GetInt16.srv](../utra_msg/srv/GetInt16.srv)
 

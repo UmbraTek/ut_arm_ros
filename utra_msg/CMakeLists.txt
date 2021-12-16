@@ -66,6 +66,7 @@ add_service_files(
     SetInt16.srv
     GetFloat32.srv
     SetFloat32.srv
+    GetUInt16A.srv
     )
 
 ## Generate actions in the 'action' folder

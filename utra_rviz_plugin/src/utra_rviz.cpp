@@ -20,6 +20,8 @@
 #include <utra_msg/RobotMsg.h>
 #include "utra_msg/SetInt16.h"
 #include "utra_msg/GetInt16.h"
+#include "utra_msg/SetFloat32.h"
+#include "utra_msg/GetFloat32.h"
 
 
 
@@ -83,10 +85,23 @@ utra_rviz::utra_rviz(QWidget* parent)
     gripperButton->setText("set");
     gripperButton->setStyleSheet("QPushButton#gripperButton:pressed{background-color:rgb(239, 41, 41)}");
 
+    QLabel *gripper_vel_l=new QLabel;
+    gripper_vel_l->setText("vel");
+    gripper_vel=new QLineEdit;
+    QDoubleValidator* vali1 = new QDoubleValidator;
+    vali1->setRange(0, 300,2);
+    gripper_vel->setValidator(vali1);
+    gripper_vel->setPlaceholderText("0-300");
+    gripper_velButton=new QPushButton;
+    gripper_velButton->setText("set");
+
     QHBoxLayout *third=new QHBoxLayout;
     third->addWidget(gripperEnable);
     third->addWidget(gripperEdit);
     third->addWidget(gripperButton);
+    third->addWidget(gripper_vel_l);
+    third->addWidget(gripper_vel);
+    third->addWidget(gripper_velButton);
     gripperLabel->setLayout(third);
     mainlayout->addWidget(gripperLabel);
 
@@ -100,6 +115,7 @@ utra_rviz::utra_rviz(QWidget* parent)
     connect(utraEnable,SIGNAL(clicked()),this,SLOT(enable()));
     connect(eStop,SIGNAL(clicked()),this,SLOT(e_stop()));
     connect(checkConnect,SIGNAL(clicked()),this,SLOT(check_connect()));
+    connect(gripper_velButton,SIGNAL(clicked()),this,SLOT(set_gripper_vel()));
     
 
 
@@ -110,6 +126,9 @@ utra_rviz::utra_rviz(QWidget* parent)
     mode_set_client = nh_.serviceClient<utra_msg::SetInt16>("utra/mode_set");
     enable_set_client = nh_.serviceClient<utra_msg::EnableSet>("utra/enable_set");
     checkconnect_client = nh_.serviceClient<utra_msg::Checkconnect>("utra/check_connect");
+
+    Grippervel_get = nh_.serviceClient<utra_msg::GetFloat32>("utra/gripper_vel_get");
+    Grippervel_set = nh_.serviceClient<utra_msg::SetFloat32>("utra/gripper_vel_set");
 
     utra_states_sub = nh_.subscribe("utra/states", 1000, &utra_rviz::statesCallback,this);
     refreshUI();
@@ -141,6 +160,17 @@ void utra_rviz::refreshUI()
         }else{
             gripperEnable->setCheckState(Qt::Unchecked);
             gripperEdit->setPlaceholderText("0-80");
+        }
+    }
+
+    utra_msg::GetFloat32 srv2;
+    if(Grippervel_get.call(srv2))
+    {
+        ROS_INFO("ret %d, data %f",srv.response.ret,srv2.response.data);
+        if(srv2.response.ret != -3){
+            gripper_vel->setText(QString().setNum(srv2.response.data));
+        }else{
+            gripper_vel->setPlaceholderText("0-300");
         }
     }
 }
@@ -198,6 +228,15 @@ void utra_rviz::set_gripper_pos()
     utra_msg::Grippermv srv;
     srv.request.pos = value;
     Grippermv_client.call(srv);
+}
+
+void utra_rviz::set_gripper_vel()
+{
+    float value=gripper_vel->text().toFloat();
+    ROS_INFO("value %f",value);
+    utra_msg::SetFloat32 srv;
+    srv.request.data = value;
+    Grippervel_set.call(srv);
 }
 
 void utra_rviz::enable_gripper(){

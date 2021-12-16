@@ -124,7 +124,9 @@ Launch the Rviz and connect the utra 1000
 roslaunch utra6_1000_moveit_config run_with_utra.launch 
 ```
 
-## 6.3 Open the Rviz with gripper
+## 6.4 Open the Rviz with gripper
+
+please install the ros_industrial: <https://github.com/ros-industrial/industrial_core>(remember to select your correct ROS distribution) , *Notice, do not excute 6.3 command at the same time*
 
 Launch the Rviz with gripper and connect the utra 550
 ```bash
@@ -137,7 +139,7 @@ roslaunch utra6_850_moveit_gripper_config run_with_utra.launch
 
 Launch the Rviz with gripper and connect the utra 1000
 ```bash
-roslaunch utra6_1000_moveit_gripper_gripper_config run_with_utra.launch 
+roslaunch utra6_1000_moveit_gripper_config run_with_utra.launch 
 ```
 
 # 7. Excute the command to communicate with server 

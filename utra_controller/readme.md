@@ -27,3 +27,11 @@ refer to [EnableSet.srv](../utra_msg/srv/EnableSet.srv),[GetInt16.srv](../utra_m
 rosservice call /utra/enable_set 0 
 rosservice call /utra/enable_get  
 ```
+
+## Gripper velocity 
+refer to [SetFloat32.srv](../utra_msg/srv/SetFloat32.srv),[GetFloat32.srv](../utra_msg/srv/GetFloat32.srv)
+
+```
+rosservice call /utra/gripper_vel_set  100   # value is [0-300]
+rosservice call /utra/gripper_vel_get  
+```

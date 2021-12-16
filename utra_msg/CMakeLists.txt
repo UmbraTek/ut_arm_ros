@@ -64,6 +64,8 @@ add_service_files(
     GripperStateGet.srv
     GetInt16.srv
     SetInt16.srv
+    GetFloat32.srv
+    SetFloat32.srv
     )
 
 ## Generate actions in the 'action' folder

@@ -1,0 +1,9 @@
+
+---
+# ret is 0: successful  -3:disconnect  other:have error
+# Service name: utra/gripper_vel_get
+# response: get utra gripper velocity 
+
+
+int16 ret
+float32 data

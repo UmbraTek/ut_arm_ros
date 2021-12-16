@@ -27,6 +27,7 @@ void statesCallback(const utra_msg::RobotMsg& msg)
   jointState.position.push_back(msg.joint[3]);
   jointState.position.push_back(msg.joint[4]);
   jointState.position.push_back(msg.joint[5]);
+  
   if(gripper){
       float utra_gripper_pos;
       ros::NodeHandle n;

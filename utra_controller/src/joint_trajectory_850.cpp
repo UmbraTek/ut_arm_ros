@@ -31,26 +31,13 @@ using namespace std;
 
 typedef actionlib::SimpleActionServer<control_msgs::FollowJointTrajectoryAction> Server;
 
-std::basic_string<char> Link1;
-std::basic_string<char> Link2;
-std::basic_string<char> Link3;
-std::basic_string<char> Link4;
-std::basic_string<char> Link5;
-std::basic_string<char> Link6;
-
-float cp1;
-float cp2;
-float cp3;
-float cp4;
-float cp5;
-float cp6;
-
+float sample_duration = 0.03;
 
 void execute(const control_msgs::FollowJointTrajectoryGoalConstPtr& goal, Server* as) {
   utra_msg::Mservojoint srv;
   srv.request.axiz = 6;
   srv.request.num = goal->trajectory.points.size();
-  srv.request.time = 0.1;
+  srv.request.time = sample_duration;
   for (int i = 0; i < goal->trajectory.points.size(); i++) {
     for (size_t j = 0; j < 6; j++)
     {

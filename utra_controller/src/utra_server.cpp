@@ -18,6 +18,8 @@
 #include "utra_msg/GripperStateSet.h"
 #include "utra_msg/GetInt16.h"
 #include "utra_msg/SetInt16.h"
+#include "utra_msg/GetFloat32.h"
+#include "utra_msg/SetFloat32.h"
 
 UtraApiTcp *utra = NULL;
 UtraFlxiE2Api *fixi = NULL;
@@ -324,6 +326,28 @@ bool enable_get(utra_msg::GetInt16::Request &req, utra_msg::GetInt16::Response &
   res.data = enable;
   return true;
 }
+bool gripper_vel_set(utra_msg::SetFloat32::Request &req, utra_msg::SetFloat32::Response &res) {
+  if(utra == NULL || fixi == NULL){
+    res.ret=-3;
+    return true;
+  }
+  int ret1 = fixi->set_vel_limit_min(-req.data,true);
+  int ret2 = fixi->set_vel_limit_max(req.data,true);
+  res.ret=ret1+ret2;
+  return true;
+}
+bool gripper_vel_get(utra_msg::GetFloat32::Request &req, utra_msg::GetFloat32::Response &res) {
+  if(utra == NULL || fixi == NULL){
+    res.ret=-3;
+    return true;
+  }
+  float value;
+  int ret1 = fixi->get_vel_limit_min(&value);
+  int ret2 = fixi->get_vel_limit_max(&value);
+  res.ret=ret1+ret2;
+  res.data = value;
+  return true;
+}
 int main(int argc, char **argv) {
   ros::init(argc, argv, "utra_server");
   ros::NodeHandle nh;
@@ -363,6 +387,8 @@ int main(int argc, char **argv) {
   ros::ServiceServer grippermv = nh.advertiseService("utra/gripper_mv", gripper_mv);
   ros::ServiceServer gripperstateset = nh.advertiseService("utra/gripper_state_set", gripper_state_set);
   ros::ServiceServer gripperstateget = nh.advertiseService("utra/gripper_state_get", gripper_state_get);
+  ros::ServiceServer grippervelset = nh.advertiseService("utra/gripper_vel_set", gripper_vel_set);
+  ros::ServiceServer grippervelget = nh.advertiseService("utra/gripper_vel_get", gripper_vel_get);
 
   ROS_INFO("Ready for utra server.");
   ros::spin();

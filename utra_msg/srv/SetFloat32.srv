@@ -1,0 +1,12 @@
+# Service name: utra/gripper_vel_set
+# request: set utra gripper velocity [0-300]
+
+
+float32 data
+
+---
+
+# response: 
+#	ret is 0: successful  -3:disconnect  other:have error
+
+int16 ret

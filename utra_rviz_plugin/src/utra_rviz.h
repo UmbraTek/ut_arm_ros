@@ -39,6 +39,7 @@ public Q_SLOTS:
     void enable();
     void e_stop();
     void check_connect();
+    void set_gripper_vel();
     // 内部变量.
 protected:
     QLabel* ip_lable;
@@ -55,6 +56,9 @@ protected:
     QLineEdit* gripperEdit;
     QPushButton* gripperButton;
 
+    QLineEdit *gripper_vel;
+    QPushButton *gripper_velButton;
+
     QSlider* yaw_slider;
     QSlider* linera_slider;
     // ROS的publisher，用来发布速度topic
@@ -66,6 +70,8 @@ protected:
     ros::ServiceClient Grippermv_client;
     ros::ServiceClient Gripperstate_get;
     ros::ServiceClient Gripperstate_set;
+    ros::ServiceClient Grippervel_get;
+    ros::ServiceClient Grippervel_set;
     ros::Subscriber utra_states_sub;
 
     ros::ServiceClient status_set_client;

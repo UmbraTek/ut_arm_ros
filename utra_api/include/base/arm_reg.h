@@ -87,6 +87,7 @@ class ARM_REG {
   uint8_t PASS_RS485_QUE[5] = {0x69, ' ', ' ', 0x55, 0};
 
   const uint8_t UTRC_U8FP32_NOW[5] = {0x6A, 4, 8, 8, 1};
+  uint8_t UTRC_FP32N_NOW[5] = {0x6B, 4, 0x55, 0x55, 1};
   const uint8_t GPIO_IN[5] = {0x6E, 2, 0x55, ' ', ' '};
   const uint8_t GPIO_OU[5] = {0x6F, 2, 0x55, ' ', ' '};
 

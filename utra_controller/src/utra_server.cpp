@@ -22,6 +22,10 @@
 #include "utra_msg/SetFloat32.h"
 #include "utra_msg/GetUInt16A.h"
 
+#include "utra_msg/MovetoJointP2p.h"
+#include "utra_msg/MovetoCartesianLine.h"
+#include "utra_msg/MovetoCartesianLineB.h"
+
 UtraApiTcp *utra = NULL;
 UtraFlxiE2Api *fixi = NULL;
 
@@ -84,40 +88,6 @@ bool check_c_api(utra_msg::Checkconnect::Request &req, utra_msg::Checkconnect::R
   return true;
 }
 
-// void move_joints(utra_msg::Api::Request &req, utra_msg::Api::Response &res) {
-//   if (check_connect(res) == false) return;
-//   if (check_arg_count(req, res, 8) == false) return;
-
-//   float j1 = std::stof(req.args[0].c_str());
-//   float j2 = std::stof(req.args[1].c_str());
-//   float j3 = std::stof(req.args[2].c_str());
-//   float j4 = std::stof(req.args[3].c_str());
-//   float j5 = std::stof(req.args[4].c_str());
-//   float j6 = std::stof(req.args[5].c_str());
-//   float speed = std::stof(req.args[6].c_str());
-//   float acc = std::stof(req.args[7].c_str());
-//   float joint[6] = {j1, j2, j3, j4, j5, j6};
-//   ROS_INFO("move_joints");
-//   int ret = utra->moveto_joint_p2p(joint, speed, acc, 0);
-//   res.rets.push_back(std::to_string(ret));
-// }
-// void move_line(utra_msg::Api::Request &req, utra_msg::Api::Response &res) {
-//   if (check_connect(res) == false) return;
-//   if (check_arg_count(req, res, 8) == false) return;
-
-//   float x = std::stof(req.args[0].c_str());
-//   float y = std::stof(req.args[1].c_str());
-//   float z = std::stof(req.args[2].c_str());
-//   float roll = std::stof(req.args[3].c_str());
-//   float pitch = std::stof(req.args[4].c_str());
-//   float yaw = std::stof(req.args[5].c_str());
-//   float speed = std::stof(req.args[6].c_str());
-//   float acc = std::stof(req.args[7].c_str());
-//   float pos[6] = {x, y, z, roll, pitch, yaw};
-//   int ret = utra->moveto_cartesian_line(pos, speed, acc, 0);
-//   res.rets.push_back(std::to_string(ret));
-// }
-
 
 void print_joints(float* frames,int con)
 {
@@ -157,14 +127,17 @@ bool mv_servo_joint(utra_msg::Mservojoint::Request &req, utra_msg::Mservojoint::
   //   ROS_INFO("%f %f %f %f %f %f",req.frames[j*6],req.frames[j*6+1],req.frames[j*6+2],req.frames[j*6+3],frames[j*6+4],req.frames[j*6+5]);
   // }
     //for run have_CON_s time send
-    utra->plan_sleep(0.2); // set utra sleep 0.1s to wait for command 
+    if(req.plan_delay>0){
+      ROS_INFO("plan_sleep %f",req.plan_delay);
+      utra->plan_sleep(req.plan_delay); // set utra sleep 0.2s to wait for command 
+    }
     for (size_t i = 0; i < have_CON_s; i++)
     {
       for (size_t j = 0; j < CON*6; j++)
       { 
         frames[j] = req.frames[req_frames_index+j];
       }
-      print_joints(frames,CON);
+      // print_joints(frames,CON);
       req_frames_index = req_frames_index + CON*6;
       ret = utra->moveto_servo_joint(CON, frames, mvtime);
       ROS_INFO("req_frames_index %d ret %d",req_frames_index,ret);
@@ -175,7 +148,7 @@ bool mv_servo_joint(utra_msg::Mservojoint::Request &req, utra_msg::Mservojoint::
     { 
       frames[i] = req.frames[req_frames_index+i];
     }
-    print_joints(frames,have_CON_m);
+    // print_joints(frames,have_CON_m);
     ret = utra->moveto_servo_joint(have_CON_m, frames, mvtime);
 
     ROS_INFO("ret %d",ret);
@@ -281,10 +254,12 @@ bool status_get(utra_msg::GetInt16::Request &req, utra_msg::GetInt16::Response &
   {
     res.ret=-3;
   }
+  
   uint8_t status;
   int ret = utra->get_motion_status(&status);
   res.ret=ret;
   res.data = status;
+  ROS_INFO("status_get ret %d, status %d",ret,status);
   return true;
 }
 bool mode_set(utra_msg::SetInt16::Request &req, utra_msg::SetInt16::Response &res) {
@@ -350,6 +325,68 @@ bool gripper_vel_get(utra_msg::GetFloat32::Request &req, utra_msg::GetFloat32::R
   return true;
 }
 
+bool gripper_acc_set(utra_msg::SetFloat32::Request &req, utra_msg::SetFloat32::Response &res) {
+  if(utra == NULL || fixi == NULL){
+    res.ret=-3;
+    return true;
+  }
+  float data = req.data;
+  if(req.data<0){
+    res.ret=-3;
+    return true;
+  }
+  if(req.data>300){
+    data = 300;
+  }
+  int ret = fixi->set_pos_adrc_param(3,data);
+  res.ret=ret;
+  return true;
+}
+bool gripper_acc_get(utra_msg::GetFloat32::Request &req, utra_msg::GetFloat32::Response &res) {
+  if(utra == NULL || fixi == NULL){
+    res.ret=-3;
+    return true;
+  }
+  float value;
+  int ret = fixi->get_pos_adrc_param(3,&value);
+  res.ret=ret;
+  res.data = value;
+  return true;
+}
+bool gripper_error_code(utra_msg::GetInt16::Request &req, utra_msg::GetInt16::Response &res) {
+  if(utra == NULL || fixi == NULL){
+    res.ret=-3;
+    return true;
+  }
+  uint8_t value;
+  int ret = fixi->get_error_code(&value);
+  res.ret=ret;
+  res.data = value;
+  return true;
+}
+
+bool gripper_reset_err(utra_msg::GetInt16::Request &req, utra_msg::GetInt16::Response &res) {
+  if(utra == NULL || fixi == NULL){
+    res.ret=-3;
+    return true;
+  }
+  int ret = fixi->reset_err();
+  res.ret=ret;
+  res.data = 0;
+  return true;
+}
+
+bool gripper_unlock(utra_msg::SetInt16::Request &req, utra_msg::SetInt16::Response &res) {
+  if(utra == NULL || fixi == NULL){
+    res.ret=-3;
+    return true;
+  }
+  int data = req.data;
+  int ret = fixi->set_unlock_function(data);
+  res.ret=ret;
+  return true;
+}
+
 bool get_error_code(utra_msg::GetUInt16A::Request &req, utra_msg::GetUInt16A::Response &res) {
   if(utra == NULL){
     res.ret=-3;
@@ -377,6 +414,65 @@ bool get_servo_msg(utra_msg::GetUInt16A::Request &req, utra_msg::GetUInt16A::Res
       res.data.push_back(array[j]);
     }
   return true;
+}
+bool moveto_joint_p2p(utra_msg::MovetoJointP2p::Request &req, utra_msg::MovetoJointP2p::Response &res) {
+  if(utra == NULL){
+    res.ret=-3;
+    return true;
+  }
+  int axis = req.joints.size();
+  if(axis == 6){
+    float joints[6] = {req.joints[0],req.joints[1],req.joints[2],req.joints[3],req.joints[4],req.joints[5]};
+    int ret = utra->moveto_joint_p2p(joints, req.speed, req.acc, 0);
+    res.ret = ret;
+    return true;
+  }else{
+    res.ret = -3;
+    return true;
+  }
+}
+
+bool moveto_cartesian_line(utra_msg::MovetoCartesianLine::Request &req, utra_msg::MovetoCartesianLine::Response &res) {
+  if(utra == NULL){
+    res.ret=-3;
+    return true;
+  }
+  int axis = req.pose.size();
+  if(axis == 6){
+    float pose[6] = {req.pose[0],req.pose[1],req.pose[2],req.pose[3],req.pose[4],req.pose[5]};
+    int ret = utra->moveto_cartesian_line(pose, req.speed, req.acc, 0);
+    res.ret = ret;
+    return true;
+  }else{
+    res.ret = -3;
+    return true;
+  }
+}
+
+bool plan_sleep(utra_msg::SetFloat32::Request &req, utra_msg::SetFloat32::Response &res) {
+  if(utra == NULL){
+    res.ret=-3;
+    return true;
+  }
+  int ret = utra->plan_sleep(req.data);
+  res.ret=ret;
+  return true;
+}
+bool moveto_cartesian_lineb(utra_msg::MovetoCartesianLineB::Request &req, utra_msg::MovetoCartesianLineB::Response &res) {
+  if(utra == NULL){
+    res.ret=-3;
+    return true;
+  }
+  int axis = req.pose.size();
+  if(axis == 6){
+    float pose[6] = {req.pose[0],req.pose[1],req.pose[2],req.pose[3],req.pose[4],req.pose[5]};
+    int ret = utra->moveto_cartesian_lineb(pose, req.speed, req.acc, 0, req.radii);
+    res.ret = ret;
+    return true;
+  }else{
+    res.ret = -3;
+    return true;
+  }
 }
 
 int main(int argc, char **argv) {
@@ -420,9 +516,21 @@ int main(int argc, char **argv) {
   ros::ServiceServer gripperstateget = nh.advertiseService("utra/gripper_state_get", gripper_state_get);
   ros::ServiceServer grippervelset = nh.advertiseService("utra/gripper_vel_set", gripper_vel_set);
   ros::ServiceServer grippervelget = nh.advertiseService("utra/gripper_vel_get", gripper_vel_get);
+  ros::ServiceServer gripperaccset = nh.advertiseService("utra/gripper_acc_set", gripper_acc_set);
+  ros::ServiceServer gripperaccget = nh.advertiseService("utra/gripper_acc_get", gripper_acc_get);
+  ros::ServiceServer gripperreseterr = nh.advertiseService("utra/gripper_reset_err", gripper_reset_err);
+  ros::ServiceServer grippererrorcode = nh.advertiseService("utra/gripper_error_code", gripper_error_code);
+  ros::ServiceServer gripperunlock = nh.advertiseService("utra/gripper_unlock", gripper_unlock);
+  
 
   ros::ServiceServer geterrorcode = nh.advertiseService("utra/get_error_code", get_error_code);
   ros::ServiceServer getservomsg = nh.advertiseService("utra/get_servo_msg", get_servo_msg);
+  
+  ros::ServiceServer movetojointp2p = nh.advertiseService("utra/moveto_joint_p2p", moveto_joint_p2p);
+  ros::ServiceServer movetocartesianline = nh.advertiseService("utra/moveto_cartesian_line", moveto_cartesian_line);
+  ros::ServiceServer plansleep = nh.advertiseService("utra/plan_sleep", plan_sleep);
+  ros::ServiceServer movetocartesianlineb = nh.advertiseService("utra/moveto_cartesian_lineb", moveto_cartesian_lineb);
+  // ros::ServiceServer moveto_cartesian_circle = nh.advertiseService("utra/moveto_cartesian_circle", moveto_cartesian_circle);
 
   ROS_INFO("Ready for utra server.");
   ros::spin();

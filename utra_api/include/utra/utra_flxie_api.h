@@ -8,6 +8,7 @@
 #define __UTRA_FLXIE_API_H__
 
 #include "base/arm_api_base.h"
+#include "base/flxie_reg.h"
 #include "base/servo_reg.h"
 #include "common/socket_tcp.h"
 
@@ -30,15 +31,18 @@ class UtraFlxiE2Api {
   int set_volt_limit(uint8_t min, uint8_t max, bool now = true);
   int get_curr_limit(float *value);
   int set_curr_limit(float value, bool now = true);
+
   int set_motion_mode(uint8_t value, bool now = true);
   int get_motion_mode(uint8_t *value);
   int set_motion_enable(uint8_t value, bool now = true);
   int get_motion_enable(uint8_t *value);
+  int set_unlock_function(uint8_t value);
   int get_temp_motor(float *value);
   int get_temp_driver(float *value);
   int get_bus_volt(float *value);
   int get_bus_curr(float *value);
   int get_error_code(uint8_t *value);
+
   int get_pos_target(float *value);
   int set_pos_target(float value, bool now = true);
   int get_pos_current(float *value);
@@ -46,18 +50,15 @@ class UtraFlxiE2Api {
   int set_pos_pidp(float value, bool now = true);
   int get_pos_smooth_cyc(uint8_t *value);
   int set_pos_smooth_cyc(uint8_t value, bool now = true);
+  int get_pos_adrc_param(int i, float *value);
+  int set_pos_adrc_param(int i, float value);
   int pos_cal_zero(void);
-  int get_vel_current(float *value);
+
   int get_vel_limit_min(float *value);
   int set_vel_limit_min(float value, bool now = true);
   int get_vel_limit_max(float *value);
   int set_vel_limit_max(float value, bool now = true);
-  int get_vel_pidp(float *value);
-  int set_vel_pidp(float value, bool now = true);
-  int get_vel_pidi(float *value);
-  int set_vel_pidi(float value, bool now = true);
-  int get_vel_smooth_cyc(uint8_t *value);
-  int set_vel_smooth_cyc(uint8_t value, bool now = true);
+
   int get_tau_target(float *value);
   int set_tau_target(float value, bool now = true);
   int get_tau_current(float *value);
@@ -69,14 +70,19 @@ class UtraFlxiE2Api {
   int set_tau_pidp(float value, bool now = true);
   int get_tau_pidi(float *value);
   int set_tau_pidi(float value, bool now = true);
+  int get_tau_adrc_param(int i, float *value);
+  int set_tau_adrc_param(int i, float value);
   int get_tau_smooth_cyc(uint8_t *value);
   int set_tau_smooth_cyc(uint8_t value, bool now = true);
+
+  int get_senser(float *value);
 
  private:
   ArmApiBase *utra_api_;
   uint8_t id_;
   uint8_t line_;
   SERVO_REG reg_;
+  FLXIE_REG flxie_reg_;
 };
 
 #endif

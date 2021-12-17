@@ -24,7 +24,11 @@ int main(int argc, char **argv) {
   utra_report = new UtraReportStatus10Hz(cstr, 6);
 
   while (ros::ok()) {
+    if(utra_report->is_error()){
+      // do something
+    }
     if (utra_report->is_update()) {
+        // ROS_INFO("utra_report->is_update");
         utra_report->get_data(&rx_data);
         robotMsg.len= rx_data.len;
         robotMsg.axis = rx_data.axis;
@@ -49,6 +53,8 @@ int main(int argc, char **argv) {
         }
         
         robotStates.publish(robotMsg);
+    }else{
+
     }
     ros::spinOnce();
     loop_rate.sleep();

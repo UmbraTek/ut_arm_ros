@@ -2,6 +2,7 @@ int16 axiz
 int16 num
 float32[] frames
 float32 time
+float32 plan_delay
 ---
 int16 ret
 string message

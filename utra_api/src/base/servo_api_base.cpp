@@ -158,6 +158,7 @@ int ServoApiBase::get_multi_version_(int id, char version[12]) {
   return ret;
 }
 int ServoApiBase::get_mech_ratio_(int id, float* ratio) { return get_reg_fp32(id, ratio, reg_.MECH_RATIO); }
+int ServoApiBase::set_mech_ratio_(int id, float ratio) { return set_reg_fp32(id, ratio, reg_.MECH_RATIO); }
 int ServoApiBase::set_com_id_(int id, int set_id) { return set_reg_int8(id, set_id, reg_.COM_ID); }
 int ServoApiBase::set_com_baud_(int id, int baud) { return set_reg_int32(id, baud, reg_.COM_BAUD); }
 int ServoApiBase::reset_err_(int id) { return set_reg_int8(id, reg_.RESET_ERR[0], reg_.RESET_ERR); }

@@ -53,7 +53,7 @@ void ArmReportStatus::flush_data(uint8_t* rx_data, int len) {
 }
 
 int ArmReportStatus::get_data(arm_report_status_t* rx_data) {
-  if (is_error_) return -1;
+  // if (is_error_) return -1;
   int flag = report_flag_;
   if (--flag < 0) flag = 2;
   memcpy(rx_data, &report_status_[flag], sizeof(arm_report_status_t));

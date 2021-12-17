@@ -33,32 +33,82 @@ using namespace std;
 
 typedef actionlib::SimpleActionServer<control_msgs::FollowJointTrajectoryAction> Server;
 
-float sample_duration = 0.03;
 
 void execute(const control_msgs::FollowJointTrajectoryGoalConstPtr& goal, Server* as) {
   utra_msg::Mservojoint srv;
+  ros::NodeHandle nh;
   srv.request.axiz = 6;
-  srv.request.num = goal->trajectory.points.size();
+  float sample_duration,plan_delay;
+  int CON;
+
+  nh.param<float>("ut_sample_duration", sample_duration, 0.1);
   srv.request.time = sample_duration;
-  for (int i = 0; i < goal->trajectory.points.size(); i++) {
+
+  nh.param<float>("ut_plan_delay", plan_delay, 0.5);
+  srv.request.plan_delay = plan_delay; //第一次发数据，延迟0.2s
+
+  nh.param<int>("ut_send_once", CON, 30);
+  ROS_INFO("ut_sample_duration : %f  ut_plan_delay :%f ,ut_send_once : %d",sample_duration,plan_delay,CON);
+
+  int p_size = goal->trajectory.points.size();
+  int have_CON_s = p_size/CON;
+  int have_CON_m = p_size%CON;
+  // 分一个循环 每次传300个点， 最后传余数的点
+  for (size_t s = 0; s < have_CON_s; s++)
+  {
+    srv.request.num = CON;
+    for (int i = s*CON; i < s*CON + CON; i++) {
+      for (size_t j = 0; j < 6; j++)
+      {
+        srv.request.frames.push_back(goal->trajectory.points[i].positions[j]);
+      }
+    }
+    if (Mservojoint_client.call(srv))
+    {
+      ROS_INFO("call ret: %d", srv.response.ret);
+      if(srv.response.ret == -3){
+        as->setAborted();
+        return;
+      }
+    }
+    else
+    {
+      ROS_ERROR("Failed to call service ");
+      as->setAborted();
+      return;
+    }
+    srv.request.plan_delay = 0;
+    srv.request.frames.clear();
+  }
+  //  最后传余数的点
+  srv.request.frames.clear();
+  srv.request.num = have_CON_m;
+  for (int i = have_CON_s*CON; i < have_CON_s*CON + have_CON_m; i++) {
     for (size_t j = 0; j < 6; j++)
     {
       srv.request.frames.push_back(goal->trajectory.points[i].positions[j]);
     }
   }
-
   if (Mservojoint_client.call(srv))
   {
     ROS_INFO("call ret: %d", srv.response.ret);
+    if(srv.response.ret == -3){
+      as->setAborted();
+      return;
+    }
   }
   else
   {
     ROS_ERROR("Failed to call service ");
+    as->setAborted();
+    return;
   }
+  
   ROS_INFO("Recieve action successful!");
 
   ros::Duration(0.2).sleep();
   utra_msg::GetInt16 srv1;
+  int error_count = 0;
   while (1)
   {
     
@@ -66,12 +116,19 @@ void execute(const control_msgs::FollowJointTrajectoryGoalConstPtr& goal, Server
     {
       if(srv1.response.ret == -3)
       {
-        as->setAborted();
-        return;
+        error_count++;
+        if(error_count>3){
+          as->setAborted();
+          return;
+        }
       }else if(srv1.response.data != 1){
         as->setSucceeded();
         ROS_INFO("moveing finish!!");
         return;
+      }else{
+        if(error_count>0){
+          error_count--;
+        }
       }
     }else{
       as->setAborted();

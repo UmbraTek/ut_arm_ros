@@ -8,6 +8,12 @@
 #        2: joint teaching mode
 #        3: cartesian teaching mode (NOT used in current version)
 
+# Service name: utra/gripper_unlock
+# request: gripper unlock
+#       1 Unlock the manipulator stuck in the limit position
+#       2 Unlock the manipulator clamp is too tight
+
+
 int16 data
 
 ---

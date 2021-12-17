@@ -67,6 +67,9 @@ add_service_files(
     GetFloat32.srv
     SetFloat32.srv
     GetUInt16A.srv
+    MovetoJointP2p.srv
+    MovetoCartesianLine.srv
+    MovetoCartesianLineB.srv
     )
 
 ## Generate actions in the 'action' folder

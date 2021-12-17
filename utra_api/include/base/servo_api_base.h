@@ -22,6 +22,7 @@ class ServoApiBase {
   int get_hw_version_(int id, char version[24]);
   int get_multi_version_(int id, char version[12]);
   int get_mech_ratio_(int id, float* ratio);
+  int set_mech_ratio_(int id, float ratio);
   int set_com_id_(int id, int set_id);
   int set_com_baud_(int id, int baud);
   int reset_err_(int id);

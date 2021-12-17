@@ -4,6 +4,9 @@
 # Service name: utra/gripper_vel_get
 # response: get utra gripper velocity 
 
+# Service name: utra/gripper_acc_get
+# response: get utra gripper Acceleration 
+
 
 int16 ret
 float32 data

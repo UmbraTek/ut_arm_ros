@@ -106,23 +106,24 @@ class ArmApiBase {
 
   int get_utrc_u8float_now(uint8_t line, uint8_t id, uint8_t reg, uint8_t num, float* value);
   int set_utrc_u8float_now(uint8_t line, uint8_t id, uint8_t reg, uint8_t num, float value);
+  int get_utrc_nfloat_now(uint8_t line, uint8_t id, uint8_t reg, uint8_t num, float* value);
 
   int get_gpio_in(uint8_t line, uint8_t id, int32_t* fun, int32_t* digit, int* adc_num, float* adc_value);
-  int get_tgpio_in(int32_t* fun, int32_t* digit, int* adc_num, float* adc_value);
-  int get_cgpio_in(int32_t* fun, int32_t* digit, int* adc_num, float* adc_value);
   int get_gpio_out(uint8_t line, uint8_t id, int32_t* fun, int32_t* digit, int* adc_num, float* adc_value);
+
+  int get_tgpio_in(int32_t* fun, int32_t* digit, int* adc_num, float* adc_value);
   int get_tgpio_out(int32_t* fun, int32_t* digit, int* adc_num, float* adc_value);
-  int get_cgpio_out(int32_t* fun, int32_t* digit, int* adc_num, float* adc_value);
-
   int set_tgpio_digit_out(int value);
-  int set_cgpio_digit_out(int value);
-
-  int get_cgpio_uuid(uint8_t* value);
-  int get_cgpio_sw_version(uint8_t* value);
-  int get_cgpio_hw_version(uint8_t* value);
   int get_tgpio_uuid(uint8_t* value);
   int get_tgpio_sw_version(uint8_t* value);
   int get_tgpio_hw_version(uint8_t* value);
+
+  int get_cgpio_in(int32_t* fun, int32_t* digit, int* adc_num, float* adc_value);
+  int get_cgpio_out(int32_t* fun, int32_t* digit, int* adc_num, float* adc_value);
+  int set_cgpio_digit_out(int value);
+  int get_cgpio_uuid(uint8_t* value);
+  int get_cgpio_sw_version(uint8_t* value);
+  int get_cgpio_hw_version(uint8_t* value);
 
  protected:
   ARM_REG* reg_;
@@ -139,7 +140,7 @@ class ArmApiBase {
 
   void send(uint8_t rw, uint8_t cmd, uint8_t cmd_data_len, uint8_t* cmd_data);
   int pend(uint8_t rx_len, float timeout_s = 0.001);
-  int sendpend(uint8_t rw, const uint8_t cmd[5], uint8_t* tx_data, float timeout_s = 0.02);
+  int sendpend(uint8_t rw, const uint8_t cmd[5], uint8_t* tx_data, float timeout_s = 0.1);
 
   int get_reg_int8(uint8_t* value, const uint8_t reg[5]);
   int set_reg_int8(uint8_t* value, const uint8_t reg[5]);

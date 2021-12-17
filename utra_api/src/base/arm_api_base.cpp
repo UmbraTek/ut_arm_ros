@@ -111,6 +111,9 @@ int ArmApiBase::set_reg_fp32(float* value, const uint8_t reg[5], int n) {
   return ret;
 }
 
+/************************************************************
+ *                     Basic Api
+ ************************************************************/
 int ArmApiBase::get_axis(uint8_t* axis) { return get_reg_int8(axis, reg_->UBOT_AXIS); }
 int ArmApiBase::get_uuid(uint8_t uuid[17]) { return get_reg_int8(uuid, reg_->UUID); }
 int ArmApiBase::get_sw_version(uint8_t version[20]) { return get_reg_int8(version, reg_->SW_VERSION); }
@@ -121,6 +124,9 @@ int ArmApiBase::reboot_system(void) { return set_reg_int8((uint8_t*)&reg_->SYS_R
 int ArmApiBase::erase_parm(void) { return set_reg_int8((uint8_t*)&reg_->ERASE_PARM[0], reg_->ERASE_PARM); }
 int ArmApiBase::saved_parm(void) { return set_reg_int8((uint8_t*)&reg_->SAVED_PARM[0], reg_->SAVED_PARM); }
 
+/************************************************************
+ *                     Control Api
+ ************************************************************/
 int ArmApiBase::get_motion_mode(uint8_t* mode) { return get_reg_int8(mode, reg_->MOTION_MDOE); }
 int ArmApiBase::set_motion_mode(uint8_t mode) { return set_reg_int8(&mode, reg_->MOTION_MDOE); }
 int ArmApiBase::get_motion_enable(int* able) { return get_reg_int32(able, reg_->MOTION_ENABLE); }
@@ -140,6 +146,9 @@ int ArmApiBase::set_motion_status(uint8_t status) { return set_reg_int8(&status,
 int ArmApiBase::get_cmd_num(int* num) { return get_reg_int32(num, reg_->CMD_NUM); }
 int ArmApiBase::set_cmd_num(int num) { return set_reg_int32(&num, reg_->CMD_NUM); }
 
+/************************************************************
+ *                     Trajectory Api
+ ************************************************************/
 int ArmApiBase::moveto_cartesian_line(float* mvpose, float mvvelo, float mvacc, float mvtime) {
   float data[6 + 3];
   memcpy(data, mvpose, 6 * 4);
@@ -223,6 +232,9 @@ int ArmApiBase::moveto_servo_joint(int frames_num, float* mvjoint, float* mvtime
 int ArmApiBase::move_sleep(float time) { return set_reg_fp32(&time, reg_->MOVE_SLEEP); }
 int ArmApiBase::plan_sleep(float time) { return set_reg_fp32(&time, reg_->PLAN_SLEEP); }
 
+/************************************************************
+ *                     Parameter Api
+ ************************************************************/
 int ArmApiBase::get_tcp_jerk(float* jerk) { return get_reg_fp32(jerk, reg_->TCP_JERK); }
 int ArmApiBase::set_tcp_jerk(float jerk) { return set_reg_fp32(&jerk, reg_->TCP_JERK); }
 
@@ -250,16 +262,6 @@ int ArmApiBase::set_collis_sens(uint8_t sens) { return set_reg_int8(&sens, reg_-
 int ArmApiBase::get_teach_sens(uint8_t* sens) { return get_reg_int8(sens, reg_->TEACH_SENS); }
 int ArmApiBase::set_teach_sens(uint8_t sens) { return set_reg_int8(&sens, reg_->TEACH_SENS); }
 
-int ArmApiBase::get_tcp_target_pos(float* pos) { return get_reg_fp32(pos, reg_->TCP_POS_CURR, 6); }
-int ArmApiBase::get_tcp_actual_pos(float* pos) { return 0; }
-int ArmApiBase::get_joint_target_pos(float* pos) { return get_reg_fp32(pos, reg_->JOINT_POS_CURR, axis_); }
-int ArmApiBase::get_joint_actual_pos(float* pos) { return 0; }
-
-int ArmApiBase::get_ik(void) { return 0; }
-int ArmApiBase::get_fk(void) { return 0; }
-int ArmApiBase::is_joint_limit(void) { return 0; }
-int ArmApiBase::is_tcp_limit(void) { return 0; }
-
 int ArmApiBase::get_friction(uint8_t axis, float* fri) {
   uint8_t tx_data[2] = {reg_->FRICTION[0], axis};
   int ret = sendpend(ARM_RW::R, reg_->FRICTION, tx_data);
@@ -273,6 +275,22 @@ int ArmApiBase::set_friction(uint8_t axis, float* fri) {
   return ret;
 }
 
+/************************************************************
+ *                     State Api
+ ************************************************************/
+int ArmApiBase::get_tcp_target_pos(float* pos) { return get_reg_fp32(pos, reg_->TCP_POS_CURR, 6); }
+int ArmApiBase::get_tcp_actual_pos(float* pos) { return 0; }
+int ArmApiBase::get_joint_target_pos(float* pos) { return get_reg_fp32(pos, reg_->JOINT_POS_CURR, axis_); }
+int ArmApiBase::get_joint_actual_pos(float* pos) { return 0; }
+
+int ArmApiBase::get_ik(void) { return 0; }
+int ArmApiBase::get_fk(void) { return 0; }
+int ArmApiBase::is_joint_limit(void) { return 0; }
+int ArmApiBase::is_tcp_limit(void) { return 0; }
+
+/************************************************************
+ *                     Rs485 Api
+ ************************************************************/
 int ArmApiBase::get_utrc_int8_now(uint8_t line, uint8_t id, uint8_t reg, uint8_t* value) {
   uint8_t tx_data[3] = {line, id, reg};
   int ret = sendpend(ARM_RW::R, reg_->UTRC_INT8_NOW, tx_data);
@@ -421,6 +439,19 @@ int ArmApiBase::set_utrc_u8float_now(uint8_t line, uint8_t id, uint8_t reg, uint
   return ret;
 }
 
+int ArmApiBase::get_utrc_nfloat_now(uint8_t line, uint8_t id, uint8_t reg, uint8_t num, float* value) {
+  uint8_t tx_data[4] = {line, id, reg, num};
+  float rx_data[1 + num];
+  int ret = sendpend(ARM_RW::R, reg_->UTRC_FP32N_NOW, tx_data);
+  HexData::hex_to_fp32_big(&utrc_rx_.data[0], rx_data, 1 + num);
+  if (ret == 0 || ret == UTRC_ERROR::STATE) ret = rx_data[0];
+  memcpy(value, &rx_data[1], sizeof(float) * num);
+  return ret;
+}
+
+/************************************************************
+ *                     GPIO Api
+ ************************************************************/
 int ArmApiBase::get_gpio_in(uint8_t line, uint8_t id, int32_t* fun, int32_t* digit, int* adc_num, float* adc_value) {
   uint8_t tx_data[2] = {line, id};
   int ret = sendpend(ARM_RW::R, reg_->GPIO_IN, tx_data);
@@ -430,12 +461,6 @@ int ArmApiBase::get_gpio_in(uint8_t line, uint8_t id, int32_t* fun, int32_t* dig
   *adc_num = utrc_rx_.data[9];
   HexData::hex_to_fp32_big(&utrc_rx_.data[10], adc_value, *adc_num);
   return ret;
-}
-int ArmApiBase::get_tgpio_in(int32_t* fun, int32_t* digit, int* adc_num, float* adc_value) {
-  return get_gpio_in(2, 1, fun, digit, adc_num, adc_value);
-}
-int ArmApiBase::get_cgpio_in(int32_t* fun, int32_t* digit, int* adc_num, float* adc_value) {
-  return get_gpio_in(3, 1, fun, digit, adc_num, adc_value);
 }
 
 int ArmApiBase::get_gpio_out(uint8_t line, uint8_t id, int32_t* fun, int32_t* digit, int* adc_num, float* adc_value) {
@@ -449,20 +474,34 @@ int ArmApiBase::get_gpio_out(uint8_t line, uint8_t id, int32_t* fun, int32_t* di
   return ret;
 }
 
+/************************************************************
+ *                     End-Tool GPIO Api
+ ************************************************************/
+int ArmApiBase::get_tgpio_in(int32_t* fun, int32_t* digit, int* adc_num, float* adc_value) {
+  return get_gpio_in(2, 1, fun, digit, adc_num, adc_value);
+}
+
 int ArmApiBase::get_tgpio_out(int32_t* fun, int32_t* digit, int* adc_num, float* adc_value) {
   return get_gpio_out(2, 1, fun, digit, adc_num, adc_value);
 }
+
+int ArmApiBase::set_tgpio_digit_out(int value) { return set_utrc_int32_now(2, 1, 0x13, value); }
+int ArmApiBase::get_tgpio_uuid(uint8_t* value) { return get_utrc_int8n_now(2, 1, 0x01, value, 12); }
+int ArmApiBase::get_tgpio_sw_version(uint8_t* value) { return get_utrc_int8n_now(2, 1, 0x02, value, 12); }
+int ArmApiBase::get_tgpio_hw_version(uint8_t* value) { return get_utrc_int8n_now(2, 1, 0x03, value, 12); }
+
+/************************************************************
+ *                     Controller GPIO Api
+ ************************************************************/
+int ArmApiBase::get_cgpio_in(int32_t* fun, int32_t* digit, int* adc_num, float* adc_value) {
+  return get_gpio_in(3, 1, fun, digit, adc_num, adc_value);
+}
+
 int ArmApiBase::get_cgpio_out(int32_t* fun, int32_t* digit, int* adc_num, float* adc_value) {
   return get_gpio_out(3, 1, fun, digit, adc_num, adc_value);
 }
 
-int ArmApiBase::set_tgpio_digit_out(int value) { return set_utrc_int32_now(2, 1, 0x13, value); }
 int ArmApiBase::set_cgpio_digit_out(int value) { return set_utrc_int32_now(3, 1, 0x13, value); }
-
 int ArmApiBase::get_cgpio_uuid(uint8_t* value) { return get_utrc_int8n_now(3, 1, 0x01, value, 12); }
 int ArmApiBase::get_cgpio_sw_version(uint8_t* value) { return get_utrc_int8n_now(3, 1, 0x02, value, 12); }
 int ArmApiBase::get_cgpio_hw_version(uint8_t* value) { return get_utrc_int8n_now(3, 1, 0x03, value, 12); }
-
-int ArmApiBase::get_tgpio_uuid(uint8_t* value) { return get_utrc_int8n_now(2, 1, 0x01, value, 12); }
-int ArmApiBase::get_tgpio_sw_version(uint8_t* value) { return get_utrc_int8n_now(2, 1, 0x02, value, 12); }
-int ArmApiBase::get_tgpio_hw_version(uint8_t* value) { return get_utrc_int8n_now(2, 1, 0x03, value, 12); }

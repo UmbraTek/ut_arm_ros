@@ -1,0 +1,17 @@
+# Service name: utra/moveto_cartesian_line
+# Move to position (linear in tool-space)
+# request: 
+#            pose (list): cartesian position [mm mm mm rad rad rad]
+#            speed (float): tool speed [mm/s]
+#            acc (float): tool acceleration [mm/sˆ2]
+
+
+
+float32[] pose
+float32  speed
+float32  acc
+---
+# response: get gripper state
+#        ret -3 is disconnect
+
+int16 ret

@@ -2,6 +2,7 @@
 
   <arg  name="utra_ns" />
   <param name = "utra_ns" type="str" value = "$(arg utra_ns)"/>
+  <rosparam command="load" file="$(find utra_controller)/config/ompl.yaml"/> 
   <node
     name="ut_joint_trajectory"
     pkg="utra_controller"

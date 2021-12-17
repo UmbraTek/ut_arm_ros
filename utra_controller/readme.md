@@ -59,11 +59,11 @@ rosservice call /utra/gripper_unlock 1  # this method is used when gripper is lo
 ```
 
 ## Move Joint
-Service name: utra/moveto_joint_p2p
-request: 
--joints (list): target joint positions [rad]
--speed (float): joint speed of leading axis [rad/s]
--acc (float): joint acceleration of leading axis [rad/sˆ2]
+Service name: utra/moveto_joint_p2p  
+request:   
+-------joints (list): target joint positions [rad]   
+-------speed (float): joint speed of leading axis [rad/s]   
+-------acc (float): joint acceleration of leading axis [rad/sˆ2]   
 
 refer to [MovetoJointP2p.srv](../utra_msg/srv/MovetoJointP2p.srv)
 
@@ -72,12 +72,12 @@ rosservice call /utra/moveto_joint_p2p [1.248,1.416,1.155,-0.252,-1.248,-0.003] 
 ```
 
 ## Move Line
-Service name: utra/moveto_cartesian_line
-Move to position (linear in tool-space)
-request: 
--pose (list): cartesian position [mm mm mm rad rad rad]
--speed (float): tool speed [mm/s]
--acc (float): tool acceleration [mm/sˆ2]
+Service name: utra/moveto_cartesian_line  
+Move to position (linear in tool-space)   
+request:   
+-------pose (list): cartesian position [mm mm mm rad rad rad]  
+-------speed (float): tool speed [mm/s]  
+-------acc (float): tool acceleration [mm/sˆ2]  
 
 refer to [MovetoCartesianLine.srv](../utra_msg/srv/MovetoCartesianLine.srv)
 
@@ -88,12 +88,12 @@ rosservice call /utra/moveto_cartesian_line [-0.0,-360.0,800.0,1.58,0.0,0.0] 50 
 ```
 
 ## Move Line with Blend 
-Blend circular (in tool-space) and move linear (in tool-space) to position.Accelerates to and moves with constant tool speed v.
-request: 
--pose (list): cartesian position [mm mm mm rad rad rad]
--speed (float): tool speed [mm/s]
--acc (float): tool acceleration [mm/sˆ2]
--radii (float): blend radius [mm]
+Blend circular (in tool-space) and move linear (in tool-space) to position.Accelerates to and moves with constant tool speed v.  
+request:   
+-------pose (list): cartesian position [mm mm mm rad rad rad]  
+-------speed (float): tool speed [mm/s]  
+-------acc (float): tool acceleration [mm/sˆ2]  
+-------radii (float): blend radius [mm]  
 
 refer to [MovetoCartesianLineB.srv](../utra_msg/srv/MovetoCartesianLineB.srv)
 

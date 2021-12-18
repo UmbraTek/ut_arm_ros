@@ -23,6 +23,8 @@ int main(int argc, char **argv) {
   std::strcpy(cstr, utra_ip.c_str());
   utra_report = new UtraReportStatus10Hz(cstr, 6);
 
+  int no_update = 0;
+  nh.setParam("ut_states_update",true);
   while (ros::ok()) {
     if(utra_report->is_error()){
       // do something
@@ -51,10 +53,18 @@ int main(int argc, char **argv) {
         {
             robotMsg.tau[i] = rx_data.tau[i];
         }
-        
+        if(no_update>0){
+          no_update--;
+        }
+        nh.setParam("ut_states_update",true);
         robotStates.publish(robotMsg);
     }else{
-
+      if(no_update < 10){
+        no_update++;
+      }
+    }
+    if(no_update >= 10){
+      nh.setParam("ut_states_update",false);
     }
     ros::spinOnce();
     loop_rate.sleep();

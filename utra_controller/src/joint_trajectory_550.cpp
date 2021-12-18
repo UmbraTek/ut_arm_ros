@@ -36,8 +36,22 @@ float sample_duration = 0.03;
 
 
 void execute(const control_msgs::FollowJointTrajectoryGoalConstPtr& goal, Server* as) {
-  utra_msg::Mservojoint srv;
+
   ros::NodeHandle nh;
+  bool ut_states_update;
+  // publish from utra_publish.cpp
+  if (nh.getParam("ut_states_update", ut_states_update)) {
+    if(ut_states_update == false){
+      ROS_ERROR("utra states no update !!!!!");
+      as->setAborted();
+      return;
+    }
+  }else{
+    as->setAborted();
+    return;
+  }
+
+  utra_msg::Mservojoint srv;
   srv.request.axiz = 6;
   float sample_duration,plan_delay;
   int CON;
@@ -54,7 +68,7 @@ void execute(const control_msgs::FollowJointTrajectoryGoalConstPtr& goal, Server
   int p_size = goal->trajectory.points.size();
   int have_CON_s = p_size/CON;
   int have_CON_m = p_size%CON;
-  // 分一个循环 每次传300个点， 最后传余数的点
+  // 分一个循环 每次传30个点， 最后传余数的点
   for (size_t s = 0; s < have_CON_s; s++)
   {
     srv.request.num = CON;
@@ -106,12 +120,17 @@ void execute(const control_msgs::FollowJointTrajectoryGoalConstPtr& goal, Server
   }
   ROS_INFO("Recieve action successful!");
 
-  ros::Duration(0.2).sleep();
+
+  // check utra moveing state, and update the return 
+
+  ros::Duration(0.1).sleep();
   utra_msg::GetInt16 srv1;
   int error_count = 0;
+  bool isStart = false;
+  int sleep_time=0;
   while (1)
   {
-    
+    sleep_time++;
     if (status_get_client.call(srv1))
     {
       if(srv1.response.ret == -3)
@@ -121,11 +140,27 @@ void execute(const control_msgs::FollowJointTrajectoryGoalConstPtr& goal, Server
           as->setAborted();
           return;
         }
-      }else if(srv1.response.data != 1){
-        as->setSucceeded();
-        ROS_INFO("moveing finish!!");
+      }else if(srv1.response.data == 1 ){
+        isStart = true;  // set flog that utra is moveing
+      }
+      else if(srv1.response.data == 0 || srv1.response.data == 2 ){
+        if(isStart){ // if state from moving to narmal or sleep , it mean that utra is run finish
+          as->setSucceeded();
+          ROS_INFO("moveing finish!!");
+          return;
+        }else{
+          if(sleep_time>10){ // if isStart alway false, and more than 10 times , return error.
+            as->setAborted();
+            ROS_INFO("moveing finish!!");
+            return;
+          }
+        }
+      }else if(srv1.response.data == 3 || srv1.response.data == 4 ){
+        as->setAborted();
+        ROS_ERROR("moveing pause or stop!!");
         return;
-      }else{
+      }
+      else{
         if(error_count>0){
           error_count--;
         }

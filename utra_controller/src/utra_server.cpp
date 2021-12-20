@@ -21,6 +21,7 @@
 #include "utra_msg/GetFloat32.h"
 #include "utra_msg/SetFloat32.h"
 #include "utra_msg/GetUInt16A.h"
+#include "utra_msg/GetFloat32A.h"
 
 #include "utra_msg/MovetoJointP2p.h"
 #include "utra_msg/MovetoCartesianLine.h"
@@ -103,6 +104,7 @@ bool mv_servo_joint(utra_msg::Mservojoint::Request &req, utra_msg::Mservojoint::
     res.message="server have not connected utra";
     return true;
   }
+  int RET_ERROR_COUNT = 0; //发送错误计数
   int axiz = req.axiz;
   int CON = 3; //how many points with one time to send
   if(axiz == 6){
@@ -141,6 +143,19 @@ bool mv_servo_joint(utra_msg::Mservojoint::Request &req, utra_msg::Mservojoint::
       req_frames_index = req_frames_index + CON*6;
       ret = utra->moveto_servo_joint(CON, frames, mvtime);
       ROS_INFO("req_frames_index %d ret %d",req_frames_index,ret);
+      if(ret != 0 ){
+        RET_ERROR_COUNT++;
+      }else{
+        if(RET_ERROR_COUNT>0){
+          RET_ERROR_COUNT--;
+        }
+      }
+      if(RET_ERROR_COUNT>3){
+        res.ret=-3;
+        res.message="RET_ERROR_COUNT more than 3 times";
+        ROS_ERROR("RET_ERROR_COUNT more than 3 times");
+        return true;
+      }
     }
     
     //last time send
@@ -475,6 +490,22 @@ bool moveto_cartesian_lineb(utra_msg::MovetoCartesianLineB::Request &req, utra_m
   }
 }
 
+bool get_joint_actual_pos(utra_msg::GetFloat32A::Request &req, utra_msg::GetFloat32A::Response &res) {
+  if(utra == NULL){
+    res.ret=-3;
+    return true;
+  }
+  float array[10] = {0};
+  int ret = utra->get_joint_target_pos(array);
+  res.ret=ret;
+  for (size_t j = 0; j < 10; j++)
+    {
+      res.data.push_back(array[j]);
+    }
+  return true;
+}
+
+
 int main(int argc, char **argv) {
   ros::init(argc, argv, "utra_server");
   ros::NodeHandle nh;
@@ -531,6 +562,7 @@ int main(int argc, char **argv) {
   ros::ServiceServer plansleep = nh.advertiseService("utra/plan_sleep", plan_sleep);
   ros::ServiceServer movetocartesianlineb = nh.advertiseService("utra/moveto_cartesian_lineb", moveto_cartesian_lineb);
   // ros::ServiceServer moveto_cartesian_circle = nh.advertiseService("utra/moveto_cartesian_circle", moveto_cartesian_circle);
+  ros::ServiceServer getjointactualpos = nh.advertiseService("utra/get_joint_actual_pos", get_joint_actual_pos);
 
   ROS_INFO("Ready for utra server.");
   ros::spin();

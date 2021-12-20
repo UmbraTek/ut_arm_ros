@@ -1,0 +1,9 @@
+
+---
+# ret is 0: successful  -3:disconnect  other:have error
+# Service name: utra/get_joint_actual_pos
+# response: get utra gripper actual joints [joint1,joint2,joint3,joint4,joint5,joint6] uint is rad.
+
+
+int16 ret
+float32[] data

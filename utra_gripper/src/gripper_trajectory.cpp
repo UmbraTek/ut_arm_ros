@@ -38,8 +38,9 @@ void execute(const control_msgs::FollowJointTrajectoryGoalConstPtr& goal, Server
 int main(int argc, char** argv) {
   ros::init(argc, argv, "trajectory_server");
   ros::NodeHandle nh;
+  ros::NodeHandle pn("~");
   std::string utra_ns_gripper;
-  if (nh.getParam("utra_ns_gripper", utra_ns_gripper)) {
+  if (pn.getParam("utra_ns_gripper", utra_ns_gripper)) {
     ROS_INFO("Got param: %s", utra_ns_gripper.c_str());
   } else {
     ROS_ERROR("Failed to get param 'utra_ns_gripper'");

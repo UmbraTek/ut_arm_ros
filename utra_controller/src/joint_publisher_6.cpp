@@ -43,8 +43,19 @@ void statesCallback(const utra_msg::RobotMsg& msg)
 int main(int argc, char **argv) {
   ros::init(argc, argv, "joint_publisher");
   ros::NodeHandle n;
+  ros::NodeHandle pn("~");
+  std::string utra_ns;
+  if (pn.getParam("utra_ns", utra_ns)) {
+    ROS_INFO("Got param: %s", utra_ns.c_str());
+  } else {
+    ROS_ERROR("Failed to get param 'utra_ns'");
+    return -1;
+  }
 
-  joint_msg_pub = n.advertise<sensor_msgs::JointState>("utra/joint_states_550", 1000);
+  char* cstr = new char[utra_ns.length() + 1];
+  std::strcpy(cstr, utra_ns.c_str());
+
+  joint_msg_pub = n.advertise<sensor_msgs::JointState>(cstr, 1000);
   ros::Subscriber sub = n.subscribe("utra/states", 1000, statesCallback);
   
  

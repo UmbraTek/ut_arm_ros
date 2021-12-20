@@ -66,48 +66,59 @@ int ArmApiBase::sendpend(uint8_t rw, const uint8_t cmd[5], uint8_t* tx_data, flo
     rx_len = cmd[4];
   }
 
-  pthread_mutex_lock(&mutex_);
   send(rw, cmd[0], tx_len, tx_data);
   int ret = pend(rx_len, timeout_s);
-  pthread_mutex_unlock(&mutex_);
   return ret;
 }
 
 bool ArmApiBase::is_error(void) { return is_error_; }
 
 int ArmApiBase::get_reg_int8(uint8_t* value, const uint8_t reg[5]) {
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::R, reg, NULL);
   memcpy(value, &utrc_rx_.data[0], reg[2]);
+  pthread_mutex_unlock(&mutex_);
   return ret;
 }
 
 int ArmApiBase::set_reg_int8(uint8_t* value, const uint8_t reg[5]) {
-  return sendpend(ARM_RW::W, reg, value);  //
+  pthread_mutex_lock(&mutex_);
+  int ret = sendpend(ARM_RW::W, reg, value);
+  pthread_mutex_unlock(&mutex_);
+  return ret;
 }
 
 int ArmApiBase::get_reg_int32(int* value, const uint8_t reg[5], int n) {
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::R, reg, NULL);
   HexData::hex_to_int32_big(&utrc_rx_.data[0], value, n);
+  pthread_mutex_unlock(&mutex_);
   return ret;
 }
 
 int ArmApiBase::set_reg_int32(int* value, const uint8_t reg[5], int n) {
   uint8_t data[4];
   HexData::int32_to_hex_big(value, &data[0], n);
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::W, reg, data);
+  pthread_mutex_unlock(&mutex_);
   return ret;
 }
 
 int ArmApiBase::get_reg_fp32(float* value, const uint8_t reg[5], int n) {
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::R, reg, NULL);
   HexData::hex_to_fp32_big(&utrc_rx_.data[0], value, n);
+  pthread_mutex_unlock(&mutex_);
   return ret;
 }
 
 int ArmApiBase::set_reg_fp32(float* value, const uint8_t reg[5], int n) {
   uint8_t data[4 * n];
   HexData::fp32_to_hex_big(value, data, n);
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::W, reg, data);
+  pthread_mutex_unlock(&mutex_);
   return ret;
 }
 
@@ -225,7 +236,9 @@ int ArmApiBase::moveto_servo_joint(int frames_num, float* mvjoint, float* mvtime
   HexData::int32_to_hex_big(&frames_num, &data[0], 1);
   HexData::fp32_to_hex_big(txdata, &data[4], data_len);
   reg_->MOVES_JOINT[3] = (data_len + 1) * 4;
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::W, reg_->MOVES_JOINT, data);
+  pthread_mutex_unlock(&mutex_);
   return ret;
 }
 
@@ -264,14 +277,18 @@ int ArmApiBase::set_teach_sens(uint8_t sens) { return set_reg_int8(&sens, reg_->
 
 int ArmApiBase::get_friction(uint8_t axis, float* fri) {
   uint8_t tx_data[2] = {reg_->FRICTION[0], axis};
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::R, reg_->FRICTION, tx_data);
   HexData::hex_to_fp32_big(&utrc_rx_.data[0], fri, 4);
+  pthread_mutex_unlock(&mutex_);
   return ret;
 }
 int ArmApiBase::set_friction(uint8_t axis, float* fri) {
   uint8_t data[4 * 4 + 2] = {reg_->FRICTION[0], axis};
   HexData::fp32_to_hex_big(fri, &data[2], 4);
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::W, reg_->FRICTION, data);
+  pthread_mutex_unlock(&mutex_);
   return ret;
 }
 
@@ -293,61 +310,75 @@ int ArmApiBase::is_tcp_limit(void) { return 0; }
  ************************************************************/
 int ArmApiBase::get_utrc_int8_now(uint8_t line, uint8_t id, uint8_t reg, uint8_t* value) {
   uint8_t tx_data[3] = {line, id, reg};
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::R, reg_->UTRC_INT8_NOW, tx_data);
   if (ret == 0 || ret == UTRC_ERROR::STATE) ret = utrc_rx_.data[0];
   *value = utrc_rx_.data[1];
+  pthread_mutex_unlock(&mutex_);
   return ret;
 }
 
 int ArmApiBase::set_utrc_int8_now(uint8_t line, uint8_t id, uint8_t reg, uint8_t value) {
   uint8_t tx_data[4] = {line, id, reg, value};
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::W, reg_->UTRC_INT8_NOW, tx_data);
   if (ret == 0 || ret == UTRC_ERROR::STATE) ret = utrc_rx_.data[0];
+  pthread_mutex_unlock(&mutex_);
   return ret;
 }
 
 int ArmApiBase::get_utrc_int32_now(uint8_t line, uint8_t id, uint8_t reg, int32_t* value) {
   uint8_t tx_data[3] = {line, id, reg};
   int32_t rx_data[2];
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::R, reg_->UTRC_INT8_NOW, tx_data);
   HexData::hex_to_int32_big(&utrc_rx_.data[0], rx_data, 2);
   if (ret == 0 || ret == UTRC_ERROR::STATE) ret = rx_data[0];
   *value = rx_data[1];
+  pthread_mutex_unlock(&mutex_);
   return ret;
 }
 
 int ArmApiBase::set_utrc_int32_now(uint8_t line, uint8_t id, uint8_t reg, int32_t value) {
   uint8_t tx_data[7] = {line, id, reg};
   HexData::int32_to_hex_big(&value, &tx_data[3], 1);
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::W, reg_->UTRC_INT8_NOW, tx_data);
   if (ret == 0 || ret == UTRC_ERROR::STATE) ret = utrc_rx_.data[0];
+  pthread_mutex_unlock(&mutex_);
   return ret;
 }
 
 int ArmApiBase::get_utrc_float_now(uint8_t line, uint8_t id, uint8_t reg, float* value) {
   uint8_t tx_data[3] = {line, id, reg};
   float rx_data[2];
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::R, reg_->UTRC_FP32_NOW, tx_data);
   HexData::hex_to_fp32_big(&utrc_rx_.data[0], rx_data, 2);
   if (ret == 0 || ret == UTRC_ERROR::STATE) ret = rx_data[0];
   *value = rx_data[1];
+  pthread_mutex_unlock(&mutex_);
   return ret;
 }
 
 int ArmApiBase::set_utrc_float_now(uint8_t line, uint8_t id, uint8_t reg, float value) {
   uint8_t tx_data[7] = {line, id, reg};
   HexData::fp32_to_hex_big(&value, &tx_data[3], 1);
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::W, reg_->UTRC_FP32_NOW, tx_data);
   if (ret == 0 || ret == UTRC_ERROR::STATE) ret = utrc_rx_.data[0];
+  pthread_mutex_unlock(&mutex_);
   return ret;
 }
 
 int ArmApiBase::get_utrc_int8n_now(uint8_t line, uint8_t id, uint8_t reg, uint8_t* data, uint8_t rx_len) {
   uint8_t tx_data[4] = {line, id, reg, rx_len};
   reg_->UTRC_INT8N_NOW[2] = rx_len + 1;
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::R, reg_->UTRC_INT8N_NOW, tx_data);
   if (ret == 0 || ret == UTRC_ERROR::STATE) ret = utrc_rx_.data[0];
   memcpy(data, &utrc_rx_.data[1], rx_len);
+  pthread_mutex_unlock(&mutex_);
   return ret;
 }
 
@@ -355,22 +386,27 @@ int ArmApiBase::set_utrc_int8n_now(uint8_t line, uint8_t id, uint8_t reg, uint8_
   uint8_t tx_data[4 + tx_len] = {line, id, reg, tx_len};
   memcpy(&tx_data[4], data, tx_len);
   reg_->UTRC_INT8N_NOW[3] = tx_len + 4;
-
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::W, reg_->UTRC_INT8N_NOW, tx_data);
+  pthread_mutex_unlock(&mutex_);
   if (ret == 0 || ret == UTRC_ERROR::STATE) ret = utrc_rx_.data[0];
   return ret;
 }
 
 int ArmApiBase::set_utrc_int8_que(uint8_t line, uint8_t id, uint8_t reg, uint8_t value) {
   uint8_t tx_data[4] = {line, id, reg, value};
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::W, reg_->UTRC_INT8_QUE, tx_data);
+  pthread_mutex_unlock(&mutex_);
   if (ret == 0 || ret == UTRC_ERROR::STATE) ret = 0;
   return ret;
 }
 int ArmApiBase::set_utrc_int32_que(uint8_t line, uint8_t id, uint8_t reg, int32_t value) {
   uint8_t tx_data[7] = {line, id, reg};
   HexData::int32_to_hex_big(&value, &tx_data[3], 1);
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::W, reg_->UTRC_INT32_QUE, tx_data);
+  pthread_mutex_unlock(&mutex_);
   if (ret == 0 || ret == UTRC_ERROR::STATE) ret = 0;
   return ret;
 }
@@ -378,7 +414,9 @@ int ArmApiBase::set_utrc_int32_que(uint8_t line, uint8_t id, uint8_t reg, int32_
 int ArmApiBase::set_utrc_float_que(uint8_t line, uint8_t id, uint8_t reg, float value) {
   uint8_t tx_data[7] = {line, id, reg};
   HexData::fp32_to_hex_big(&value, &tx_data[3], 1);
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::W, reg_->UTRC_FP32_QUE, tx_data);
+  pthread_mutex_unlock(&mutex_);
   if (ret == 0 || ret == UTRC_ERROR::STATE) ret = 0;
   return ret;
 }
@@ -387,8 +425,9 @@ int ArmApiBase::set_utrc_int8n_que(uint8_t line, uint8_t id, uint8_t reg, uint8_
   uint8_t tx_data[4 + tx_len] = {line, id, reg, tx_len};
   memcpy(&tx_data[4], data, tx_len);
   reg_->UTRC_INT8N_QUE[3] = tx_len + 4;
-
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::W, reg_->UTRC_INT8N_QUE, tx_data);
+  pthread_mutex_unlock(&mutex_);
   if (ret == 0 || ret == UTRC_ERROR::STATE) ret = 0;
   return ret;
 }
@@ -401,10 +440,11 @@ int ArmApiBase::set_pass_rs485_now(uint8_t line, uint8_t timeout_ms, uint8_t tx_
   memcpy(&temp[4], tx_data, tx_len);
   reg_->PASS_RS485_NOW[3] = tx_len + 4;
   reg_->PASS_RS485_NOW[4] = rx_len + 2;
-
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::W, reg_->PASS_RS485_NOW, temp);
   if (ret == 0 || ret == UTRC_ERROR::STATE) ret = utrc_rx_.data[0];
   memcpy(rx_data, &utrc_rx_.data[1], rx_len);
+  pthread_mutex_unlock(&mutex_);
   return ret;
 }
 
@@ -414,18 +454,20 @@ int ArmApiBase::set_pass_rs485_que(uint8_t line, uint8_t tx_len, uint8_t* tx_dat
   uint8_t temp[2 + tx_len] = {line, tx_len};
   memcpy(&temp[2], tx_data, tx_len);
   reg_->PASS_RS485_QUE[3] = tx_len + 2;
-
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::W, reg_->PASS_RS485_QUE, temp);
+  pthread_mutex_unlock(&mutex_);
   if (ret == 0 || ret == UTRC_ERROR::STATE) ret = 0;
-
   return ret;
 }
 
 int ArmApiBase::get_utrc_u8float_now(uint8_t line, uint8_t id, uint8_t reg, uint8_t num, float* value) {
   uint8_t tx_data[4] = {line, id, reg, num};
   float rx_data[2];
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::R, reg_->UTRC_U8FP32_NOW, tx_data);
   HexData::hex_to_fp32_big(&utrc_rx_.data[0], rx_data, 2);
+  pthread_mutex_unlock(&mutex_);
   if (ret == 0 || ret == UTRC_ERROR::STATE) ret = rx_data[0];
   *value = rx_data[1];
   return ret;
@@ -434,16 +476,20 @@ int ArmApiBase::get_utrc_u8float_now(uint8_t line, uint8_t id, uint8_t reg, uint
 int ArmApiBase::set_utrc_u8float_now(uint8_t line, uint8_t id, uint8_t reg, uint8_t num, float value) {
   uint8_t tx_data[8] = {line, id, reg, num};
   HexData::fp32_to_hex_big(&value, &tx_data[4], 1);
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::W, reg_->UTRC_U8FP32_NOW, tx_data);
   if (ret == 0 || ret == UTRC_ERROR::STATE) ret = utrc_rx_.data[0];
+  pthread_mutex_unlock(&mutex_);
   return ret;
 }
 
 int ArmApiBase::get_utrc_nfloat_now(uint8_t line, uint8_t id, uint8_t reg, uint8_t num, float* value) {
   uint8_t tx_data[4] = {line, id, reg, num};
   float rx_data[1 + num];
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::R, reg_->UTRC_FP32N_NOW, tx_data);
   HexData::hex_to_fp32_big(&utrc_rx_.data[0], rx_data, 1 + num);
+  pthread_mutex_unlock(&mutex_);
   if (ret == 0 || ret == UTRC_ERROR::STATE) ret = rx_data[0];
   memcpy(value, &rx_data[1], sizeof(float) * num);
   return ret;
@@ -454,23 +500,27 @@ int ArmApiBase::get_utrc_nfloat_now(uint8_t line, uint8_t id, uint8_t reg, uint8
  ************************************************************/
 int ArmApiBase::get_gpio_in(uint8_t line, uint8_t id, int32_t* fun, int32_t* digit, int* adc_num, float* adc_value) {
   uint8_t tx_data[2] = {line, id};
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::R, reg_->GPIO_IN, tx_data);
   if (ret == 0 || ret == UTRC_ERROR::STATE) ret = utrc_rx_.data[0];
   HexData::hex_to_int32_big(&utrc_rx_.data[1], fun, 1);
   HexData::hex_to_int32_big(&utrc_rx_.data[5], digit, 1);
   *adc_num = utrc_rx_.data[9];
   HexData::hex_to_fp32_big(&utrc_rx_.data[10], adc_value, *adc_num);
+  pthread_mutex_unlock(&mutex_);
   return ret;
 }
 
 int ArmApiBase::get_gpio_out(uint8_t line, uint8_t id, int32_t* fun, int32_t* digit, int* adc_num, float* adc_value) {
   uint8_t tx_data[2] = {line, id};
+  pthread_mutex_lock(&mutex_);
   int ret = sendpend(ARM_RW::R, reg_->GPIO_OU, tx_data);
   if (ret == 0 || ret == UTRC_ERROR::STATE) ret = utrc_rx_.data[0];
   HexData::hex_to_int32_big(&utrc_rx_.data[1], fun, 1);
   HexData::hex_to_int32_big(&utrc_rx_.data[5], digit, 1);
   *adc_num = utrc_rx_.data[9];
   HexData::hex_to_fp32_big(&utrc_rx_.data[10], adc_value, *adc_num);
+  pthread_mutex_unlock(&mutex_);
   return ret;
 }
 

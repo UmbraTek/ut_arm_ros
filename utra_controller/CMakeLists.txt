@@ -55,10 +55,10 @@ add_dependencies(joint_trajectory_6 utra_controller_gencpp utra_msg_generate_mes
 
 add_executable(utra_server src/utra_server.cpp)
 target_link_libraries(utra_server ${catkin_LIBRARIES} utra_api)
-add_dependencies(utra_server utra_server_gencpp)
+add_dependencies(utra_server utra_server_gencpp utra_msg_generate_messages_cpp)
 
 add_executable(utra_publish src/utra_publish.cpp)
 target_link_libraries(utra_publish ${catkin_LIBRARIES} utra_api)
-add_dependencies(utra_publish utra_publish_gencpp)
+add_dependencies(utra_publish utra_publish_gencpp utra_msg_generate_messages_cpp)
 
 

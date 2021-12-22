@@ -9,7 +9,7 @@
 #        3: cartesian teaching mode (NOT used in current version)
 
 # Service name: utra/status_get
-# response: get utra status 0:nomal 1:moveing 2:sleep 3:pause 4:stop
+# response: get utra status  1:moveing 2:sleep 3:pause 4:stop
 
 # Service name: utra/enable_get
 # response: get utra enable 

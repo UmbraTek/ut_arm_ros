@@ -33,7 +33,7 @@ rosservice call /utra/mode_get
 refer to [EnableSet.srv](../utra_msg/srv/EnableSet.srv),[GetInt16.srv](../utra_msg/srv/GetInt16.srv)
 
 ```
-rosservice call /utra/enable_set 0 
+rosservice call /utra/enable_set 10 1 # 10>6 axis, Joint axis, if it is greater than the maximum number of joints, set all joints
 rosservice call /utra/enable_get  
 ```
 

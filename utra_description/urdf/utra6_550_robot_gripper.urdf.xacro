@@ -22,6 +22,20 @@
       <origin xyz="0 0 0" rpy="0 0 0" />
     </joint>
 
+    <link name="$(arg prefix)link_tcp" />
+
+    <joint
+      name="$(arg prefix)joint_tcp"
+      type="fixed">
+      <origin
+        xyz="0 -0.18 0"
+        rpy="0 0 0" />
+      <parent
+        link="$(arg prefix)link_6" />
+      <child
+        link="$(arg prefix)link_tcp" />
+    </joint>
+
     <xacro:if value="$(arg limited)">
       <xacro:utra6_550_urdf prefix="$(arg prefix)"
         joint1_lower_limit="${-2.0*pi}" joint1_upper_limit="${2.0*pi}"

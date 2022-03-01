@@ -2,6 +2,7 @@
 <launch>
   <arg name="limited" default="True" doc="If true, limits joint range (-PI, PI) on all joints." />
   <arg name="gripper" default="false"/>
+  <arg name="vacuum_gripper" default="false"/>
   <include file="$(find utra_description)/launch/utra6_1000_upload.launch" >
     <arg name="limited" value="$(arg limited)"/>
     <arg name="gripper" value="$(arg gripper)"/>

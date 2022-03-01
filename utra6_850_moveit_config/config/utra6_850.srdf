@@ -41,5 +41,6 @@
     <disable_collisions link1="link_4" link2="link_6" reason="Never" />
     <disable_collisions link1="link_5" link2="link_6" reason="Adjacent" />
     <disable_collisions link1="link_6" link2="vauum_gripper_base" reason="Never" />
+    <disable_collisions link1="link_6" link2="d435i" reason="Never" />
     <disable_collisions link1="vauum_gripper_base" link2="vauum_gripper" reason="Never" />
 </robot>

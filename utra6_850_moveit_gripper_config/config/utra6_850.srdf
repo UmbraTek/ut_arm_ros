@@ -68,6 +68,8 @@
     <disable_collisions link1="link_3" link2="link_4" reason="Adjacent" />
     <disable_collisions link1="link_4" link2="link_5" reason="Adjacent" />
     <disable_collisions link1="link_4" link2="link_6" reason="Never" />
+    <disable_collisions link1="link_6" link2="d435i" reason="Never" />
+    <disable_collisions link1="d435i" link2="base_link_gripper" reason="Never" />
     <disable_collisions link1="link_4" link2="right_finger_link" reason="Never" />
     <disable_collisions link1="link_4" link2="right_inner_knuckle_link" reason="Never" />
     <disable_collisions link1="link_4" link2="right_knuckle_link" reason="Never" />

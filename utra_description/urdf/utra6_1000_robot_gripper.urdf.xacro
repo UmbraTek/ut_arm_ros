@@ -7,6 +7,7 @@
   <xacro:arg name="effort_control" default="false"/>
   <xacro:arg name="attach_to_world" default="true"/>
   <xacro:arg name="add_gripper" default="true"/>
+  <xacro:arg name="add_realsense_d435i" default="false"/> 
 
     <!-- utra6_1000 -->
     <xacro:include filename="$(find utra_description)/urdf/utra6_1000.urdf.xacro" />
@@ -61,12 +62,43 @@
 
   <xacro:include filename="$(find utra_description)/urdf/utra6_1000_common.gazebo.xacro" /> 
 
-  <xacro:if value="$(arg add_gripper)" >
+  <xacro:if value="$(arg add_realsense_d435i)" >
+    <link name="$(arg prefix)d435i">
+        <inertial>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <mass value="0.00001" />
+          <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+        </inertial>
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry> <mesh filename="package://utra_description/meshes/d435i/d435i.STL" /> </geometry>
+          <material name="Silver"> <color rgba="0.7 0.7 0.7 1.0"/> </material>
+        </visual>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry> <mesh filename="package://utra_description/meshes/d435i/d435i.STL" /> </geometry>
+        </collision>
+    </link>
+    <joint name="$(arg prefix)d435i_joint" type="fixed">
+        <parent link="$(arg prefix)link_6"/>
+        <child link="$(arg prefix)d435i"/>
+        <origin xyz="0 0 0" rpy="0 -${pi/2} ${pi/2}"/>
+    </joint>
+    <xacro:if value="$(arg add_gripper)" >
       <xacro:include filename="$(find utra_gripper)/urdf/gripper.urdf.xacro" />
-      <xacro:gripper prefix="$(arg prefix)" parent="$(arg prefix)link_6" >
-        <origin xyz="0 0 0" rpy="1.571 1.571 0"/>
+      <xacro:gripper prefix="$(arg prefix)" parent="$(arg prefix)d435i" >
+        <origin xyz="0 0 0" rpy="0 0 0"/>
       </xacro:gripper>
+    </xacro:if>
   </xacro:if>
+  <xacro:unless value="$(arg add_realsense_d435i)">
+      <xacro:if value="$(arg add_gripper)" >
+          <xacro:include filename="$(find utra_gripper)/urdf/gripper.urdf.xacro" />
+          <xacro:gripper prefix="$(arg prefix)" parent="$(arg prefix)link_6" >
+            <origin xyz="0 0 0" rpy="1.571 1.571 0"/>
+          </xacro:gripper>
+      </xacro:if>
+  </xacro:unless>
 
 
 </robot>

@@ -96,9 +96,3 @@ In this panel, you can enable the utra and set the gripper more easy.
 
 ![RVIZ2](./doc/rviz2.png)  
 
-# 9. Adding RealSense D435i model
-
-You can add the RealSense D435i model with camera stand provided by Umbratek.
-For example in Utra 850:
-1. base add d435i: set `add_realsense_d435i` value to `true` in  `utra6_850_robot.urdf.xacro`
-2. add d435i on gripper: set `add_realsense_d435i` value to `true` in  `utra6_850_robot_gripper.urdf.xacro`

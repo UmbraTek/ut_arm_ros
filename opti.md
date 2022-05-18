@@ -1,35 +1,35 @@
 
-# 1. Run in RViz
+# 1. Run in Rviz
 
 Launch opti6 rviz :
 ```bash
-roslaunch utra_description opti6_view.launch [gripper:=true] [vacuum_gripper:=true]
+roslaunch utra_description opti6_800_view.launch [gripper:=true] [vacuum_gripper:=true]
 ```
 
-# 2. Run in RViz  and Gazebo simulator
+# 2. Run in Rviz  and Gazebo simulator
 You can launch Rviz and gazebo, and controll the arm in Rviz. When in first launch time, the arm is in vertical posture, it hard to plan trajectory, you can select the **init** posture in **MotionPlanning->Planning->Goal state** and click the **Plan & Execute** button to make arm go to the good posture.
 
 Launch opti6 rviz and gazebo:
 1. Run gazebo first:
 ```bash
-roslaunch opti6_gazebo gazebo.launch
+roslaunch opti6_800_gazebo gazebo.launch
 ```
 2. Then in another terminal:
 ```bash
-roslaunch opti6_moveit_config moveit_planning_execution.launch
+roslaunch opti6_800_moveit_config moveit_planning_execution.launch
 ```
 
 If launch with gripper,
 1. Run gazebo with gripper first:
 ```bash
-roslaunch opti6_gazebo gazebo.launch gripper:=true
+roslaunch opti6_800_gazebo gazebo.launch gripper:=true
 ```
 2. Then in another terminal:
 ```bash
-roslaunch opti6_moveit_gripper_config moveit_planning_execution.launch
+roslaunch opti6_800_moveit_gripper_config moveit_planning_execution.launch
 ```
 
-# 3. Run RViz and connect with opti
+# 3. Run Rviz and connect with opti
 You can connect with opti and controll it in rviz.
 **Pay Attention** you need to very be careful the **Trajectory planning** in rviz , you must **Play** before the **Excute** every time to make sure that the generated trajectory is not **Collision**. We suggest that make opti with a good posture by select the **init** posture in **MotionPlanning->Planning->Goal state**. For Safe on Execute, we suggest you set the Velocity and Accel smaller first.
 ![init](./doc/init.png)  
@@ -49,7 +49,7 @@ please install the ros_industrial: <https://github.com/ros-industrial/industrial
 
 Launch the Rviz and connect the opti6
 ```bash
-roslaunch opti6_moveit_config run_with_utra.launch 
+roslaunch opti6_800_moveit_config run_with_utra.launch 
 ```
 
 ## 3.4 Open the Rviz with gripper
@@ -58,7 +58,7 @@ please install the ros_industrial: <https://github.com/ros-industrial/industrial
 
 Launch the Rviz with gripper and connect the opti6
 ```bash
-roslaunch opti6_moveit_gripper_config run_with_utra.launch 
+roslaunch opti6_800_moveit_gripper_config run_with_utra.launch 
 ```
 
 
@@ -93,6 +93,7 @@ You can open the opti rviz plugin by select Menu->Panels->utra_rviz->utra_panel
 ![RVIZ1](./doc/rviz1.png)  
 
 In this panel, you can enable the utra and set the gripper more easy.
+
 ![RVIZ2](./doc/rviz2.png)  
 
 # 9. Adding RealSense D435i model

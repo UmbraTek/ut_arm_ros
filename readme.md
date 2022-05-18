@@ -57,7 +57,7 @@ Skip above operation if you already have that inside your ~/.bashrc. Then do:
 ```bash
 source ~/.bashrc
 ```
-# 4. Run in RViz (Opti series refer to [opti.md](./opti.md))
+# 4. Run in Rviz (Opti series refer to [opti.md](./opti.md))
 Launch utra 550 rviz :
 ```bash
 roslaunch utra_description utra6_550_view.launch [gripper:=true] [vacuum_gripper:=true]
@@ -72,7 +72,7 @@ roslaunch utra_description utra6_1000_view.launch [gripper:=true] [vacuum_grippe
 ```
 
 
-# 5. Run in RViz  and Gazebo simulator
+# 5. Run in Rviz  and Gazebo simulator
 You can launch Rviz and gazebo, and controll the arm in Rviz. When in first launch time, the arm is in vertical posture, it hard to plan trajectory, you can select the **init** posture in **MotionPlanning->Planning->Goal state** and click the **Plan & Execute** button to make arm go to the good posture.
 
 ## 5.1 Launch Utra Series
@@ -96,7 +96,7 @@ roslaunch utra6_850_moveit_gripper_config moveit_planning_execution.launch
 ```
 
 
-# 6. Run RViz and connect with utra
+# 6. Run Rviz and connect with utra
 You can connect with utra and controll it in rviz.
 **Pay Attention** you need to very be careful the **Trajectory planning** in rviz , you must **Play** before the **Excute** every time to make sure that the generated trajectory is not **Collision**. We suggest that make utra with a good posture by select the **init** posture in **MotionPlanning->Planning->Goal state**. For Safe on Execute, we suggest you set the Velocity and Accel smaller first.
 ![init](./doc/init.png) 

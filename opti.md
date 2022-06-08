@@ -9,7 +9,7 @@ roslaunch utra_description opti6_800_view.launch [gripper:=true] [vacuum_gripper
 # 2. Run in Rviz  and Gazebo simulator
 You can launch Rviz and gazebo, and controll the arm in Rviz. When in first launch time, the arm is in vertical posture, it hard to plan trajectory, you can select the **init** posture in **MotionPlanning->Planning->Goal state** and click the **Plan & Execute** button to make arm go to the good posture.
 
-Launch opti6 rviz and gazebo:
+## Launch opti6 rviz and gazebo:
 1. Run gazebo first:
 ```bash
 roslaunch opti6_800_gazebo gazebo.launch
@@ -27,6 +27,25 @@ roslaunch opti6_800_gazebo gazebo.launch gripper:=true
 2. Then in another terminal:
 ```bash
 roslaunch opti6_800_moveit_gripper_config moveit_planning_execution.launch
+```
+## Launch opti7 rviz and gazebo:
+1. Run gazebo first:
+```bash
+roslaunch opti7_800_gazebo gazebo.launch
+```
+2. Then in another terminal:
+```bash
+roslaunch opti7_800_moveit_config moveit_planning_execution.launch
+```
+
+If launch with gripper,
+1. Run gazebo with gripper first:
+```bash
+roslaunch opti7_800_gazebo gazebo.launch gripper:=true
+```
+2. Then in another terminal:
+```bash
+roslaunch opti7_800_moveit_gripper_config moveit_planning_execution.launch
 ```
 
 # 3. Run Rviz and connect with opti
@@ -95,4 +114,5 @@ You can open the opti rviz plugin by select Menu->Panels->utra_rviz->utra_panel
 In this panel, you can enable the utra and set the gripper more easy.
 
 ![RVIZ2](./doc/rviz2.png)  
+
 

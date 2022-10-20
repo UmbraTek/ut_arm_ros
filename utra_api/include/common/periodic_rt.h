@@ -87,20 +87,20 @@ class RtTask {
 
   // 设置线程堆栈大小
   void stack_prefault(long size) {
-    volatile char stack[size];
-    memset(const_cast<char*>(stack), 0, size);
-    if (mlockall(MCL_CURRENT | MCL_FUTURE) == -1) {
-      printf("[Rt  Task] [Error] %s mlockall failed.\n", name_.c_str());
-    }
+    //volatile char stack[size];
+    //memset(const_cast<char*>(stack), 0, size);
+    //if (mlockall(MCL_CURRENT | MCL_FUTURE) == -1) {
+    //  printf("[Rt  Task] [Error] %s mlockall failed.\n", name_.c_str());
+    //}
   }
 
   // 设置线程优先级
   void setup_scheduler(int priority) {
-    struct sched_param params;
-    params.sched_priority = priority;
-    if (sched_setscheduler(0, SCHED_FIFO, &params) == -1) {
-      printf("[Rt  Task] [Error] %s setup_scheduler failed.\n", name_.c_str());
-    }
+    //struct sched_param params;
+    //params.sched_priority = priority;
+    //if (sched_setscheduler(0, SCHED_FIFO, &params) == -1) {
+    //  printf("[Rt  Task] [Error] %s setup_scheduler failed.\n", name_.c_str());
+    //}
   }
 
   // 周期性循环运行的函数

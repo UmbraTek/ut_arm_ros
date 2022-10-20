@@ -16,7 +16,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_library(${PROJECT_NAME} STATIC
+add_library(${PROJECT_NAME}
     src/common/network.cpp    
     src/common/preempt_rt.cpp    
     src/common/socket_serial.cpp

@@ -1,6 +1,5 @@
 
 
-
 /* Copyright 2021 Umbratek Inc. All Rights Reserved.
  *
  * Software License Agreement (BSD License)
@@ -30,10 +29,7 @@ using namespace std;
 
 typedef actionlib::SimpleActionServer<control_msgs::FollowJointTrajectoryAction> Server;
 
-
-void execute(const control_msgs::FollowJointTrajectoryGoalConstPtr& goal, Server* as) {
-  as->setSucceeded();
-}
+void execute(const control_msgs::FollowJointTrajectoryGoalConstPtr& goal, Server* as) { as->setSucceeded(); }
 
 int main(int argc, char** argv) {
   ros::init(argc, argv, "trajectory_server");

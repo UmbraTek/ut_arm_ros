@@ -6,15 +6,14 @@
  ============================================================================*/
 #include "utra/utra_report_status.h"
 
+#include <utra_msg/RobotMsg.h>
 #include "ros/ros.h"
 #include "sensor_msgs/JointState.h"
 #include "std_msgs/Header.h"
-#include <utra_msg/RobotMsg.h>
 
-ros::Publisher joint_msg_pub ;
-sensor_msgs::JointState jointState ;
-void statesCallback(const utra_msg::RobotMsg& msg)
-{
+ros::Publisher joint_msg_pub;
+sensor_msgs::JointState jointState;
+void statesCallback(const utra_msg::RobotMsg& msg) {
   jointState.header.stamp = ros::Time::now();
   jointState.position.clear();
   jointState.position.push_back(msg.joint[0]);
@@ -26,14 +25,14 @@ void statesCallback(const utra_msg::RobotMsg& msg)
   joint_msg_pub.publish(jointState);
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
   ros::init(argc, argv, "joint_publisher");
 
   ros::NodeHandle n;
 
   joint_msg_pub = n.advertise<sensor_msgs::JointState>("utra/joint_states_450", 1000);
   ros::Subscriber sub = n.subscribe("utra/states", 1000, statesCallback);
-  
+
   jointState.name.push_back("joint1");
   jointState.name.push_back("joint2");
   jointState.name.push_back("joint3");

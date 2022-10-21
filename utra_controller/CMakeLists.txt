@@ -35,25 +35,24 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 # add_subdirectory(utapi utapi_arm)
 add_executable(joint_publisher_450 src/joint_publisher_450.cpp)
 target_link_libraries(joint_publisher_450 ${catkin_LIBRARIES})
+add_dependencies(joint_publisher_450 utra_msg_generate_messages_cpp)
 
-# add_dependencies(joint_publisher_450 utra_controller_gencpp utra_msg_generate_messages_cpp)
 add_executable(joint_trajectory_450 src/joint_trajectory_450.cpp)
 target_link_libraries(joint_trajectory_450 ${catkin_LIBRARIES})
+add_dependencies(joint_trajectory_450 utra_msg_generate_messages_cpp)
 
-# add_dependencies(joint_trajectory_450 utra_controller_gencpp utra_msg_generate_messages_cpp)
 add_executable(joint_publisher_6 src/joint_publisher_6.cpp)
 target_link_libraries(joint_publisher_6 ${catkin_LIBRARIES})
+add_dependencies(joint_publisher_6 utra_msg_generate_messages_cpp)
 
-# add_dependencies(joint_publisher_6 utra_controller_gencpp utra_msg_generate_messages_cpp)
 add_executable(joint_trajectory_6 src/joint_trajectory_6.cpp)
 target_link_libraries(joint_trajectory_6 ${catkin_LIBRARIES})
+add_dependencies(joint_trajectory_6 utra_msg_generate_messages_cpp)
 
-# add_dependencies(joint_trajectory_6 utra_controller_gencpp utra_msg_generate_messages_cpp)
 add_executable(utra_server src/utra_server.cpp)
 target_link_libraries(utra_server ${catkin_LIBRARIES})
+add_dependencies(utra_server utra_msg_generate_messages_cpp)
 
-# add_dependencies(utra_server utra_server_gencpp utra_msg_generate_messages_cpp)
 add_executable(utra_publish src/utra_publish.cpp)
 target_link_libraries(utra_publish ${catkin_LIBRARIES})
-
-# add_dependencies(utra_publish utra_publish_gencpp utra_msg_generate_messages_cpp)
+add_dependencies(utra_publish utra_msg_generate_messages_cpp)

@@ -20,12 +20,11 @@
     <material name="Silver"> <color rgba="0.7 0.7 0.7 1.0"/> </material>
 
     <xacro:macro name="origin_joint1"> <origin xyz="0 0 0" rpy="0 0 0" /> </xacro:macro>
-    <xacro:macro name="origin_joint2"> <origin xyz="0 0 0.0795" rpy="0 0 0" /> </xacro:macro>
+    <xacro:macro name="origin_joint2"> <origin xyz="0 0 0.0845" rpy="0 0 0" /> </xacro:macro>
     <xacro:macro name="origin_joint3"> <origin xyz="0 0 0.2425" rpy="0 0 0" /> </xacro:macro>
     <xacro:macro name="origin_joint4"> <origin xyz="0 0 0.211" rpy="0 0 0" /> </xacro:macro>
     <xacro:macro name="origin_joint5"> <origin xyz="0 -0.1075 0.0965" rpy="0 0 0" /> </xacro:macro>
-    <xacro:macro name="origin_joint6"> <origin xyz="0 -0.0655 0" rpy="0 0 0" /> </xacro:macro>
-
+    <xacro:macro name="origin_joint6"> <origin xyz="0 -0.0665 0" rpy="${0.5*pi} 0 0" /> </xacro:macro>
 
     <xacro:macro name="origin_visual_base">  <origin xyz="0 0 0" rpy="0 0 0" /> </xacro:macro>
     <xacro:macro name="origin_visual_link_1"> <origin xyz="0 0 0" rpy="0 0 0" /> </xacro:macro>
@@ -231,7 +230,7 @@
       <xacro:origin_joint6/>
       <parent link="${prefix}link_5" />
       <child link="${prefix}link_6" />
-      <axis xyz="0 1 0" />
+      <axis xyz="0 0 1" />
       <limit lower="${joint6_lower_limit}" upper="${joint6_upper_limit}" effort="${effort_joint6}" velocity="3.14" />
       <dynamics damping="${damping_joint6}" friction="${friction_joint6}" />
     </joint>

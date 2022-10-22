@@ -18,7 +18,7 @@ void rot_to_euler(double mat[3][3], double arr[3]) {
 
 // ./ik_fast_utra6_550_robot 0 0 0 0 0 0
 int main(int argc, char** argv) {
-  IkReal j[6];
+  IkReal j[7];
   if (argc == GetNumJoints() + 1) {
     j[0] = atof(argv[1]) * M_PI / 180.0;
     j[1] = atof(argv[2]) * M_PI / 180.0;
@@ -26,6 +26,9 @@ int main(int argc, char** argv) {
     j[3] = atof(argv[4]) * M_PI / 180.0;
     j[4] = atof(argv[5]) * M_PI / 180.0;
     j[5] = atof(argv[6]) * M_PI / 180.0;
+    if (GetNumJoints() == 7) j[6] = atof(argv[7]) * M_PI / 180.0;
+    for (int i = 0; i < 7; i++) printf("%f ", j[i]);
+    printf("\n");
   } else {
     j[0] = 0;
     j[1] = 0;
@@ -33,6 +36,9 @@ int main(int argc, char** argv) {
     j[3] = 0;
     j[4] = 0;
     j[5] = 0;
+    j[6] = 0;
+    for (int i = 0; i < 6; i++) printf("%f ", j[i]);
+    printf("\n");
   }
 
   IkReal eetrans[3];
@@ -43,7 +49,7 @@ int main(int argc, char** argv) {
   double mat[3][3] = {eerot[0], eerot[1], eerot[2], eerot[3], eerot[4], eerot[5], eerot[6], eerot[7], eerot[8]};
   rot_to_euler(mat, arr);
 
-  for (int i = 0; i < 6; i++) printf("%f ", j[i]);
+  for (int i = 0; i < 7; i++) printf("%f ", j[i]);
   printf("\n");
   for (int i = 0; i < 3; i++) printf("%f ", eetrans[i] * 1000.0);
   for (int i = 0; i < 3; i++) printf("%f ", arr[i] * 180.0 / M_PI);

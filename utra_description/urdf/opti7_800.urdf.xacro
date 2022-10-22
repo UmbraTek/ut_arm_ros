@@ -97,12 +97,12 @@
       </inertial>
       <visual>
         <xacro:origin_visual_base/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/base.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti7_800/visual/base.STL" /> </geometry>
         <material name="Silver" />
       </visual>
       <collision>
         <xacro:origin_visual_base/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/base.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti7_800/visual/base.STL" /> </geometry>
       </collision>
     </link>
 
@@ -123,12 +123,12 @@
       </inertial>
       <visual>
         <xacro:origin_visual_link_1/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link1.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti7_800/visual/link1.STL" /> </geometry>
         <material name="Silver" />
       </visual>
       <collision>
         <xacro:origin_visual_link_1/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link1.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti7_800/visual/link1.STL" /> </geometry>
       </collision>
     </link>
 
@@ -149,12 +149,12 @@
       </inertial>
       <visual>
         <xacro:origin_visual_link_2/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link2.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti7_800/visual/link2.STL" /> </geometry>
         <material name="Silver" />
       </visual>
       <collision>
         <xacro:origin_visual_link_2/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link2.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti7_800/visual/link2.STL" /> </geometry>
       </collision>
     </link>
 
@@ -175,12 +175,12 @@
       </inertial>
       <visual>
         <xacro:origin_visual_link_3/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link3.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti7_800/visual/link3.STL" /> </geometry>
         <material name="Silver" />
       </visual>
       <collision>
         <xacro:origin_visual_link_3/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link3.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti7_800/visual/link3.STL" /> </geometry>
       </collision>
     </link>
 
@@ -201,17 +201,17 @@
       </inertial>
       <visual>
         <xacro:origin_visual_link_4/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link4.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti7_800/visual/link4.STL" /> </geometry>
         <material name="Silver" />
       </visual>
       <collision>
         <xacro:origin_visual_link_4/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link4.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti7_800/visual/link4.STL" /> </geometry>
       </collision>
     </link>
 
     <joint name="${prefix}joint5" type="revolute">
-      <xacro:origin_joint4/>
+      <xacro:origin_joint5/>
       <parent link="${prefix}link_4" />
       <child link="${prefix}link_5" />
       <axis xyz="0 0 1" />
@@ -227,12 +227,12 @@
       </inertial>
       <visual>
         <xacro:origin_visual_link_5/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link5.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti7_800/visual/link5.STL" /> </geometry>
         <material name="Silver" />
       </visual>
       <collision>
         <xacro:origin_visual_link_5/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link5.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti7_800/visual/link5.STL" /> </geometry>
       </collision>
     </link>
 
@@ -253,12 +253,12 @@
       </inertial>
       <visual>
         <xacro:origin_visual_link_6/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link6.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti7_800/visual/link6.STL" /> </geometry>
         <material name="Silver" />
       </visual>
       <collision>
         <xacro:origin_visual_link_6/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link6.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti7_800/visual/link6.STL" /> </geometry>
       </collision>
     </link>
 
@@ -279,12 +279,12 @@
       </inertial>
       <visual>
         <xacro:origin_visual_link_7/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link7.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti7_800/visual/link7.STL" /> </geometry>
         <material name="Silver" />
       </visual>
       <collision>
         <xacro:origin_visual_link_7/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link7.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti7_800/visual/link7.STL" /> </geometry>
       </collision>
     </link>
 

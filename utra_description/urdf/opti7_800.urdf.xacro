@@ -6,7 +6,7 @@
     Contributers:
   -->
 
-  <xacro:macro name="opti7_urdf" params="prefix
+  <xacro:macro name="opti7_800_urdf" params="prefix
     joint1_lower_limit:=${-2.0*pi} joint1_upper_limit:=${2.0*pi}
     joint2_lower_limit:=${-2.0*pi} joint2_upper_limit:=${2.0*pi}
     joint3_lower_limit:=${-2.0*pi} joint3_upper_limit:=${2.0*pi}

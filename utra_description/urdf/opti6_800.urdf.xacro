@@ -6,7 +6,7 @@
     Contributers:
   -->
 
-  <xacro:macro name="opti6_urdf" params="prefix
+  <xacro:macro name="opti6_800_urdf" params="prefix
     joint1_lower_limit:=${-2.0*pi} joint1_upper_limit:=${2.0*pi}
     joint2_lower_limit:=${-2.0*pi} joint2_upper_limit:=${2.0*pi}
     joint3_lower_limit:=${-2.0*pi} joint3_upper_limit:=${2.0*pi}
@@ -21,8 +21,7 @@
 
     <xacro:macro name="origin_joint1"> <origin xyz="0 0 0" rpy="0 0 0" /> </xacro:macro>
     <xacro:macro name="origin_joint2"> <origin xyz="0 0 0.278" rpy="0 0 0" /> </xacro:macro>
-    <xacro:macro name="_origin_joint3"> <origin xyz="0 0 0.1993" rpy="0 0 0" /> </xacro:macro>
-    <xacro:macro name="origin_joint3"> <origin xyz="0 0 0.1507" rpy="0 0 0" /> </xacro:macro>
+    <xacro:macro name="origin_joint3"> <origin xyz="0 0 0.35" rpy="0 0 0" /> </xacro:macro>
     <xacro:macro name="origin_joint4"> <origin xyz="0 0 0.1677" rpy="0 0 0" /> </xacro:macro>
     <xacro:macro name="origin_joint5"> <origin xyz="0 0 0.1393" rpy="0 0 0" /> </xacro:macro>
     <xacro:macro name="origin_joint6"> <origin xyz="0 0 0.143" rpy="0 0 0" /> </xacro:macro>
@@ -150,32 +149,10 @@
       </collision>
     </link>
 
-    <joint name="${prefix}joint3_" type="fixed">
-      <xacro:_origin_joint3/>
-      <parent link="${prefix}link_2" />
-      <child link="${prefix}link_3_" />
-    </joint>
-
-    <link name="${prefix}link_3_">
-      <inertial>
-        <xacro:origin_inertial_link_3/>
-        <mass value="${mass_link_3}" />
-        <xacro:inertia_link_3/>
-      </inertial>
-      <visual>
-        <xacro:origin_visual_link_3/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link3.STL" /> </geometry>
-        <material name="Silver" />
-      </visual>
-      <collision>
-        <xacro:origin_visual_link_3/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link3.STL" /> </geometry>
-      </collision>
-    </link>
 
     <joint name="${prefix}joint3" type="revolute">
       <xacro:origin_joint3/>
-      <parent link="${prefix}link_3_" />
+      <parent link="${prefix}link_2" />
       <child link="${prefix}link_3" />
       <axis xyz="0 -1 0" />
       <limit lower="${joint3_lower_limit}" upper="${joint3_upper_limit}" effort="${effort_joint3}" velocity="3.14" />
@@ -190,12 +167,12 @@
       </inertial>
       <visual>
         <xacro:origin_visual_link_3/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link4.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link3.STL" /> </geometry>
         <material name="Silver" />
       </visual>
       <collision>
         <xacro:origin_visual_link_3/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link4.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link3.STL" /> </geometry>
       </collision>
     </link>
 
@@ -216,12 +193,12 @@
       </inertial>
       <visual>
         <xacro:origin_visual_link_4/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link5.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link4.STL" /> </geometry>
         <material name="Silver" />
       </visual>
       <collision>
         <xacro:origin_visual_link_4/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link5.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link4.STL" /> </geometry>
       </collision>
     </link>
 
@@ -242,12 +219,12 @@
       </inertial>
       <visual>
         <xacro:origin_visual_link_5/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link6.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link5.STL" /> </geometry>
         <material name="Silver" />
       </visual>
       <collision>
         <xacro:origin_visual_link_5/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link6.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link5.STL" /> </geometry>
       </collision>
     </link>
 
@@ -268,12 +245,12 @@
       </inertial>
       <visual>
         <xacro:origin_visual_link_6/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link7.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link6.STL" /> </geometry>
         <material name="Silver" />
       </visual>
       <collision>
         <xacro:origin_visual_link_6/>
-        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link7.STL" /> </geometry>
+        <geometry> <mesh filename="package://utra_description/meshes/opti6_800/visual/link6.STL" /> </geometry>
       </collision>
     </link>
 

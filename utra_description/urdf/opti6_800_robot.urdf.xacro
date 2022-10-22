@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<robot xmlns:xacro="http://ros.org/wiki/xacro" name="opti6">
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="opti6_800">
 
   <xacro:arg name="prefix" default=""/>
   <xacro:arg name="ros_namespace" default="utra"/>
@@ -22,7 +22,7 @@
     </joint>
 
     <xacro:if value="$(arg limited)">
-      <xacro:opti6_urdf prefix="$(arg prefix)"
+      <xacro:opti6_800_urdf prefix="$(arg prefix)"
         joint1_lower_limit="${-2.0*pi}" joint1_upper_limit="${2.0*pi}"
         joint2_lower_limit="${-2.0*pi}" joint2_upper_limit="${2.0*pi}"
         joint3_lower_limit="${-2.0*pi}" joint3_upper_limit="${2.0*pi}"
@@ -31,7 +31,7 @@
         joint6_lower_limit="${-2.0*pi}" joint6_upper_limit="${2.0*pi}"/>
     </xacro:if>
     <xacro:unless value="$(arg limited)">
-      <xacro:opti6_urdf prefix="$(arg prefix)"/>
+      <xacro:opti6_800_urdf prefix="$(arg prefix)"/>
     </xacro:unless>
 
 

@@ -1,4 +1,4 @@
-opti6:
+opti7_800:
   # Publish all joint states -----------------------------------
   joint_state_controller:
     type: joint_state_controller/JointStateController

@@ -1,15 +1,15 @@
 <launch>
       <arg name="gripper" default="false"/>
-      <rosparam file="$(find opti7_800_gazebo)/config/opti7_trajectory_control.yaml" command="load"/>
+      <rosparam file="$(find opti7_800_gazebo)/config/opti7_800_trajectory_control.yaml" command="load"/>
 
       <node  name="arm_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
-            output="screen" ns="/opti7" args="arm_joint_controller"/>
+            output="screen" ns="/opti7_800" args="arm_joint_controller"/>
 
       <node if="$(arg gripper)" name="gripper_controller_spawner"
             pkg="controller_manager"
             type="spawner"
             respawn="false"
             output="screen"
-            ns="/opti7"
+            ns="/opti7_800"
             args="gripper_controller"/>
 </launch>

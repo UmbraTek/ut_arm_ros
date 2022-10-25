@@ -1,4 +1,4 @@
-opti7:  
+opti6_800:  
   gazebo_ros_control:
     pid_gains:
       joint1:
@@ -22,10 +22,6 @@ opti7:
         i: 0.01 
         d: 10.0
       joint6:
-        p: 100.0
-        i: 0.01 
-        d: 10.0
-      joint7:
         p: 100.0
         i: 0.01 
         d: 10.0

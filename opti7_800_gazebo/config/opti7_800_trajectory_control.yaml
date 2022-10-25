@@ -1,4 +1,4 @@
-opti7:
+opti7_800:
   arm_joint_controller:
     type: "position_controllers/JointTrajectoryController"
     joints:

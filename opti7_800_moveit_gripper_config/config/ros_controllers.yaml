@@ -24,7 +24,7 @@ joint_state_controller:
   type: joint_state_controller/JointStateController
   publish_rate: 50
 controller_list:
-  - name: opti7/arm_joint_controller
+  - name: opti7_800/arm_joint_controller
     action_ns: follow_joint_trajectory
     default: True
     type: FollowJointTrajectory
@@ -37,7 +37,7 @@ controller_list:
       - joint6
       - joint7
 
-  - name: opti7/gripper_controller
+  - name: opti7_800/gripper_controller
     action_ns: follow_joint_trajectory
     type: FollowJointTrajectory
     joints:

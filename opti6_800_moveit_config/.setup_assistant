@@ -4,7 +4,7 @@ moveit_setup_assistant_config:
     relative_path: urdf/opti6_800_robot.urdf.xacro
     xacro_args: "--inorder "
   SRDF:
-    relative_path: config/opti6.srdf
+    relative_path: config/opti6_800.srdf
   CONFIG:
     author_name: hsp
     author_email: johnson@umbratek.com

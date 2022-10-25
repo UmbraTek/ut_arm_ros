@@ -9,7 +9,7 @@
   <param if="$(arg load_robot_description)" name="$(arg robot_description)" command="xacro --inorder  '$(find utra_description)/urdf/opti7_800_robot_gripper.urdf.xacro'"/>
 
   <!-- The semantic description that corresponds to the URDF -->
-  <param name="$(arg robot_description)_semantic" textfile="$(find opti7_800_moveit_gripper_config)/config/opti7.srdf" />
+  <param name="$(arg robot_description)_semantic" textfile="$(find opti7_800_moveit_gripper_config)/config/opti7_800.srdf" />
 
   <!-- Load updated joint limits (override information from URDF) -->
   <group ns="$(arg robot_description)_planning">

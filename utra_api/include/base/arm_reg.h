@@ -26,6 +26,7 @@ class ARM_REG {
   const uint8_t SW_VERSION[5] = {0x02, 0, 20, ' ', ' '};
   const uint8_t HW_VERSION[5] = {0x03, 0, 20, ' ', ' '};
   const uint8_t UBOT_AXIS[5] = {0x04, 0, 1, ' ', ' '};
+  const uint8_t SYS_AUTORUN[5] = {0x0A, 0, 1, 1, 0};
   const uint8_t SYS_SHUTDOWN[5] = {0x0B, ' ', ' ', 1, 0};
   const uint8_t RESET_ERR[5] = {0x0C, ' ', ' ', 1, 0};
   const uint8_t SYS_REBOOT[5] = {0x0D, ' ', ' ', 1, 0};
@@ -43,17 +44,17 @@ class ARM_REG {
   const uint8_t MOVET_LINE[5] = {0x30, ' ', ' ', 36, 4};
   const uint8_t MOVET_LINEB[5] = {0x31, ' ', ' ', 40, 4};
   const uint8_t MOVET_CIRCLE[5] = {0x32, ' ', ' ', 64, 4};
-  const uint8_t MOVET_P2P[5] = {0x33, ' ', ' ', ' ', ' '};
+  const uint8_t MOVET_P2P[5] = {0x33, ' ', ' ', 36, 4};
   const uint8_t MOVET_P2PB[5] = {0x34, ' ', ' ', ' ', ' '};
-  const uint8_t MOVEJ_LINE[5] = {0x35, ' ', ' ', ' ', ' '};
-  const uint8_t MOVEJ_LINEB[5] = {0x36, ' ', ' ', ' ', ' '};
-  const uint8_t MOVEJ_CIRCLE[5] = {0x37, ' ', ' ', ' ', ' '};
+  const uint8_t MOVEJ_LINE[5] = {0x35, ' ', ' ', (uint8_t)((AXIS + 3) * 4), 4};
+  const uint8_t MOVEJ_LINEB[5] = {0x36, ' ', ' ', (uint8_t)((AXIS + 4) * 4), 4};
+  const uint8_t MOVEJ_CIRCLE[5] = {0x37, ' ', ' ', (uint8_t)((AXIS * 2 + 4) * 4), 4};
   const uint8_t MOVEJ_P2P[5] = {0x38, ' ', ' ', (uint8_t)((AXIS + 3) * 4), 4};
   const uint8_t MoveJ_P2PB[5] = {0x39, ' ', ' ', ' ', ' '};
   const uint8_t MOVEJ_HOME[5] = {0x3A, ' ', ' ', 12, 4};
   const uint8_t MOVE_SLEEP[5] = {0x3B, ' ', ' ', 4, 4};
-  const uint8_t MOVE_SERVOJ[5] = {0x3C, ' ', ' ', (uint8_t)((AXIS + 3) * 4), 4};
-  uint8_t MOVES_JOINT[5] = {0x3D, ' ', ' ', 0x55, 4};
+  uint8_t MOVEJ_SERVO[5] = {0x3D, ' ', ' ', 0x55, 4};
+  uint8_t MOVET_SERVO[5] = {0x3E, ' ', ' ', 0x55, 4};
   const uint8_t PLAN_SLEEP[5] = {0x3F, ' ', ' ', 4, 4};
 
   const uint8_t TCP_JERK[5] = {0x40, 0, 4, 4, 4};
@@ -65,10 +66,11 @@ class ARM_REG {
   const uint8_t GRAVITY_DIR[5] = {0x46, 0, 12, 12, 0};
   const uint8_t COLLIS_SENS[5] = {0x47, 0, 1, 1, 0};
   const uint8_t TEACH_SENS[5] = {0x48, 0, 1, 1, 0};
+  const uint8_t LIMIT_FUN[5] = {0x49, 0, 4, 4, 0};
 
   const uint8_t TCP_POS_CURR[5] = {0x50, 0, 24, ' ', ' '};
   const uint8_t JOINT_POS_CURR[5] = {0x51, 0, (uint8_t)(AXIS * 4), ' ', ' '};
-  const uint8_t CAL_IK[5] = {0x52, 24, (uint8_t)(AXIS * 4), ' ', ' '};
+  const uint8_t CAL_IK[5] = {0x52, (uint8_t)((6 + AXIS) * 4), (uint8_t)(AXIS * 4), ' ', ' '};
   const uint8_t CAL_FK[5] = {0x53, (uint8_t)(AXIS * 4), 24, ' ', ' '};
   const uint8_t IS_JOINT_LIMIT[5] = {0x54, (uint8_t)(AXIS * 4), 1, ' ', ' '};
   const uint8_t IS_TCP_LIMIT[5] = {0x55, 24, 1, ' ', ' '};

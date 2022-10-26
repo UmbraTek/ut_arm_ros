@@ -18,9 +18,19 @@ class HexData {
 
   static int bit_get(int a, int n) { return (a & (0x01 << n)); }
 
+  static int8_t hex_to_int8_big(uint8_t *a) { return a[0]; }
+  static void hex_to_int8_big(uint8_t *a, int8_t *b, int n) {
+    for (int i = 0; i < n; i++) b[i] = hex_to_int8_big(&a[i]);
+  }
+
   static int16_t hex_to_int16_big(uint8_t *a) { return (a[0] << 8) + a[1]; }
   static void hex_to_int16_big(uint8_t *a, int16_t *b, int n) {
     for (int i = 0; i < n; i++) b[i] = hex_to_int16_big(&a[i * 2]);
+  }
+
+  static uint16_t hex_to_uint16_big(uint8_t *a) { return (a[0] << 8) + a[1]; }
+  static void hex_to_int16_big(uint8_t *a, uint16_t *b, int n) {
+    for (int i = 0; i < n; i++) b[i] = hex_to_uint16_big(&a[i * 2]);
   }
 
   static int32_t hex_to_int32_big(uint8_t *a) { return ((a[0] << 24) + (a[1] << 16) + (a[2] << 8) + a[3]); }

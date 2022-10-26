@@ -29,7 +29,7 @@ class SocketTcp : public Socket {
   int rxlen_max_;
   bool is_decode_ = true;
   SerialDecode* decode_ = NULL;
-  serial_stream_t serial_stream_;
+  serial_stream_t rx_stream_;
   BlockDeque<serial_stream_t>* rx_que_ = NULL;
   RtPeriodicMemberFun<SocketTcp>* recv_task_ = NULL;
 

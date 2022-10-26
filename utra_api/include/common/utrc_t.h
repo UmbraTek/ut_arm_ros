@@ -10,8 +10,10 @@
 #include <stddef.h>
 #include <stdio.h>
 #include "crc16.h"
+#include "hex_data.h"
 #include "print.h"
 #include "socket.h"
+
 
 class UTRC_ERROR {
  public:
@@ -82,9 +84,10 @@ typedef struct {
   int unpack(serial_stream_t* serial_stream) {
     len = serial_stream->data[2] & 0x7F;
     if (serial_stream->len != len + 5) {
-      printf("[UxBus_t ] Error 1:%d %d\n", serial_stream->len, len);
-      return -1;
+      printf("[UtrcTyp] Error 1:%d %d\n", serial_stream->len, len);
+      return UTRC_ERROR::LEN;
     }
+
     master_id = serial_stream->data[0];
     slave_id = serial_stream->data[1];
     state = (serial_stream->data[2] & 0xFF) >> 7;
@@ -103,7 +106,7 @@ typedef struct {
     printf("  len  : %d\n", len);
     printf("  rw   : %d\n", rw);
     printf("  cmd  : 0x%x\n", cmd);
-    Print::hex("  data : ", data, len);
+    Print::hex("  data : ", data, len - 1);
     printf("  crc  : 0x%x\n", crc);
     printf("  type : %d\n", intf_type);
   }
@@ -118,6 +121,30 @@ class UtrcClient {
   }
 
   ~UtrcClient(void) {}
+
+  int connect_device(uint32_t baud = 0xFFFFFFFF) {
+    utrc_t tx_utrc;
+    tx_utrc.master_id = 0xAA;
+    tx_utrc.slave_id = 0x55;
+    tx_utrc.state = 0;
+    tx_utrc.len = 0x08;
+    tx_utrc.rw = 0;
+    tx_utrc.cmd = 0x7F;
+    tx_utrc.data[0] = 0x7F;
+    tx_utrc.data[1] = 0x7F;
+    tx_utrc.data[2] = 0x7F;
+    tx_utrc.data[3] = 0x7F;
+    tx_utrc.data[4] = 0x7F;
+    tx_utrc.data[5] = 0x7F;
+    tx_utrc.data[6] = 0x7F;
+    HexData::int32_to_hex_big(baud, &tx_utrc.data[0]);
+
+    send(&tx_utrc);
+    utrc_t rx_utrc;
+    int ret = pend(&tx_utrc, 1, 1, &rx_utrc);
+    if (ret != 0) return ret;
+    return 0;
+  }
 
   void send(utrc_t* tx_utrc) {
     tx_utrc->pack(&tx_stream_);
@@ -143,16 +170,24 @@ class UtrcClient {
     ret = rx_utrc->unpack(&rx_stream_);
     if (ret != 0)
       return ret;
-    else if (rx_utrc->master_id != tx_utrc->slave_id && tx_utrc->slave_id != 0x55)
+    else if (rx_utrc->master_id != tx_utrc->slave_id && tx_utrc->slave_id != 0x55) {
+      printf("[UtrcCli] Error: UTRC_ERROR.M_ID: %d %d\n", rx_utrc->master_id, tx_utrc->slave_id);
       return UTRC_ERROR::M_ID;
-    else if (rx_utrc->slave_id != tx_utrc->master_id)
+    } else if (rx_utrc->slave_id != tx_utrc->master_id) {
+      printf("[UtrcCli] Error: UTRC_ERROR.S_ID: %d %d\n", rx_utrc->slave_id, tx_utrc->master_id);
       return UTRC_ERROR::S_ID;
-    else if (rx_utrc->state != 0)
+    } else if (rx_utrc->state != 0) {
       return UTRC_ERROR::STATE;
-    else if (rx_utrc->rw != tx_utrc->rw)
+    } else if ((rx_utrc->len != r_len + 1) && (r_len != 0x55)) {
+      printf("[UtrcCli] Error: UTRC_ERROR.LEN: %d %d\n", rx_utrc->len, r_len);
+      return UTRC_ERROR::LEN;
+    } else if (rx_utrc->rw != tx_utrc->rw) {
+      printf("[UtrcCli] Error: UTRC_ERROR.RW: %d %d\n", rx_utrc->rw, tx_utrc->rw);
       return UTRC_ERROR::RW;
-    else if (rx_utrc->cmd != tx_utrc->cmd)
+    } else if (rx_utrc->cmd != tx_utrc->cmd) {
+      printf("[UtrcCli] Error: UTRC_ERROR.CMD: %d %d\n", rx_utrc->cmd, tx_utrc->cmd);
       return UTRC_ERROR::CMD;
+    }
     return 0;
   }
 
@@ -283,7 +318,6 @@ class UtrcDecode : public SerialDecode {
   int rx_data_idx_;
   unsigned char rx_buf_[128];
   serial_stream_t rx_data;
-  // bool rx_data_continue_ = false;
 
   unsigned char ch;
   uint16_t crc1_, crc2_;

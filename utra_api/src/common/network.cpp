@@ -131,7 +131,7 @@ int LinuxCvl::socket_init(char *local_ip, int port, int is_server) {
   local_addr.sin_port = htons(port);
   local_addr.sin_addr.s_addr = inet_addr(local_ip);
   ret = bind(sockfd, (struct sockaddr *)&local_addr, sizeof(local_addr));
-  PERRNO(ret, "[LinuxCvl]", " Error: bind");
+  PERRNO(ret, "[LinuxCvl]", " Error: socket_init bind");
 
   if (is_server) {
     ret = listen(sockfd, 10);

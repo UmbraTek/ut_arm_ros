@@ -49,6 +49,14 @@ add_executable(joint_trajectory_6 src/joint_trajectory_6.cpp)
 target_link_libraries(joint_trajectory_6 ${catkin_LIBRARIES})
 add_dependencies(joint_trajectory_6 utra_msg_generate_messages_cpp)
 
+add_executable(joint_publisher_7 src/joint_publisher_7.cpp)
+target_link_libraries(joint_publisher_7 ${catkin_LIBRARIES})
+add_dependencies(joint_publisher_7 utra_msg_generate_messages_cpp)
+
+add_executable(joint_trajectory_7 src/joint_trajectory_7.cpp)
+target_link_libraries(joint_trajectory_7 ${catkin_LIBRARIES})
+add_dependencies(joint_trajectory_7 utra_msg_generate_messages_cpp)
+
 add_executable(utra_server src/utra_server.cpp)
 target_link_libraries(utra_server ${catkin_LIBRARIES})
 add_dependencies(utra_server utra_msg_generate_messages_cpp)

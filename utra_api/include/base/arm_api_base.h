@@ -23,6 +23,8 @@ class ArmApiBase {
   int get_uuid(uint8_t uuid[17]);
   int get_sw_version(uint8_t version[20]);
   int get_hw_version(uint8_t version[20]);
+  int get_sys_autorun(uint8_t* autorun);
+  int set_sys_autorun(uint8_t autorun);
   int shutdown_system(void);
   int reset_err(void);
   int reboot_system(void);
@@ -31,29 +33,37 @@ class ArmApiBase {
 
   int get_motion_mode(uint8_t* mode);
   int set_motion_mode(uint8_t mode);
+  int into_motion_mode_pos(void);
+  int into_motion_mode_teach(void);
   int get_motion_enable(int* able);
   int set_motion_enable(uint8_t axis, uint8_t en);
+  int into_motion_enable(void);
+  int into_motion_disable(void);
   int get_brake_enable(int* able);
   int set_brake_enable(uint8_t axis, uint8_t en);
   int get_error_code(uint8_t* code);
   int get_servo_msg(uint8_t* msg);
   int get_motion_status(uint8_t* status);
   int set_motion_status(uint8_t status);
+  int motion_status_into_stop(void);
+  int motion_status_into_ready(void);
+  int motion_status_into_pause(void);
   int get_cmd_num(int* num);
   int set_cmd_num(int num);
 
   int moveto_cartesian_line(float* mvpose, float mvvelo, float mvacc, float mvtime);
   int moveto_cartesian_lineb(float* mvpose, float mvvelo, float mvacc, float mvtime, float mvradii);
-  int moveto_cartesian_p2p(void);
+  int moveto_cartesian_p2p(float* mvpose, float mvvelo, float mvacc, float mvtime);
   int moveto_cartesian_p2pb(void);
   int moveto_cartesian_circle(float* pose1, float* pose2, float mvvelo, float mvacc, float mvtime, float percent);
-  int moveto_joint_line(void);
-  int moveto_joint_lineb(void);
+  int moveto_joint_line(float* mvjoint, float mvvelo, float mvacc, float mvtime);
+  int moveto_joint_lineb(float* mvjoint, float mvvelo, float mvacc, float mvtime, float mvradii);
   int moveto_joint_p2p(float* mvjoint, float mvvelo, float mvacc, float mvtime);
-  int moveto_joint_circle(void);
+  int moveto_joint_circle(float* mvjoint1, float* mvjoint2, float mvvelo, float mvacc, float mvtime, float percent);
   int moveto_home_p2p(float mvvelo, float mvacc, float mvtime);
-  int moveto_servoj(float* mvjoint, float mvvelo, float mvacc, float mvtime);
   int moveto_servo_joint(int frames_num, float* mvjoint, float* mvtime);
+  int moveto_joint_servo(int frames_num, float* mvjoint, float* mvtime);
+  int moveto_cartesian_servo(int frames_num, float* mvpose, float* mvtime);
   int move_sleep(float time);
   int plan_sleep(float time);
 
@@ -75,12 +85,16 @@ class ArmApiBase {
   int set_collis_sens(uint8_t sens);
   int get_teach_sens(uint8_t* sens);
   int set_teach_sens(uint8_t sens);
+  int get_limit_fun(int* fun);
+  int set_limit_fun(int fun);
+  int set_limit_angle_enable(int en);
+  int set_limit_geometry_enable(int en);
   int get_tcp_target_pos(float* pos);
   int get_tcp_actual_pos(float* pos);
   int get_joint_target_pos(float* pos);
   int get_joint_actual_pos(float* pos);
-  int get_ik(void);
-  int get_fk(void);
+  int get_ik(float* pose, float* qnear, float* joints);
+  int get_fk(float* joints, float* pose);
   int is_joint_limit(void);
   int is_tcp_limit(void);
 
@@ -148,6 +162,8 @@ class ArmApiBase {
   int set_reg_int32(int* value, const uint8_t reg[5], int n = 1);
   int get_reg_fp32(float* value, const uint8_t reg[5], int n = 1);
   int set_reg_fp32(float* value, const uint8_t reg[5], int n = 1);
+  int get_reg_fp32_fp32(const uint8_t reg[5], float* txdate, int tx_n, float* rxdate, int rx_n);
+  int get_reg_int8_fp32(const uint8_t reg[5], float* txdate, int tx_n, float* rxdate, int rx_n);
 };
 
 class ARM_RW {

@@ -36,8 +36,7 @@ SocketSerial::SocketSerial(const char *port, int baud, int rxque_max, SerialDeco
     is_decode_ = true;
 
   flush();
-  recv_task_ =
-      new RtPeriodicMemberFun<SocketSerial>(0, "recv_task", 1024 * 1024, priority, &SocketSerial::recv_proc, this);
+  recv_task_ = new RtPeriodicMemberFun<SocketSerial>(0, "recv_task", 1024 * 1024, priority, &SocketSerial::recv_proc, this);
   recv_task_->start();
 }
 
@@ -71,6 +70,7 @@ void SocketSerial::flush(int slave_id, int master_id, int rxlen_max) {
 int SocketSerial::write_frame(serial_stream_t *data) {
   if (is_error_) return -1;
   if (write(fp_, data->data, data->len) != data->len) return -1;
+  // Print::hex("[SockSeri] write: ", data->data, data->len);
   return 0;
 }
 
@@ -80,19 +80,17 @@ int SocketSerial::read_frame(serial_stream_t *data, float timeout_s) {
 }
 
 void SocketSerial::recv_proc(void) {
-  unsigned char ch[rxlen_max_];
-  int ret;
   while (is_error_ == false) {
-    ret = read(fp_, ch, rxlen_max_);
+    bzero(rx_stream_.data, rxlen_max_);
+    rx_stream_.len = read(fp_, rx_stream_.data, rxlen_max_);
     if (is_error_) return;
-    if (ret >= 0) {
+    if (rx_stream_.len >= 0) {
       if (decode_ != NULL && is_decode_) {
-        decode_->parse_put(ch, ret, rx_que_);
+        decode_->parse_put(rx_stream_.data, rx_stream_.len, rx_que_);
       } else {
-        serial_stream_.len = ret;
-        memcpy(serial_stream_.data, ch, serial_stream_.len);
-        rx_que_->push_back(&serial_stream_);
+        rx_que_->push_back(&rx_stream_);
       }
+      // Print::hex("[SockSeri] recv: ", rx_stream_.data, rx_stream_.len);
     }
   }
 }
@@ -155,8 +153,14 @@ int SocketSerial::init_serial(const char *port, int baud) {
     case 1000000:
       speed = B1000000;
       break;
-    case 2000000:
-      speed = B2000000;
+    case 2500000:
+      speed = B2500000;
+    case 3000000:
+      speed = B3000000;
+    case 3500000:
+      speed = B3500000;
+    case 4000000:
+      speed = B4000000;
       break;
   }
 

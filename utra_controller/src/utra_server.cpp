@@ -100,9 +100,73 @@ bool mv_servo_joint(utra_msg::Mservojoint::Request &req, utra_msg::Mservojoint::
     res.message = "server have not connected utra";
     return true;
   }
+
   int RET_ERROR_COUNT = 0;  //发送错误计数
   int axiz = req.axiz;
   int CON = 3;  // how many points with one time to send
+
+  int frames_num = req.num;
+
+  ROS_INFO("mv_servo_joint %d %f", frames_num, req.time);
+
+  float frames[CON * 6] = {0};
+  float mvtime[CON] = {0};
+
+  for (size_t i = 0; i < CON; i++) {
+    mvtime[i] = req.time;
+  }
+
+  int have_CON_s = frames_num / CON;
+  int have_CON_m = frames_num % CON;
+
+  int req_frames_index = 0;
+  int ret = 0;
+
+  // for run have_CON_s time send
+  if (req.plan_delay > 0) {
+    ROS_INFO("plan_sleep %f", req.plan_delay);
+    utra->plan_sleep(req.plan_delay);  // set utra sleep 0.2s to wait for command
+  }
+  for (size_t i = 0; i < have_CON_s; i++) {
+    for (size_t j = 0; j < CON * axiz; j++) {
+      frames[j] = req.frames[req_frames_index + j];
+    }
+    // print_joints(frames,CON);
+    req_frames_index = req_frames_index + CON * axiz;
+    ret = utra->moveto_servo_joint(CON, frames, mvtime);
+    ROS_INFO("req_frames_index %d ret %d", req_frames_index, ret);
+    if (ret != 0) {
+      RET_ERROR_COUNT++;
+    } else {
+      if (RET_ERROR_COUNT > 0) {
+        RET_ERROR_COUNT--;
+      }
+    }
+    if (RET_ERROR_COUNT > 3) {
+      res.ret = -3;
+      res.message = "RET_ERROR_COUNT more than 3 times";
+      ROS_ERROR("RET_ERROR_COUNT more than 3 times");
+      return true;
+    }
+  }
+
+  // last time send
+  for (size_t i = 0; i < have_CON_m * axiz; i++) {
+    frames[i] = req.frames[req_frames_index + i];
+  }
+  // print_joints(frames,have_CON_m);
+  ret = utra->moveto_servo_joint(have_CON_m, frames, mvtime);
+
+  ROS_INFO("ret %d", ret);
+  res.ret = ret;
+  res.message = "send cmd success";
+  return true;
+
+  /*
+  int RET_ERROR_COUNT = 0;  //发送错误计数
+  int axiz = req.axiz;
+  int CON = 3;  // how many points with one time to send
+
   if (axiz == 6) {
     int frames_num = req.num;
     ROS_INFO("mv_servo_joint %d %f", frames_num, req.time);
@@ -162,7 +226,7 @@ bool mv_servo_joint(utra_msg::Mservojoint::Request &req, utra_msg::Mservojoint::
     res.ret = ret;
     res.message = "send cmd success";
     return true;
-  }
+  }*/
   return true;
 }
 
@@ -424,6 +488,12 @@ bool moveto_joint_p2p(utra_msg::MovetoJointP2p::Request &req, utra_msg::MovetoJo
     int ret = utra->moveto_joint_p2p(joints, req.speed, req.acc, 0);
     res.ret = ret;
     return true;
+  } else if (axis == 7) {
+    float joints[7] = {req.joints[0], req.joints[1], req.joints[2], req.joints[3],
+                       req.joints[4], req.joints[5], req.joints[6]};
+    int ret = utra->moveto_joint_p2p(joints, req.speed, req.acc, 0);
+    res.ret = ret;
+    return true;
   } else {
     res.ret = -3;
     return true;
@@ -436,7 +506,7 @@ bool moveto_cartesian_line(utra_msg::MovetoCartesianLine::Request &req, utra_msg
     return true;
   }
   int axis = req.pose.size();
-  if (axis == 6) {
+  if (axis == 6 || axis == 7) {
     float pose[6] = {req.pose[0], req.pose[1], req.pose[2], req.pose[3], req.pose[4], req.pose[5]};
     int ret = utra->moveto_cartesian_line(pose, req.speed, req.acc, 0);
     res.ret = ret;
@@ -463,7 +533,7 @@ bool moveto_cartesian_lineb(utra_msg::MovetoCartesianLineB::Request &req,
     return true;
   }
   int axis = req.pose.size();
-  if (axis == 6) {
+  if (axis == 6 || axis == 7) {
     float pose[6] = {req.pose[0], req.pose[1], req.pose[2], req.pose[3], req.pose[4], req.pose[5]};
     int ret = utra->moveto_cartesian_lineb(pose, req.speed, req.acc, 0, req.radii);
     res.ret = ret;

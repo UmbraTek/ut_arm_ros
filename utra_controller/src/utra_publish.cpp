@@ -1,5 +1,6 @@
 #include <utra_msg/RobotMsg.h>
 #include "ros/ros.h"
+#include "utra/utra_api_tcp.h"
 #include "utra/utra_report_status.h"
 
 int main(int argc, char **argv) {
@@ -21,7 +22,15 @@ int main(int argc, char **argv) {
   UtraReportStatus10Hz *utra_report;
   char *cstr = new char[utra_ip.length() + 1];
   std::strcpy(cstr, utra_ip.c_str());
-  utra_report = new UtraReportStatus10Hz(cstr, 6);
+
+  uint8_t axis = 6;
+  UtraApiTcp *utra = new UtraApiTcp(cstr);
+  int ret = -3;
+  for (int i = 0; i < 3; i++) {
+    ret = utra->get_axis(&axis);
+    if (ret != -3) break;
+  }
+  utra_report = new UtraReportStatus10Hz(cstr, axis);
 
   int no_update = 0;
   nh.setParam("ut_states_update", true);
@@ -32,6 +41,7 @@ int main(int argc, char **argv) {
     if (utra_report->is_update()) {
       // ROS_INFO("utra_report->is_update");
       utra_report->get_data(&rx_data);
+      // utra_report->print_data(&rx_data);
       robotMsg.len = rx_data.len;
       robotMsg.axis = rx_data.axis;
       robotMsg.motion_status = rx_data.motion_status;

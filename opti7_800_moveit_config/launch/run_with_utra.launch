@@ -1,11 +1,11 @@
 <launch>
-    <include file="$(find utra_controller)/launch/joint_trajectory_6.launch">
+    <include file="$(find utra_controller)/launch/joint_trajectory_7.launch">
         <arg name="utra_ns" value="opti7_800/arm_joint_controller/follow_joint_trajectory" />
     </include>
 
     
-    <include file="$(find utra_controller)/launch/joint_publisher_6.launch">
-        <arg name="utra_ns" value="utra/joint_states_550" />
+    <include file="$(find utra_controller)/launch/joint_publisher_7.launch">
+        <arg name="utra_ns" value="opti7_800/joint_states_800" />
     </include>
 
     <include file="$(find opti7_800_moveit_config)/launch/demo.launch">

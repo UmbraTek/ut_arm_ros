@@ -24,7 +24,7 @@ UtraReportStatus10Hz::~UtraReportStatus10Hz(void) {
 }
 
 UtraReportStatus100Hz::UtraReportStatus100Hz(char* ip, int axis) {
-  socket_tcp_ = new SocketTcp(ip, 30002, 16, NULL, 4096, 45);
+  socket_tcp_ = new SocketTcp(ip, 30002, 1600, NULL, 40960, 45);
   if (socket_tcp_->is_error()) {
     printf("[UtraReSt] Error: socket_file open failed, %s\n", ip);
     return;

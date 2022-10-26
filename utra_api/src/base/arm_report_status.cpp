@@ -34,7 +34,7 @@ void ArmReportStatus::recv_proc(void) {
 
 void ArmReportStatus::flush_data(uint8_t* rx_data, int len) {
   if (len % frame_len != 0) {
-    printf("[ArmReSta] Error: flush_data len = %d\n", len);
+    printf("[ArmReSta] Error: flush_data len = %d, %d\n", len, frame_len);
     is_error_ = true;
     return;
   }
@@ -43,11 +43,11 @@ void ArmReportStatus::flush_data(uint8_t* rx_data, int len) {
   k *= frame_len;
 
   if (++report_flag_ >= 3) report_flag_ = 0;
-  memcpy(&report_status_[report_flag_], &rx_data[k * frame_len], 17);
+  memcpy(&report_status_[report_flag_], &rx_data[k], 17);
   int axis = report_status_[report_flag_].axis;
-  HexData::hex_to_fp32(&rx_data[k * frame_len + 17], report_status_[report_flag_].joint, axis);
-  HexData::hex_to_fp32(&rx_data[k * frame_len + 17 + axis * 4], report_status_[report_flag_].pose, 6);
-  HexData::hex_to_fp32(&rx_data[k * frame_len + 17 + axis * 4 + 6 * 4], report_status_[report_flag_].tau, axis);
+  HexData::hex_to_fp32(&rx_data[k + 17], report_status_[report_flag_].joint, axis);
+  HexData::hex_to_fp32(&rx_data[k + 17 + axis * 4], report_status_[report_flag_].pose, 6);
+  HexData::hex_to_fp32(&rx_data[k + 17 + axis * 4 + 6 * 4], report_status_[report_flag_].tau, axis);
   rxcnt_++;
   is_update_ = true;
 }

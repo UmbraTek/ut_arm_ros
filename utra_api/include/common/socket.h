@@ -8,11 +8,12 @@
 #define __COMMON_SOCKET_H__
 
 #include <string.h>
+
 #include "deque_block.h"
 
-#define SERIAL_DATA_MAX 256
+#define SERIAL_DATA_MAX 2560
 typedef struct {
-  uint8_t len;
+  int len;
   unsigned char data[SERIAL_DATA_MAX];
 } serial_stream_t;
 

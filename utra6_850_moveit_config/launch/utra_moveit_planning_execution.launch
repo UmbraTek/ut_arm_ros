@@ -6,7 +6,7 @@
     </include>
     
     <include file="$(find arm_controller)/launch/utarm_status_transmit.launch">
-        <arg name="utra_ns" value="utra/joint_states_850" />
+        <arg name="utra_ns" value="utra6_850/joint_states_850" />
         <arg name="axis" type="str" value="6" />
     </include>
 
@@ -42,7 +42,7 @@
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
     <param name="use_gui" value="$(arg use_gui)"/>
     <!-- <rosparam param="source_list">[move_group/fake_controller_joint_states]</rosparam> -->
-    <rosparam param="source_list">[utra/joint_states_850]</rosparam >
+    <rosparam param="source_list">[utra6_850/joint_states_850]</rosparam >
   </node>
 
   <!-- Given the published joint states, publish tf for the robot links -->

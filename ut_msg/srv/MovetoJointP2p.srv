@@ -1,4 +1,4 @@
-# Service name: utra/moveto_joint_p2p
+# Service name: utsrv/moveto_joint_p2p
 # Move to position (linear in joint-space) When using this command
 # request: 
 #            joints (list): target joint positions [rad]

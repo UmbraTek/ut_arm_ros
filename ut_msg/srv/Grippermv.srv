@@ -1,4 +1,4 @@
-#Service name: utra/gripper_mv
+#Service name: utsrv/gripper_mv
 # request:  pos is gripper value( 0-80 unit is cm)
 
 float32 pos

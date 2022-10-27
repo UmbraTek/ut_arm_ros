@@ -1,0 +1,5 @@
+#Service name: utsrv/disconnect
+
+---
+int16 ret
+string message

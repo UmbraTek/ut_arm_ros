@@ -55,12 +55,12 @@ add_service_files(
   FILES
   Connect.srv
   Disconnect.srv
-  Checkconnect.srv
-  Mservojoint.srv
+  CheckConnect.srv
+  MovetoServoJoint.srv
   Grippermv.srv
-  EnableSet.srv
-  GripperStateSet.srv
-  GripperStateGet.srv
+  SetEnable.srv
+  SetGripperState.srv
+  GetGripperState.srv
   GetInt16.srv
   SetInt16.srv
   GetFloat32.srv

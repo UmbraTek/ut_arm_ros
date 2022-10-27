@@ -1,5 +1,0 @@
-#Service name: utra/disconnect
-
----
-int16 ret
-string message

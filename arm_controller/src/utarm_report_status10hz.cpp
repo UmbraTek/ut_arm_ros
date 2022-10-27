@@ -4,12 +4,12 @@
 #include "utra/utra_report_status.h"
 
 /**
- * The automatic reporting data of the Arm NTRO controller, published to the message[ut_arm/states]
+ * The automatic reporting data of the Arm NTRO controller, published to the message[utsrv/states]
  */
 int main(int argc, char **argv) {
   ros::init(argc, argv, "utarm_report_status10hz");
   ros::NodeHandle nh;
-  ros::Publisher robotStates = nh.advertise<ut_msg::RobotMsg>("ut_arm/states", 1000, true);
+  ros::Publisher robotStates = nh.advertise<ut_msg::RobotMsg>("utsrv/states", 1000, true);
   std::string arm_ip;
   if (nh.getParam("arm_ip", arm_ip)) {
     ROS_INFO("Got param: %s", arm_ip.c_str());
@@ -24,24 +24,24 @@ int main(int argc, char **argv) {
   int no_update = 0;
   ut_msg::RobotMsg robotMsg;
   arm_report_status_t rx_data;
-  UtraReportStatus10Hz *utra_report;
-  UtraApiTcp *utra = new UtraApiTcp(cstr);
+  UtraReportStatus10Hz *arm_report;
+  UtraApiTcp *armapi = new UtraApiTcp(cstr);
 
   int ret = -3;
   for (int i = 0; i < 3; i++) {
-    ret = utra->get_axis(&axis);
+    ret = armapi->get_axis(&axis);
     if (ret != -3) break;
   }
 
-  utra_report = new UtraReportStatus10Hz(cstr, axis);
+  arm_report = new UtraReportStatus10Hz(cstr, axis);
   nh.setParam("is_utarm_states_update", true);
 
   ros::Rate loop_rate(9);
   while (ros::ok()) {
-    if (utra_report->is_update()) {
-      // ROS_INFO("utra_report->is_update");
-      utra_report->get_data(&rx_data);
-      // utra_report->print_data(&rx_data);
+    if (arm_report->is_update()) {
+      // ROS_INFO("arm_report->is_update");
+      arm_report->get_data(&rx_data);
+      // arm_report->print_data(&rx_data);
       robotMsg.len = rx_data.len;
       robotMsg.axis = rx_data.axis;
       robotMsg.motion_status = rx_data.motion_status;

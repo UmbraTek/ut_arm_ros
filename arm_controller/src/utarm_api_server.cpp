@@ -8,19 +8,19 @@
 #include "utra/utra_api_tcp.h"
 #include "utra/utra_flxie_api.h"
 
-#include "ut_msg/Checkconnect.h"
+#include "ut_msg/CheckConnect.h"
 #include "ut_msg/Connect.h"
 #include "ut_msg/Disconnect.h"
-#include "ut_msg/EnableSet.h"
 #include "ut_msg/GetFloat32.h"
 #include "ut_msg/GetFloat32A.h"
+#include "ut_msg/GetGripperState.h"
 #include "ut_msg/GetInt16.h"
 #include "ut_msg/GetUInt16A.h"
-#include "ut_msg/GripperStateGet.h"
-#include "ut_msg/GripperStateSet.h"
 #include "ut_msg/Grippermv.h"
-#include "ut_msg/Mservojoint.h"
+#include "ut_msg/MovetoServoJoint.h"
+#include "ut_msg/SetEnable.h"
 #include "ut_msg/SetFloat32.h"
+#include "ut_msg/SetGripperState.h"
 #include "ut_msg/SetInt16.h"
 
 #include "ut_msg/MovetoCartesianLine.h"
@@ -75,7 +75,7 @@ bool disconnect_api(ut_msg::Disconnect::Request &req, ut_msg::Disconnect::Respon
   return true;
 }
 
-bool check_c_api(ut_msg::Checkconnect::Request &req, ut_msg::Checkconnect::Response &res) {
+bool check_c_api(ut_msg::CheckConnect::Request &req, ut_msg::CheckConnect::Response &res) {
   res.ip_address = "";
   CHECK_ARM_CONNECT()
 
@@ -91,7 +91,7 @@ bool check_c_api(ut_msg::Checkconnect::Request &req, ut_msg::Checkconnect::Respo
   return true;
 }
 
-bool mv_servo_joint(ut_msg::Mservojoint::Request &req, ut_msg::Mservojoint::Response &res) {
+bool mv_servo_joint(ut_msg::MovetoServoJoint::Request &req, ut_msg::MovetoServoJoint::Response &res) {
   CHECK_ARM_CONNECT()
 
   int ret = 0;
@@ -110,7 +110,7 @@ bool mv_servo_joint(ut_msg::Mservojoint::Request &req, ut_msg::Mservojoint::Resp
   float mvtime[frames_per_cmd] = {0};
   for (int i = 0; i < frames_per_cmd; i++) mvtime[i] = time_per_cmd;
 
-  // set utra sleep to wait for command
+  // set arm sleep to wait for command
   if (req.plan_delay > 0) {
     ret = armapi->plan_sleep(req.plan_delay);
     ROS_INFO("[ArmContr] plan_sleep %d, delya:%f", ret, req.plan_delay);
@@ -186,7 +186,7 @@ bool mode_get(ut_msg::GetInt16::Request &req, ut_msg::GetInt16::Response &res) {
   return true;
 }
 
-bool enable_set(ut_msg::EnableSet::Request &req, ut_msg::EnableSet::Response &res) {
+bool enable_set(ut_msg::SetEnable::Request &req, ut_msg::SetEnable::Response &res) {
   CHECK_ARM_CONNECT()
 
   int ret = armapi->set_motion_enable(req.axis, req.enable);
@@ -313,7 +313,7 @@ bool get_joint_actual_pos(ut_msg::GetFloat32A::Request &req, ut_msg::GetFloat32A
     return true;                                                      \
   }
 
-bool gripper_state_set(ut_msg::GripperStateSet::Request &req, ut_msg::GripperStateSet::Response &res) {
+bool gripper_state_set(ut_msg::SetGripperState::Request &req, ut_msg::SetGripperState::Response &res) {
   if (armapi == NULL) {
     res.ret = -3;
     res.message = "server have not connected arm";
@@ -349,7 +349,7 @@ bool gripper_state_set(ut_msg::GripperStateSet::Request &req, ut_msg::GripperSta
   return true;
 }
 
-bool gripper_state_get(ut_msg::GripperStateGet::Request &req, ut_msg::GripperStateGet::Response &res) {
+bool gripper_state_get(ut_msg::GetGripperState::Request &req, ut_msg::GetGripperState::Response &res) {
   res.enable = 0;
   CHECK_FLXIE_CONNECT()
 
@@ -475,7 +475,7 @@ bool gripper_unlock(ut_msg::SetInt16::Request &req, ut_msg::SetInt16::Response &
  * API service for the Arm NTRO controller
  */
 int main(int argc, char **argv) {
-  ros::init(argc, argv, "utra_server");
+  ros::init(argc, argv, "utarm_api_server");
   ros::NodeHandle nh;
 
   if (nh.getParam("arm_ip", arm_ip)) {
@@ -496,39 +496,39 @@ int main(int argc, char **argv) {
     }
   }
 
-  ros::ServiceServer connect = nh.advertiseService("utra/connect", connect_api);
-  ros::ServiceServer disconnect = nh.advertiseService("utra/disconnect", disconnect_api);
-  ros::ServiceServer check_c = nh.advertiseService("utra/check_connect", check_c_api);
-  ros::ServiceServer mservojoint = nh.advertiseService("utra/mv_servo_joint", mv_servo_joint);
+  ros::ServiceServer connect = nh.advertiseService("utsrv/connect", connect_api);
+  ros::ServiceServer disconnect = nh.advertiseService("utsrv/disconnect", disconnect_api);
+  ros::ServiceServer check_c = nh.advertiseService("utsrv/check_connect", check_c_api);
+  ros::ServiceServer mservojoint = nh.advertiseService("utsrv/mv_servo_joint", mv_servo_joint);
 
-  ros::ServiceServer statusset = nh.advertiseService("utra/status_set", status_set);
-  ros::ServiceServer statusget = nh.advertiseService("utra/status_get", status_get);
-  ros::ServiceServer modeset = nh.advertiseService("utra/mode_set", mode_set);
-  ros::ServiceServer modeget = nh.advertiseService("utra/mode_get", mode_get);
-  ros::ServiceServer enableset = nh.advertiseService("utra/enable_set", enable_set);
-  ros::ServiceServer enableget = nh.advertiseService("utra/enable_get", enable_get);
+  ros::ServiceServer statusset = nh.advertiseService("utsrv/status_set", status_set);
+  ros::ServiceServer statusget = nh.advertiseService("utsrv/status_get", status_get);
+  ros::ServiceServer modeset = nh.advertiseService("utsrv/mode_set", mode_set);
+  ros::ServiceServer modeget = nh.advertiseService("utsrv/mode_get", mode_get);
+  ros::ServiceServer enableset = nh.advertiseService("utsrv/enable_set", enable_set);
+  ros::ServiceServer enableget = nh.advertiseService("utsrv/enable_get", enable_get);
 
-  ros::ServiceServer grippermv = nh.advertiseService("utra/gripper_mv", gripper_mv);
-  ros::ServiceServer gripperstateset = nh.advertiseService("utra/gripper_state_set", gripper_state_set);
-  ros::ServiceServer gripperstateget = nh.advertiseService("utra/gripper_state_get", gripper_state_get);
-  ros::ServiceServer grippervelset = nh.advertiseService("utra/gripper_vel_set", gripper_vel_set);
-  ros::ServiceServer grippervelget = nh.advertiseService("utra/gripper_vel_get", gripper_vel_get);
-  ros::ServiceServer gripperaccset = nh.advertiseService("utra/gripper_acc_set", gripper_acc_set);
-  ros::ServiceServer gripperaccget = nh.advertiseService("utra/gripper_acc_get", gripper_acc_get);
-  ros::ServiceServer gripperreseterr = nh.advertiseService("utra/gripper_reset_err", gripper_reset_err);
-  ros::ServiceServer grippererrorcode = nh.advertiseService("utra/gripper_error_code", gripper_error_code);
-  ros::ServiceServer gripperunlock = nh.advertiseService("utra/gripper_unlock", gripper_unlock);
+  ros::ServiceServer grippermv = nh.advertiseService("utsrv/gripper_mv", gripper_mv);
+  ros::ServiceServer gripperstateset = nh.advertiseService("utsrv/gripper_state_set", gripper_state_set);
+  ros::ServiceServer gripperstateget = nh.advertiseService("utsrv/gripper_state_get", gripper_state_get);
+  ros::ServiceServer grippervelset = nh.advertiseService("utsrv/gripper_vel_set", gripper_vel_set);
+  ros::ServiceServer grippervelget = nh.advertiseService("utsrv/gripper_vel_get", gripper_vel_get);
+  ros::ServiceServer gripperaccset = nh.advertiseService("utsrv/gripper_acc_set", gripper_acc_set);
+  ros::ServiceServer gripperaccget = nh.advertiseService("utsrv/gripper_acc_get", gripper_acc_get);
+  ros::ServiceServer gripperreseterr = nh.advertiseService("utsrv/gripper_reset_err", gripper_reset_err);
+  ros::ServiceServer grippererrorcode = nh.advertiseService("utsrv/gripper_error_code", gripper_error_code);
+  ros::ServiceServer gripperunlock = nh.advertiseService("utsrv/gripper_unlock", gripper_unlock);
 
-  ros::ServiceServer geterrorcode = nh.advertiseService("utra/get_error_code", get_error_code);
-  ros::ServiceServer getservomsg = nh.advertiseService("utra/get_servo_msg", get_servo_msg);
+  ros::ServiceServer geterrorcode = nh.advertiseService("utsrv/get_error_code", get_error_code);
+  ros::ServiceServer getservomsg = nh.advertiseService("utsrv/get_servo_msg", get_servo_msg);
 
-  ros::ServiceServer movetojointp2p = nh.advertiseService("utra/moveto_joint_p2p", moveto_joint_p2p);
-  ros::ServiceServer movetocartesianline = nh.advertiseService("utra/moveto_cartesian_line", moveto_cartesian_line);
-  ros::ServiceServer plansleep = nh.advertiseService("utra/plan_sleep", plan_sleep);
-  ros::ServiceServer movetocartesianlineb = nh.advertiseService("utra/moveto_cartesian_lineb", moveto_cartesian_lineb);
-  // ros::ServiceServer moveto_cartesian_circle = nh.advertiseService("utra/moveto_cartesian_circle",
+  ros::ServiceServer movetojointp2p = nh.advertiseService("utsrv/moveto_joint_p2p", moveto_joint_p2p);
+  ros::ServiceServer movetocartesianline = nh.advertiseService("utsrv/moveto_cartesian_line", moveto_cartesian_line);
+  ros::ServiceServer plansleep = nh.advertiseService("utsrv/plan_sleep", plan_sleep);
+  ros::ServiceServer movetocartesianlineb = nh.advertiseService("utsrv/moveto_cartesian_lineb", moveto_cartesian_lineb);
+  // ros::ServiceServer moveto_cartesian_circle = nh.advertiseService("utsrv/moveto_cartesian_circle",
   // moveto_cartesian_circle);
-  ros::ServiceServer getjointactualpos = nh.advertiseService("utra/get_joint_actual_pos", get_joint_actual_pos);
+  ros::ServiceServer getjointactualpos = nh.advertiseService("utsrv/get_joint_actual_pos", get_joint_actual_pos);
 
   ROS_INFO("[ArmContr] ready for arm controller server.");
   ros::spin();

@@ -1,5 +1,5 @@
-#Service name: utra/enable_set
-# request: set utra enable 
+#Service name: utsrv/enable_set
+# request: set arm enable 
 #    axis (int): Joint axis, if it is greater than the maximum number of joints, set all joints
 #    en (bool): 1-enable, 0-disable
 

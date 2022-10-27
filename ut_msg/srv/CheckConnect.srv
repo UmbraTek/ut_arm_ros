@@ -1,4 +1,4 @@
-#Service name: utra/check_connect
+#Service name: utsrv/check_connect
 
 ---
 int16 ret

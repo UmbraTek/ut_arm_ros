@@ -25,10 +25,10 @@
 #include <sstream>
 #include "ut_msg/GetFloat32A.h"
 #include "ut_msg/GetInt16.h"
-#include "ut_msg/Mservojoint.h"
+#include "ut_msg/MovetoServoJoint.h"
 
 int axis;
-ros::ServiceClient Mservojoint_client;
+ros::ServiceClient MovetoServoJoint_client;
 ros::ServiceClient status_get_client;
 ros::ServiceClient joint_actual_pos_client;
 using namespace std;
@@ -79,7 +79,7 @@ void execute(const control_msgs::FollowJointTrajectoryGoalConstPtr& goal, Server
   }
 
   // Start sending data
-  ut_msg::Mservojoint srv;
+  ut_msg::MovetoServoJoint srv;
   srv.request.axiz = axis;
   float sample_duration, plan_delay;
   int CON;
@@ -102,15 +102,15 @@ void execute(const control_msgs::FollowJointTrajectoryGoalConstPtr& goal, Server
     for (int i = s * CON; i < s * CON + CON; i++) {
       for (size_t j = 0; j < axis; j++) srv.request.frames.push_back(goal->trajectory.points[i].positions[j]);
     }
-    if (Mservojoint_client.call(srv)) {
-      ROS_INFO("[ArmMvSeT] Mservojoint_client.call ret: %d", srv.response.ret);
+    if (MovetoServoJoint_client.call(srv)) {
+      ROS_INFO("[ArmMvSeT] MovetoServoJoint_client.call ret: %d", srv.response.ret);
       if (srv.response.ret == -3) {
-        ROS_ERROR("[ArmMvSeT] Failed in call Mservojoint_client.call");
+        ROS_ERROR("[ArmMvSeT] Failed in call MovetoServoJoint_client.call");
         as->setAborted();
         return;
       }
     } else {
-      ROS_ERROR("[ArmMvSeT] Failed to Mservojoint_client.call ");
+      ROS_ERROR("[ArmMvSeT] Failed to MovetoServoJoint_client.call ");
       as->setAborted();
       return;
     }
@@ -124,21 +124,21 @@ void execute(const control_msgs::FollowJointTrajectoryGoalConstPtr& goal, Server
   for (int i = have_CON_s * CON; i < have_CON_s * CON + have_CON_m; i++) {
     for (size_t j = 0; j < axis; j++) srv.request.frames.push_back(goal->trajectory.points[i].positions[j]);
   }
-  if (Mservojoint_client.call(srv)) {
-    ROS_INFO("[ArmMvSeT] Mservojoint_client.call ret: %d", srv.response.ret);
+  if (MovetoServoJoint_client.call(srv)) {
+    ROS_INFO("[ArmMvSeT] MovetoServoJoint_client.call ret: %d", srv.response.ret);
     if (srv.response.ret == -3) {
-      ROS_ERROR("[ArmMvSeT] Failed in call Mservojoint_client.call");
+      ROS_ERROR("[ArmMvSeT] Failed in call MovetoServoJoint_client.call");
       as->setAborted();
       return;
     }
   } else {
-    ROS_ERROR("[ArmMvSeT] Failed to call Mservojoint_client.call ");
+    ROS_ERROR("[ArmMvSeT] Failed to call MovetoServoJoint_client.call ");
     as->setAborted();
     return;
   }
   ROS_INFO("[ArmMvSeT] Recieve action successful!");
 
-  // check utra moveing state, and update the return
+  // check arm moveing state, and update the return
   ros::Duration(0.1).sleep();
   ut_msg::GetInt16 srv1;
   int error_count = 0;
@@ -154,9 +154,9 @@ void execute(const control_msgs::FollowJointTrajectoryGoalConstPtr& goal, Server
           return;
         }
       } else if (srv1.response.data == 1) {
-        isStart = true;  // set flog that utra is moveing
+        isStart = true;  // set flog that arm is moveing
       } else if (srv1.response.data == 0 || srv1.response.data == 2) {
-        if (isStart) {  // if state from moving to narmal or sleep , it mean that utra is run finish
+        if (isStart) {  // if state from moving to narmal or sleep , it mean that arm is run finish
           // ros::Duration(0.05).sleep();
           as->setSucceeded();
           ROS_INFO("[ArmMvSeT] moveing finish!!");
@@ -205,9 +205,9 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  Mservojoint_client = nh.serviceClient<ut_msg::Mservojoint>("utra/mv_servo_joint");
-  status_get_client = nh.serviceClient<ut_msg::GetInt16>("utra/status_get");
-  joint_actual_pos_client = nh.serviceClient<ut_msg::GetFloat32A>("utra/get_joint_actual_pos");
+  MovetoServoJoint_client = nh.serviceClient<ut_msg::MovetoServoJoint>("utsrv/mv_servo_joint");
+  status_get_client = nh.serviceClient<ut_msg::GetInt16>("utsrv/status_get");
+  joint_actual_pos_client = nh.serviceClient<ut_msg::GetFloat32A>("utsrv/get_joint_actual_pos");
 
   char* cstr = new char[utra_ns.length() + 1];
   std::strcpy(cstr, utra_ns.c_str());

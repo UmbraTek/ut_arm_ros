@@ -1,4 +1,4 @@
-# Service name: utra/moveto_cartesian_line
+# Service name: utsrv/moveto_cartesian_line
 # Move to position (linear in tool-space)
 # request: 
 #            pose (list): cartesian position [mm mm mm rad rad rad]

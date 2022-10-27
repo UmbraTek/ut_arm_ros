@@ -52,7 +52,7 @@ void statesCallback(const ut_msg::RobotMsg& msg) {
 }
 
 /**
- * Forward messages[ut_arm/states] to custom utra_ns messages.
+ * Forward messages[utsrv/states] to custom utra_ns messages.
  */
 int main(int argc, char** argv) {
   ros::init(argc, argv, "utarm_status_transmit");
@@ -78,7 +78,7 @@ int main(int argc, char** argv) {
   char* cstr = new char[utra_ns.length() + 1];
   std::strcpy(cstr, utra_ns.c_str());
   joint_msg_pub = n.advertise<sensor_msgs::JointState>(cstr, 1000);
-  ros::Subscriber sub = n.subscribe("ut_arm/states", 1000, statesCallback);
+  ros::Subscriber sub = n.subscribe("utsrv/states", 1000, statesCallback);
 
   if (6 == axis) {
     jointState.name.push_back("joint1");

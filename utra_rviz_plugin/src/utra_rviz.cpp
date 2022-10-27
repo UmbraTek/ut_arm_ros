@@ -13,14 +13,14 @@
 #include <geometry_msgs/Twist.h>
 #include <ut_msg/RobotMsg.h>
 #include <QDebug>
-#include "ut_msg/Checkconnect.h"
-#include "ut_msg/EnableSet.h"
+#include "ut_msg/CheckConnect.h"
 #include "ut_msg/GetFloat32.h"
+#include "ut_msg/GetGripperState.h"
 #include "ut_msg/GetInt16.h"
-#include "ut_msg/GripperStateGet.h"
-#include "ut_msg/GripperStateSet.h"
 #include "ut_msg/Grippermv.h"
+#include "ut_msg/SetEnable.h"
 #include "ut_msg/SetFloat32.h"
+#include "ut_msg/SetGripperState.h"
 #include "ut_msg/SetInt16.h"
 
 namespace utra_rviz_space {
@@ -109,24 +109,24 @@ utra_rviz::utra_rviz(QWidget *parent) : rviz::Panel(parent) {
   connect(checkConnect, SIGNAL(clicked()), this, SLOT(check_connect()));
   connect(gripper_velButton, SIGNAL(clicked()), this, SLOT(set_gripper_vel()));
 
-  Grippermv_client = nh_.serviceClient<ut_msg::Grippermv>("utra/gripper_mv");
-  Gripperstate_get = nh_.serviceClient<ut_msg::GripperStateGet>("utra/gripper_state_get");
-  Gripperstate_set = nh_.serviceClient<ut_msg::GripperStateSet>("utra/gripper_state_set");
-  status_set_client = nh_.serviceClient<ut_msg::SetInt16>("utra/status_set");
-  mode_set_client = nh_.serviceClient<ut_msg::SetInt16>("utra/mode_set");
-  enable_set_client = nh_.serviceClient<ut_msg::EnableSet>("utra/enable_set");
-  checkconnect_client = nh_.serviceClient<ut_msg::Checkconnect>("utra/check_connect");
+  Grippermv_client = nh_.serviceClient<ut_msg::Grippermv>("utsrv/gripper_mv");
+  Gripperstate_get = nh_.serviceClient<ut_msg::GetGripperState>("utsrv/gripper_state_get");
+  Gripperstate_set = nh_.serviceClient<ut_msg::SetGripperState>("utsrv/gripper_state_set");
+  status_set_client = nh_.serviceClient<ut_msg::SetInt16>("utsrv/status_set");
+  mode_set_client = nh_.serviceClient<ut_msg::SetInt16>("utsrv/mode_set");
+  enable_set_client = nh_.serviceClient<ut_msg::SetEnable>("utsrv/enable_set");
+  checkconnect_client = nh_.serviceClient<ut_msg::CheckConnect>("utsrv/check_connect");
 
-  Grippervel_get = nh_.serviceClient<ut_msg::GetFloat32>("utra/gripper_vel_get");
-  Grippervel_set = nh_.serviceClient<ut_msg::SetFloat32>("utra/gripper_vel_set");
+  Grippervel_get = nh_.serviceClient<ut_msg::GetFloat32>("utsrv/gripper_vel_get");
+  Grippervel_set = nh_.serviceClient<ut_msg::SetFloat32>("utsrv/gripper_vel_set");
 
-  utra_states_sub = nh_.subscribe("ut_arm/states", 1000, &utra_rviz::statesCallback, this);
+  utra_states_sub = nh_.subscribe("utsrv/states", 1000, &utra_rviz::statesCallback, this);
   refreshUI();
 }
 void utra_rviz::check_connect() { refreshUI(); }
 
 void utra_rviz::refreshUI() {
-  ut_msg::Checkconnect srv1;
+  ut_msg::CheckConnect srv1;
   if (checkconnect_client.call(srv1)) {
     if (srv1.response.ret != -3) {
       ip_addrees->setText(QString::fromStdString(srv1.response.ip_address));
@@ -135,7 +135,7 @@ void utra_rviz::refreshUI() {
     }
   }
 
-  ut_msg::GripperStateGet srv;
+  ut_msg::GetGripperState srv;
   if (Gripperstate_get.call(srv)) {
     ROS_INFO("ret %d, pos %f", srv.response.ret, srv.response.pos);
     if (srv.response.enable == 1) {
@@ -217,7 +217,7 @@ void utra_rviz::set_gripper_vel() {
 
 void utra_rviz::enable_gripper() {
   Qt::CheckState state = gripperEnable->checkState();
-  ut_msg::GripperStateSet srv;
+  ut_msg::SetGripperState srv;
   switch (state) {
     case Qt::Unchecked:
       srv.request.state = 0;
@@ -244,7 +244,7 @@ void utra_rviz::resumeState() {
 }
 void utra_rviz::enable() {
   Qt::CheckState state = utraEnable->checkState();
-  ut_msg::EnableSet srv;
+  ut_msg::SetEnable srv;
   switch (state) {
     case Qt::Unchecked:
       srv.request.axis = 100;

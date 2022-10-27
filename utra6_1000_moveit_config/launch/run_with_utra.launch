@@ -7,7 +7,7 @@
 
     
     <include file="$(find arm_controller)/launch/utarm_status_transmit.launch">
-        <arg name="utra_ns" value="utra/joint_states_1000" />
+        <arg name="utra_ns" value="utra6_1000/joint_states_1000" />
         <arg name="axis" type="str" value="6" />
     </include>
 

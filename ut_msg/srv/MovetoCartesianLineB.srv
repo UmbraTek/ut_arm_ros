@@ -1,4 +1,4 @@
-# Service name: utra/moveto_cartesian_lineb
+# Service name: utsrv/moveto_cartesian_lineb
 # Blend circular (in tool-space) and move linear (in tool-space) to position.Accelerates to and moves with constant tool speed v.
 # request: 
 #            pose (list): cartesian position [mm mm mm rad rad rad]

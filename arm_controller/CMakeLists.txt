@@ -17,7 +17,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs genmsg actionlib c
 # Api.srv
 # Connect.srv
 # Disconnect.srv
-# Checkconnect.srv
+# CheckConnect.srv
 # )
 
 # # Generate added messages and services
@@ -41,9 +41,9 @@ add_executable(utarm_mvservo_trajectory src/utarm_mvservo_trajectory.cpp)
 target_link_libraries(utarm_mvservo_trajectory ${catkin_LIBRARIES})
 add_dependencies(utarm_mvservo_trajectory ut_msg_generate_messages_cpp)
 
-add_executable(utra_server src/utra_server.cpp)
-target_link_libraries(utra_server ${catkin_LIBRARIES})
-add_dependencies(utra_server ut_msg_generate_messages_cpp)
+add_executable(utarm_api_server src/utarm_api_server.cpp)
+target_link_libraries(utarm_api_server ${catkin_LIBRARIES})
+add_dependencies(utarm_api_server ut_msg_generate_messages_cpp)
 
 add_executable(utarm_report_status10hz src/utarm_report_status10hz.cpp)
 target_link_libraries(utarm_report_status10hz ${catkin_LIBRARIES})

@@ -1,0 +1,12 @@
+
+---
+# ret is 0: successful  -3:disconnect  other:have error
+# Service name: utsrv/gripper_vel_get
+# response: get arm gripper velocity 
+
+# Service name: utsrv/gripper_acc_get
+# response: get arm gripper Acceleration 
+
+
+int16 ret
+float32 data

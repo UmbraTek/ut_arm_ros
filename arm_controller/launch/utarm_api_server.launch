@@ -3,9 +3,9 @@
   <arg  name="arm_ip" />
   <param name = "arm_ip" type="str" value = "$(arg arm_ip)"/>
   <node
-    name="utra_server"
+    name="utarm_api_server"
     pkg="arm_controller"
-    type="utra_server"
+    type="utarm_api_server"
     respawn="false"
     output="screen"
     ></node>

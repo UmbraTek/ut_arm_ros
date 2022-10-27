@@ -53,10 +53,10 @@ You can connect with opti and controll it in rviz.
 **Pay Attention** you need to very be careful the **Trajectory planning** in rviz , you must **Play** before the **Excute** every time to make sure that the generated trajectory is not **Collision**. We suggest that make opti with a good posture by select the **init** posture in **MotionPlanning->Planning->Goal state**. For Safe on Execute, we suggest you set the Velocity and Accel smaller first.
 ![init](./doc/init.png)  
 
-## 3.1 Launch the server to connect the utra
+## 3.1 Launch the server to connect the arm
 
 ```bash
-roslaunch arm_controller utra_server.launch arm_ip:="opti_ip_address"   //opti_ip_address like 192.168.1.234
+roslaunch arm_controller utarm_api_server.launch arm_ip:="opti_ip_address"   //opti_ip_address like 192.168.1.234
 ```
 ## 3.2 Enable the opti
 
@@ -82,27 +82,27 @@ roslaunch opti6_800_moveit_gripper_config run_with_utra.launch
 
 
 # 4. Excute the command to communicate with server 
-All servers are implemented in utra_server.cpp of arm_controller package.
+All servers are implemented in utarm_api_server.cpp of arm_controller package.
 
 All msg are in ut_msg package.
 
 ## 4.1 Communication with opti through the rosservice command
 
 
-Connect service, refer to [Connect.srv](/ut_msg/srv/Connect.srv),[Disconnect.srv](/ut_msg/srv/Disconnect.srv),[Checkconnect.srv](/ut_msg/srv/Checkconnect.srv)
+Connect service, refer to [Connect.srv](/ut_msg/srv/Connect.srv),[Disconnect.srv](/ut_msg/srv/Disconnect.srv),[CheckConnect.srv](/ut_msg/srv/CheckConnect.srv)
 
 ```
-rosservice call /utra/connect "192.168.1.234" 
-rosservice call /utra/disconnect 
-rosservice call /utra/check_connect 
+rosservice call /utsrv/connect "192.168.1.234" 
+rosservice call /utsrv/disconnect 
+rosservice call /utsrv/check_connect 
 ```
 
-Gripper service, refer to [GripperStateSet.srv](/ut_msg/srv/GripperStateSet.srv),[GripperStateGet.srv](/ut_msg/srv/GripperStateGet.srv),[Grippermv.srv](/ut_msg/srv/Grippermv.srv)
+Gripper service, refer to [SetGripperState.srv](/ut_msg/srv/SetGripperState.srv),[GetGripperState.srv](/ut_msg/srv/GetGripperState.srv),[Grippermv.srv](/ut_msg/srv/Grippermv.srv)
 
 ```
-rosservice call /utra/gripper_state_set 1  
-rosservice call /utra/gripper_state_get 
-rosservice call /utra/gripper_mv 20
+rosservice call /utsrv/gripper_state_set 1  
+rosservice call /utsrv/gripper_state_get 
+rosservice call /utsrv/gripper_mv 20
 ```
 more service introduction [service.md](/arm_controller/readme.md)
 
@@ -111,7 +111,7 @@ more service introduction [service.md](/arm_controller/readme.md)
 You can open the opti rviz plugin by select Menu->Panels->utra_rviz->utra_panel
 ![RVIZ1](./doc/rviz1.png)  
 
-In this panel, you can enable the utra and set the gripper more easy.
+In this panel, you can enable the arm and set the gripper more easy.
 
 ![RVIZ2](./doc/rviz2.png)  
 

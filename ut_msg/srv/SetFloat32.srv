@@ -1,0 +1,18 @@
+# Service name: utsrv/gripper_vel_set
+# request: set arm gripper velocity [0-300]
+
+# Service name: utsrv/gripper_acc_set
+# request: set arm gripper Acceleration [0-300]
+
+# Service name: utsrv/plan_sleep
+# Sleep for an amount of plan time
+# request: time (float): sleep time [s]
+
+float32 data
+
+---
+
+# response: 
+#	ret is 0: successful  -3:disconnect  other:have error
+
+int16 ret

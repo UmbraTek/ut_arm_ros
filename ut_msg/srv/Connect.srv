@@ -1,4 +1,4 @@
-#Service name: utra/connect
+#Service name: utsrv/connect
 
 string ip_address
 ---

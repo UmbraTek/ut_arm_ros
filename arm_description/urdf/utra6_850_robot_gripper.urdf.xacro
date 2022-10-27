@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro" name="utra6_850">
 
   <xacro:arg name="prefix" default=""/>
-  <xacro:arg name="ros_namespace" default="utra"/>
+  <xacro:arg name="ros_namespace" default="utra6_850"/>
   <xacro:arg name="limited" default="false"/>
   <xacro:arg name="effort_control" default="false"/>
   <xacro:arg name="attach_to_world" default="true"/>

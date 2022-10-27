@@ -68,7 +68,7 @@ please install the ros_industrial: <https://github.com/ros-industrial/industrial
 
 Launch the Rviz and connect the opti6
 ```bash
-roslaunch opti6_800_moveit_config run_with_utra.launch 
+roslaunch opti6_800_moveit_config run_with_opti6_800.launch 
 ```
 
 ## 3.4 Open the Rviz with gripper
@@ -77,7 +77,7 @@ please install the ros_industrial: <https://github.com/ros-industrial/industrial
 
 Launch the Rviz with gripper and connect the opti6
 ```bash
-roslaunch opti6_800_moveit_gripper_config run_with_utra.launch 
+roslaunch opti6_800_moveit_gripper_config run_with_opti6_800.launch 
 ```
 
 

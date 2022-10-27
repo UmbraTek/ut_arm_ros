@@ -24,9 +24,10 @@ namespace utra_rviz_space {
 class utra_rviz : public rviz::Panel {
   Q_OBJECT
  public:
-  // 构造函数，在类中会用到QWidget的实例来实现GUI界面，这里先初始化为0即可
+  // Constructor, in the class will use the QWidget instance to implement the GUI interface, here initialized to 0
   utra_rviz(QWidget* parent = 0);
-  // 重载rviz::Panel积累中的函数，用于保存、加载配置文件中的数据，在我们这个plugin中，数据就是topic的名称
+  // Override the rviz::Panel accumulation function to save and load the data from the configuration file.In our case,
+  // the data is the name of the topic
   //    virtual void load( const rviz::Config& config );
   virtual void save(rviz::Config config) const;
   void move_base(char k, float speed_linear, float speed_trun);
@@ -38,7 +39,7 @@ class utra_rviz : public rviz::Panel {
   void e_stop();
   void check_connect();
   void set_gripper_vel();
-  // 内部变量.
+
  protected:
   QLabel* ip_lable;
   QLabel* ip_addrees;
@@ -77,7 +78,7 @@ class utra_rviz : public rviz::Panel {
   ros::ServiceClient enable_set_client;
   ros::ServiceClient checkconnect_client;
 
-  // 当前保存的线速度和角速度值
+  // Currently saved linear and angular velocity values
   float linear_velocity_;
   float angular_velocity_;
 

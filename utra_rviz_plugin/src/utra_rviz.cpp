@@ -271,13 +271,13 @@ void utra_rviz::e_stop() {
     ROS_INFO("status_set ret %d,", srv.response.ret);
   }
 }
-// 重载父类的功能
+// Overrides the functionality of the parent class
 void utra_rviz::save(rviz::Config config) const {
   rviz::Panel::save(config);
   //   config.mapSetValue( "Topic", output_topic_ );
 }
 
-//// 重载父类的功能，加载配置数据
+//// Override superclass functionality to load configuration data
 // void utra_rviz::load( const rviz::Config& config )
 //{
 //  rviz::Panel::load( config );
@@ -291,7 +291,7 @@ void utra_rviz::save(rviz::Config config) const {
 
 }  // namespace utra_rviz_space
 
-// 声明此类是一个rviz的插件
+// Declare that this class is a plug-in for rviz
 #include <pluginlib/class_list_macros.h>
 PLUGINLIB_EXPORT_CLASS(utra_rviz_space::utra_rviz, rviz::Panel)
 // END_TUTORIAL

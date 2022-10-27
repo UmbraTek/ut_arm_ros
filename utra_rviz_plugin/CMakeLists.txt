@@ -37,14 +37,12 @@ add_definitions(-DQT_NO_KEYWORDS)
 
 # # Here we specify which header files need to be run through "moc",
 # # Qt's meta-object compiler.
-# #修改这里的头文件名
 qt5_wrap_cpp(MOC_FILES
   src/utra_rviz.h
 )
 
 # # Here we specify the list of source files, including the output of
 # # the previous command which is stored in ``${MOC_FILES}``.
-# #修改这里的cpp名
 set(SOURCE_FILES
   src/utra_rviz.cpp
   ${MOC_FILES}

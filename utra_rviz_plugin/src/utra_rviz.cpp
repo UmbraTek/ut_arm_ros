@@ -120,7 +120,7 @@ utra_rviz::utra_rviz(QWidget *parent) : rviz::Panel(parent) {
   Grippervel_get = nh_.serviceClient<utra_msg::GetFloat32>("utra/gripper_vel_get");
   Grippervel_set = nh_.serviceClient<utra_msg::SetFloat32>("utra/gripper_vel_set");
 
-  utra_states_sub = nh_.subscribe("utra/states", 1000, &utra_rviz::statesCallback, this);
+  utra_states_sub = nh_.subscribe("ut_arm/states", 1000, &utra_rviz::statesCallback, this);
   refreshUI();
 }
 void utra_rviz::check_connect() { refreshUI(); }

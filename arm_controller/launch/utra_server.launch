@@ -1,0 +1,20 @@
+<launch>
+
+  <arg  name="arm_ip" />
+  <param name = "arm_ip" type="str" value = "$(arg arm_ip)"/>
+  <node
+    name="utra_server"
+    pkg="arm_controller"
+    type="utra_server"
+    respawn="false"
+    output="screen"
+    ></node>
+  <node
+    name="utarm_report_status10hz"
+    pkg="arm_controller"
+    type="utarm_report_status10hz"
+    respawn="false"
+    output="screen"
+    ></node>
+    
+</launch>

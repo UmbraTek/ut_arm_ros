@@ -19,7 +19,7 @@
     <arg name="headless" value="$(arg headless)"/>
   </include>
 
-  <!-- Load the URDF into the ROS Parameter Server   opti7_800_robot.urdf.xacro utra550.xacro-->
+  <!-- Load the URDF into the ROS Parameter Server   opti7_800_robot.urdf.xacro opti7_800.xacro-->
   <param if="$(arg gripper)" name="robot_description" command="$(find xacro)/xacro --inorder '$(find utra_description)/urdf/opti7_800_robot_gripper.urdf.xacro'" /> 
   <param if="$(arg vacuum_gripper)" name="robot_description" command="$(find xacro)/xacro --inorder '$(find utra_description)/urdf/opti7_800_robot_vacuum_gripper.urdf.xacro'" /> 
   

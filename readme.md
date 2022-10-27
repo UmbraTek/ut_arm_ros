@@ -104,7 +104,7 @@ You can connect with utra and controll it in rviz.
 ## 6.1 Launch the server to connect the utra
 
 ```bash
-roslaunch utra_controller utra_server.launch utra_ip:="utra_ip_address"   //utra_ip_address like 192.168.1.234
+roslaunch arm_controller utra_server.launch arm_ip:="arm_ip_address"   //arm_ip_address like 192.168.1.234
 ```
 ## 6.2 Enable the utra
 
@@ -147,7 +147,7 @@ roslaunch utra6_1000_moveit_gripper_config run_with_utra.launch
 ```
 
 # 7. Excute the command to communicate with server 
-All servers are implemented in utra_server.cpp of utra_controller package.
+All servers are implemented in utra_server.cpp of arm_controller package.
 
 All msg are in utra_msg package.
 
@@ -169,7 +169,7 @@ rosservice call /utra/gripper_state_set 1
 rosservice call /utra/gripper_state_get 
 rosservice call /utra/gripper_mv 20
 ```
-more service introduction [service.md](/utra_controller/readme.md)
+more service introduction [service.md](/arm_controller/readme.md)
 
 # 8. Utra Rviz plugin
 

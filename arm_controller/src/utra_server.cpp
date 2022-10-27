@@ -29,7 +29,7 @@
 
 UtraApiTcp *armapi = NULL;
 UtraFlxiE2Api *fixie = NULL;
-std::string utra_ip = "";
+std::string arm_ip = "";
 
 constexpr unsigned int hash(const char *s, int off = 0) { return !s[off] ? 5381 : (hash(s, off + 1) * 33) ^ s[off]; }
 
@@ -51,7 +51,7 @@ bool connect_api(utra_msg::Connect::Request &req, utra_msg::Connect::Response &r
   }
 
   uint8_t axis;
-  utra_ip = req.ip_address;
+  arm_ip = req.ip_address;
   char *ip = new char[req.ip_address.length() + 1];
   std::strcpy(ip, req.ip_address.c_str());
   armapi = new UtraApiTcp(ip);
@@ -81,7 +81,7 @@ bool check_c_api(utra_msg::Checkconnect::Request &req, utra_msg::Checkconnect::R
 
   uint8_t axis;
   int ret = armapi->get_axis(&axis);
-  res.ip_address = utra_ip;
+  res.ip_address = arm_ip;
   res.ret = ret;
   if (ret == -3) {
     res.message = "can not connect the arm";
@@ -472,27 +472,28 @@ bool gripper_unlock(utra_msg::SetInt16::Request &req, utra_msg::SetInt16::Respon
 //------------------------------------------------------------------------------------
 //                                      MAIN
 //------------------------------------------------------------------------------------
+/**
+ * API service for the Arm NTRO controller
+ */
 int main(int argc, char **argv) {
   ros::init(argc, argv, "utra_server");
   ros::NodeHandle nh;
 
-  if (nh.getParam("utra_ip", utra_ip)) {
-    ROS_INFO("[ArmContr] Got param: %s", utra_ip.c_str());
+  if (nh.getParam("arm_ip", arm_ip)) {
+    ROS_INFO("[ArmContr] Got param: %s", arm_ip.c_str());
   } else {
-    ROS_ERROR("[ArmContr] Failed to get param 'utra_ip'");
-    utra_ip = "";
-    // return -1;
+    ROS_ERROR("[ArmContr] Failed to get param 'arm_ip'");
+    arm_ip = "";
   }
-  if (utra_ip != "") {
-    char *ip = new char[utra_ip.length() + 1];
-    std::strcpy(ip, utra_ip.c_str());
+  if (arm_ip != "") {
+    char *ip = new char[arm_ip.length() + 1];
+    std::strcpy(ip, arm_ip.c_str());
     armapi = new UtraApiTcp(ip);
     uint8_t axis;
     int ret = armapi->get_axis(&axis);
     ROS_INFO("[ArmContr] get_axis %d, axis:%d", ret, axis);
     if (ret == -3) {
       ROS_ERROR("[ArmContr] can not connect the arm");
-      // return -1;
     }
   }
 

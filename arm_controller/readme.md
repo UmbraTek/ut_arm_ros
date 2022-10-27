@@ -1,5 +1,5 @@
 # Communication with utra through the rosservice command
-All servers are implemented in utra_server.cpp of utra_controller package.
+All servers are implemented in utra_server.cpp of arm_controller package.
 
 All msg are in utra_msg package.
 

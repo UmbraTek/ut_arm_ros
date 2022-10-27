@@ -32,7 +32,7 @@ typedef actionlib::SimpleActionServer<control_msgs::FollowJointTrajectoryAction>
 void execute(const control_msgs::FollowJointTrajectoryGoalConstPtr& goal, Server* as) { as->setSucceeded(); }
 
 int main(int argc, char** argv) {
-  ros::init(argc, argv, "trajectory_server");
+  ros::init(argc, argv, "utarm_mvservo_trajectory");
   ros::NodeHandle nh;
   ros::NodeHandle pn("~");
   std::string utra_ns_gripper;

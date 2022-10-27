@@ -8,7 +8,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp std_msgs actionlib control_msgs)
 catkin_package(
 
     # INCLUDE_DIRS include
-    # LIBRARIES utra_description
+    # LIBRARIES arm_description
     # CATKIN_DEPENDS other_catkin_pkg
     # DEPENDS system_lib
 )

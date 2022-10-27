@@ -9,7 +9,7 @@
 #include <rviz/panel.h>  //plugin基类的头文件
 
 #include <geometry_msgs/Twist.h>
-#include <utra_msg/RobotMsg.h>
+#include <ut_msg/RobotMsg.h>
 #include <QCheckBox>
 #include <QDebug>
 #include <QHBoxLayout>
@@ -83,7 +83,7 @@ class utra_rviz : public rviz::Panel {
   float angular_velocity_;
 
   void refreshUI();
-  void statesCallback(const utra_msg::RobotMsg& msg);
+  void statesCallback(const ut_msg::RobotMsg& msg);
 };
 }  // namespace utra_rviz_space
 

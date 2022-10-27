@@ -4,7 +4,7 @@ SET(CMAKE_CXX_FLAGS "-std=c++11")
 project(arm_controller)
 
 # # Find catkin and any catkin packages
-find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs genmsg actionlib control_msgs utra_api utra_msg)
+find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs genmsg actionlib control_msgs ut_api ut_msg)
 
 # # Declare ROS messages and services
 # add_message_files(
@@ -22,7 +22,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs genmsg actionlib c
 
 # # Generate added messages and services
 catkin_package(
-  CATKIN_DEPENDS roscpp utra_msg utra_api
+  CATKIN_DEPENDS roscpp ut_msg ut_api
 )
 
 # # Declare a catkin package
@@ -35,16 +35,16 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 # add_subdirectory(utapi utapi_arm)
 add_executable(utarm_status_transmit src/utarm_status_transmit.cpp)
 target_link_libraries(utarm_status_transmit ${catkin_LIBRARIES})
-add_dependencies(utarm_status_transmit utra_msg_generate_messages_cpp)
+add_dependencies(utarm_status_transmit ut_msg_generate_messages_cpp)
 
 add_executable(utarm_mvservo_trajectory src/utarm_mvservo_trajectory.cpp)
 target_link_libraries(utarm_mvservo_trajectory ${catkin_LIBRARIES})
-add_dependencies(utarm_mvservo_trajectory utra_msg_generate_messages_cpp)
+add_dependencies(utarm_mvservo_trajectory ut_msg_generate_messages_cpp)
 
 add_executable(utra_server src/utra_server.cpp)
 target_link_libraries(utra_server ${catkin_LIBRARIES})
-add_dependencies(utra_server utra_msg_generate_messages_cpp)
+add_dependencies(utra_server ut_msg_generate_messages_cpp)
 
 add_executable(utarm_report_status10hz src/utarm_report_status10hz.cpp)
 target_link_libraries(utarm_report_status10hz ${catkin_LIBRARIES})
-add_dependencies(utarm_report_status10hz utra_msg_generate_messages_cpp)
+add_dependencies(utarm_report_status10hz ut_msg_generate_messages_cpp)

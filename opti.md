@@ -3,7 +3,7 @@
 
 Launch opti6 rviz :
 ```bash
-roslaunch utra_description opti6_800_view.launch [gripper:=true] [vacuum_gripper:=true]
+roslaunch arm_description opti6_800_view.launch [gripper:=true] [vacuum_gripper:=true]
 ```
 
 # 2. Run in Rviz  and Gazebo simulator
@@ -84,12 +84,12 @@ roslaunch opti6_800_moveit_gripper_config run_with_utra.launch
 # 4. Excute the command to communicate with server 
 All servers are implemented in utra_server.cpp of arm_controller package.
 
-All msg are in utra_msg package.
+All msg are in ut_msg package.
 
 ## 4.1 Communication with opti through the rosservice command
 
 
-Connect service, refer to [Connect.srv](/utra_msg/srv/Connect.srv),[Disconnect.srv](/utra_msg/srv/Disconnect.srv),[Checkconnect.srv](/utra_msg/srv/Checkconnect.srv)
+Connect service, refer to [Connect.srv](/ut_msg/srv/Connect.srv),[Disconnect.srv](/ut_msg/srv/Disconnect.srv),[Checkconnect.srv](/ut_msg/srv/Checkconnect.srv)
 
 ```
 rosservice call /utra/connect "192.168.1.234" 
@@ -97,7 +97,7 @@ rosservice call /utra/disconnect
 rosservice call /utra/check_connect 
 ```
 
-Gripper service, refer to [GripperStateSet.srv](/utra_msg/srv/GripperStateSet.srv),[GripperStateGet.srv](/utra_msg/srv/GripperStateGet.srv),[Grippermv.srv](/utra_msg/srv/Grippermv.srv)
+Gripper service, refer to [GripperStateSet.srv](/ut_msg/srv/GripperStateSet.srv),[GripperStateGet.srv](/ut_msg/srv/GripperStateGet.srv),[Grippermv.srv](/ut_msg/srv/Grippermv.srv)
 
 ```
 rosservice call /utra/gripper_state_set 1  

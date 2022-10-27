@@ -8,24 +8,24 @@
 #include "utra/utra_api_tcp.h"
 #include "utra/utra_flxie_api.h"
 
-#include "utra_msg/Checkconnect.h"
-#include "utra_msg/Connect.h"
-#include "utra_msg/Disconnect.h"
-#include "utra_msg/EnableSet.h"
-#include "utra_msg/GetFloat32.h"
-#include "utra_msg/GetFloat32A.h"
-#include "utra_msg/GetInt16.h"
-#include "utra_msg/GetUInt16A.h"
-#include "utra_msg/GripperStateGet.h"
-#include "utra_msg/GripperStateSet.h"
-#include "utra_msg/Grippermv.h"
-#include "utra_msg/Mservojoint.h"
-#include "utra_msg/SetFloat32.h"
-#include "utra_msg/SetInt16.h"
+#include "ut_msg/Checkconnect.h"
+#include "ut_msg/Connect.h"
+#include "ut_msg/Disconnect.h"
+#include "ut_msg/EnableSet.h"
+#include "ut_msg/GetFloat32.h"
+#include "ut_msg/GetFloat32A.h"
+#include "ut_msg/GetInt16.h"
+#include "ut_msg/GetUInt16A.h"
+#include "ut_msg/GripperStateGet.h"
+#include "ut_msg/GripperStateSet.h"
+#include "ut_msg/Grippermv.h"
+#include "ut_msg/Mservojoint.h"
+#include "ut_msg/SetFloat32.h"
+#include "ut_msg/SetInt16.h"
 
-#include "utra_msg/MovetoCartesianLine.h"
-#include "utra_msg/MovetoCartesianLineB.h"
-#include "utra_msg/MovetoJointP2p.h"
+#include "ut_msg/MovetoCartesianLine.h"
+#include "ut_msg/MovetoCartesianLineB.h"
+#include "ut_msg/MovetoJointP2p.h"
 
 UtraApiTcp *armapi = NULL;
 UtraFlxiE2Api *fixie = NULL;
@@ -43,7 +43,7 @@ constexpr unsigned int hash(const char *s, int off = 0) { return !s[off] ? 5381 
     return true;                                           \
   }
 
-bool connect_api(utra_msg::Connect::Request &req, utra_msg::Connect::Response &res) {
+bool connect_api(ut_msg::Connect::Request &req, ut_msg::Connect::Response &res) {
   if (armapi != NULL) {
     res.ret = 0;
     res.message = "server have connected arm";
@@ -65,7 +65,7 @@ bool connect_api(utra_msg::Connect::Request &req, utra_msg::Connect::Response &r
   return true;
 }
 
-bool disconnect_api(utra_msg::Disconnect::Request &req, utra_msg::Disconnect::Response &res) {
+bool disconnect_api(ut_msg::Disconnect::Request &req, ut_msg::Disconnect::Response &res) {
   CHECK_ARM_CONNECT()
 
   delete armapi;
@@ -75,7 +75,7 @@ bool disconnect_api(utra_msg::Disconnect::Request &req, utra_msg::Disconnect::Re
   return true;
 }
 
-bool check_c_api(utra_msg::Checkconnect::Request &req, utra_msg::Checkconnect::Response &res) {
+bool check_c_api(ut_msg::Checkconnect::Request &req, ut_msg::Checkconnect::Response &res) {
   res.ip_address = "";
   CHECK_ARM_CONNECT()
 
@@ -91,7 +91,7 @@ bool check_c_api(utra_msg::Checkconnect::Request &req, utra_msg::Checkconnect::R
   return true;
 }
 
-bool mv_servo_joint(utra_msg::Mservojoint::Request &req, utra_msg::Mservojoint::Response &res) {
+bool mv_servo_joint(ut_msg::Mservojoint::Request &req, ut_msg::Mservojoint::Response &res) {
   CHECK_ARM_CONNECT()
 
   int ret = 0;
@@ -145,7 +145,7 @@ bool mv_servo_joint(utra_msg::Mservojoint::Request &req, utra_msg::Mservojoint::
   return true;
 }
 
-bool status_set(utra_msg::SetInt16::Request &req, utra_msg::SetInt16::Response &res) {
+bool status_set(ut_msg::SetInt16::Request &req, ut_msg::SetInt16::Response &res) {
   CHECK_ARM_CONNECT()
 
   int ret = armapi->set_motion_status(req.data);
@@ -154,7 +154,7 @@ bool status_set(utra_msg::SetInt16::Request &req, utra_msg::SetInt16::Response &
   return true;
 }
 
-bool status_get(utra_msg::GetInt16::Request &req, utra_msg::GetInt16::Response &res) {
+bool status_get(ut_msg::GetInt16::Request &req, ut_msg::GetInt16::Response &res) {
   CHECK_ARM_CONNECT()
 
   uint8_t status;
@@ -166,7 +166,7 @@ bool status_get(utra_msg::GetInt16::Request &req, utra_msg::GetInt16::Response &
   return true;
 }
 
-bool mode_set(utra_msg::SetInt16::Request &req, utra_msg::SetInt16::Response &res) {
+bool mode_set(ut_msg::SetInt16::Request &req, ut_msg::SetInt16::Response &res) {
   CHECK_ARM_CONNECT()
 
   int ret = armapi->set_motion_mode(req.data);
@@ -175,7 +175,7 @@ bool mode_set(utra_msg::SetInt16::Request &req, utra_msg::SetInt16::Response &re
   return true;
 }
 
-bool mode_get(utra_msg::GetInt16::Request &req, utra_msg::GetInt16::Response &res) {
+bool mode_get(ut_msg::GetInt16::Request &req, ut_msg::GetInt16::Response &res) {
   CHECK_ARM_CONNECT()
 
   uint8_t mode;
@@ -186,7 +186,7 @@ bool mode_get(utra_msg::GetInt16::Request &req, utra_msg::GetInt16::Response &re
   return true;
 }
 
-bool enable_set(utra_msg::EnableSet::Request &req, utra_msg::EnableSet::Response &res) {
+bool enable_set(ut_msg::EnableSet::Request &req, ut_msg::EnableSet::Response &res) {
   CHECK_ARM_CONNECT()
 
   int ret = armapi->set_motion_enable(req.axis, req.enable);
@@ -195,7 +195,7 @@ bool enable_set(utra_msg::EnableSet::Request &req, utra_msg::EnableSet::Response
   return true;
 }
 
-bool enable_get(utra_msg::GetInt16::Request &req, utra_msg::GetInt16::Response &res) {
+bool enable_get(ut_msg::GetInt16::Request &req, ut_msg::GetInt16::Response &res) {
   CHECK_ARM_CONNECT()
 
   int enable;
@@ -206,7 +206,7 @@ bool enable_get(utra_msg::GetInt16::Request &req, utra_msg::GetInt16::Response &
   return true;
 }
 
-bool get_error_code(utra_msg::GetUInt16A::Request &req, utra_msg::GetUInt16A::Response &res) {
+bool get_error_code(ut_msg::GetUInt16A::Request &req, ut_msg::GetUInt16A::Response &res) {
   CHECK_ARM_CONNECT()
 
   uint8_t array[24] = {0};
@@ -217,7 +217,7 @@ bool get_error_code(utra_msg::GetUInt16A::Request &req, utra_msg::GetUInt16A::Re
   return true;
 }
 
-bool get_servo_msg(utra_msg::GetUInt16A::Request &req, utra_msg::GetUInt16A::Response &res) {
+bool get_servo_msg(ut_msg::GetUInt16A::Request &req, ut_msg::GetUInt16A::Response &res) {
   CHECK_ARM_CONNECT()
 
   uint8_t array[24] = {0};
@@ -228,7 +228,7 @@ bool get_servo_msg(utra_msg::GetUInt16A::Request &req, utra_msg::GetUInt16A::Res
   return true;
 }
 
-bool moveto_joint_p2p(utra_msg::MovetoJointP2p::Request &req, utra_msg::MovetoJointP2p::Response &res) {
+bool moveto_joint_p2p(ut_msg::MovetoJointP2p::Request &req, ut_msg::MovetoJointP2p::Response &res) {
   CHECK_ARM_CONNECT()
 
   int axis = req.joints.size();
@@ -251,7 +251,7 @@ bool moveto_joint_p2p(utra_msg::MovetoJointP2p::Request &req, utra_msg::MovetoJo
   }
 }
 
-bool moveto_cartesian_line(utra_msg::MovetoCartesianLine::Request &req, utra_msg::MovetoCartesianLine::Response &res) {
+bool moveto_cartesian_line(ut_msg::MovetoCartesianLine::Request &req, ut_msg::MovetoCartesianLine::Response &res) {
   CHECK_ARM_CONNECT()
 
   int axis = req.pose.size();
@@ -267,7 +267,7 @@ bool moveto_cartesian_line(utra_msg::MovetoCartesianLine::Request &req, utra_msg
   }
 }
 
-bool plan_sleep(utra_msg::SetFloat32::Request &req, utra_msg::SetFloat32::Response &res) {
+bool plan_sleep(ut_msg::SetFloat32::Request &req, ut_msg::SetFloat32::Response &res) {
   CHECK_ARM_CONNECT()
 
   int ret = armapi->plan_sleep(req.data);
@@ -276,8 +276,7 @@ bool plan_sleep(utra_msg::SetFloat32::Request &req, utra_msg::SetFloat32::Respon
   return true;
 }
 
-bool moveto_cartesian_lineb(utra_msg::MovetoCartesianLineB::Request &req,
-                            utra_msg::MovetoCartesianLineB::Response &res) {
+bool moveto_cartesian_lineb(ut_msg::MovetoCartesianLineB::Request &req, ut_msg::MovetoCartesianLineB::Response &res) {
   CHECK_ARM_CONNECT()
 
   int axis = req.pose.size();
@@ -293,7 +292,7 @@ bool moveto_cartesian_lineb(utra_msg::MovetoCartesianLineB::Request &req,
   }
 }
 
-bool get_joint_actual_pos(utra_msg::GetFloat32A::Request &req, utra_msg::GetFloat32A::Response &res) {
+bool get_joint_actual_pos(ut_msg::GetFloat32A::Request &req, ut_msg::GetFloat32A::Response &res) {
   CHECK_ARM_CONNECT()
 
   float array[10] = {0};
@@ -314,7 +313,7 @@ bool get_joint_actual_pos(utra_msg::GetFloat32A::Request &req, utra_msg::GetFloa
     return true;                                                      \
   }
 
-bool gripper_state_set(utra_msg::GripperStateSet::Request &req, utra_msg::GripperStateSet::Response &res) {
+bool gripper_state_set(ut_msg::GripperStateSet::Request &req, ut_msg::GripperStateSet::Response &res) {
   if (armapi == NULL) {
     res.ret = -3;
     res.message = "server have not connected arm";
@@ -350,7 +349,7 @@ bool gripper_state_set(utra_msg::GripperStateSet::Request &req, utra_msg::Grippe
   return true;
 }
 
-bool gripper_state_get(utra_msg::GripperStateGet::Request &req, utra_msg::GripperStateGet::Response &res) {
+bool gripper_state_get(ut_msg::GripperStateGet::Request &req, ut_msg::GripperStateGet::Response &res) {
   res.enable = 0;
   CHECK_FLXIE_CONNECT()
 
@@ -374,7 +373,7 @@ bool gripper_state_get(utra_msg::GripperStateGet::Request &req, utra_msg::Grippe
   return true;
 }
 
-bool gripper_mv(utra_msg::Grippermv::Request &req, utra_msg::Grippermv::Response &res) {
+bool gripper_mv(ut_msg::Grippermv::Request &req, ut_msg::Grippermv::Response &res) {
   CHECK_FLXIE_CONNECT()
 
   int ret = fixie->set_pos_target(req.pos);
@@ -389,7 +388,7 @@ bool gripper_mv(utra_msg::Grippermv::Request &req, utra_msg::Grippermv::Response
   return true;
 }
 
-bool gripper_vel_set(utra_msg::SetFloat32::Request &req, utra_msg::SetFloat32::Response &res) {
+bool gripper_vel_set(ut_msg::SetFloat32::Request &req, ut_msg::SetFloat32::Response &res) {
   CHECK_FLXIE_CONNECT()
 
   int ret1 = fixie->set_vel_limit_min(-req.data, true);
@@ -399,7 +398,7 @@ bool gripper_vel_set(utra_msg::SetFloat32::Request &req, utra_msg::SetFloat32::R
   return true;
 }
 
-bool gripper_vel_get(utra_msg::GetFloat32::Request &req, utra_msg::GetFloat32::Response &res) {
+bool gripper_vel_get(ut_msg::GetFloat32::Request &req, ut_msg::GetFloat32::Response &res) {
   CHECK_FLXIE_CONNECT()
 
   float value;
@@ -411,7 +410,7 @@ bool gripper_vel_get(utra_msg::GetFloat32::Request &req, utra_msg::GetFloat32::R
   return true;
 }
 
-bool gripper_acc_set(utra_msg::SetFloat32::Request &req, utra_msg::SetFloat32::Response &res) {
+bool gripper_acc_set(ut_msg::SetFloat32::Request &req, ut_msg::SetFloat32::Response &res) {
   CHECK_FLXIE_CONNECT()
 
   float data = req.data;
@@ -427,7 +426,7 @@ bool gripper_acc_set(utra_msg::SetFloat32::Request &req, utra_msg::SetFloat32::R
   return true;
 }
 
-bool gripper_acc_get(utra_msg::GetFloat32::Request &req, utra_msg::GetFloat32::Response &res) {
+bool gripper_acc_get(ut_msg::GetFloat32::Request &req, ut_msg::GetFloat32::Response &res) {
   CHECK_FLXIE_CONNECT()
 
   float value;
@@ -438,7 +437,7 @@ bool gripper_acc_get(utra_msg::GetFloat32::Request &req, utra_msg::GetFloat32::R
   return true;
 }
 
-bool gripper_error_code(utra_msg::GetInt16::Request &req, utra_msg::GetInt16::Response &res) {
+bool gripper_error_code(ut_msg::GetInt16::Request &req, ut_msg::GetInt16::Response &res) {
   CHECK_FLXIE_CONNECT()
 
   uint8_t value;
@@ -449,7 +448,7 @@ bool gripper_error_code(utra_msg::GetInt16::Request &req, utra_msg::GetInt16::Re
   return true;
 }
 
-bool gripper_reset_err(utra_msg::GetInt16::Request &req, utra_msg::GetInt16::Response &res) {
+bool gripper_reset_err(ut_msg::GetInt16::Request &req, ut_msg::GetInt16::Response &res) {
   CHECK_FLXIE_CONNECT()
 
   int ret = fixie->reset_err();
@@ -459,7 +458,7 @@ bool gripper_reset_err(utra_msg::GetInt16::Request &req, utra_msg::GetInt16::Res
   return true;
 }
 
-bool gripper_unlock(utra_msg::SetInt16::Request &req, utra_msg::SetInt16::Response &res) {
+bool gripper_unlock(ut_msg::SetInt16::Request &req, ut_msg::SetInt16::Response &res) {
   CHECK_FLXIE_CONNECT()
 
   int data = req.data;

@@ -6,7 +6,7 @@
  *
  * Author: johnson <johnson@umbratek.com>
  ============================================================================*/
-#include <utra_msg/RobotMsg.h>
+#include <ut_msg/RobotMsg.h>
 #include "ros/ros.h"
 #include "sensor_msgs/JointState.h"
 #include "std_msgs/Header.h"
@@ -18,7 +18,7 @@ sensor_msgs::JointState jointState;
 bool gripper;
 int axis;
 
-void statesCallback(const utra_msg::RobotMsg& msg) {
+void statesCallback(const ut_msg::RobotMsg& msg) {
   jointState.header.stamp = ros::Time::now();
   jointState.position.clear();
 

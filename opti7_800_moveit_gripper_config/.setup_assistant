@@ -1,6 +1,6 @@
 moveit_setup_assistant_config:
   URDF:
-    package: utra_description
+    package: arm_description
     relative_path: urdf/opti7_800_robot_gripper.urdf.xacro
     xacro_args: "--inorder "
   SRDF:

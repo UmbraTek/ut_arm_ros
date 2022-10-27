@@ -100,7 +100,7 @@ find_package(catkin REQUIRED)
 catkin_package(
 
     # INCLUDE_DIRS include
-    # LIBRARIES utra_description
+    # LIBRARIES arm_description
     # CATKIN_DEPENDS other_catkin_pkg
     # DEPENDS system_lib
 )
@@ -119,7 +119,7 @@ include_directories(
 
 # # Declare a C++ library
 # add_library(${PROJECT_NAME}
-# src/${PROJECT_NAME}/utra_description.cpp
+# src/${PROJECT_NAME}/arm_description.cpp
 # )
 
 # # Add cmake target dependencies of the library

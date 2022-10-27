@@ -11,11 +11,11 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rviz
   std_msgs
-  utra_msg
+  ut_msg
 )
 
 catkin_package(
-  CATKIN_DEPENDS roscpp rviz std_msgs utra_msg
+  CATKIN_DEPENDS roscpp rviz std_msgs ut_msg
 )
 
 # # Specify additional locations of header files
@@ -51,4 +51,4 @@ set(SOURCE_FILES
 add_library(${PROJECT_NAME} ${SOURCE_FILES})
 
 target_link_libraries(${PROJECT_NAME} ${QT_LIBRARIES} ${catkin_LIBRARIES})
-add_dependencies(${PROJECT_NAME} utra_msg_generate_messages_cpp)
+add_dependencies(${PROJECT_NAME} ut_msg_generate_messages_cpp)

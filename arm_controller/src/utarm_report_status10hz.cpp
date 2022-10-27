@@ -1,4 +1,4 @@
-#include <utra_msg/RobotMsg.h>
+#include <ut_msg/RobotMsg.h>
 #include "ros/ros.h"
 #include "utra/utra_api_tcp.h"
 #include "utra/utra_report_status.h"
@@ -9,7 +9,7 @@
 int main(int argc, char **argv) {
   ros::init(argc, argv, "utarm_report_status10hz");
   ros::NodeHandle nh;
-  ros::Publisher robotStates = nh.advertise<utra_msg::RobotMsg>("ut_arm/states", 1000, true);
+  ros::Publisher robotStates = nh.advertise<ut_msg::RobotMsg>("ut_arm/states", 1000, true);
   std::string arm_ip;
   if (nh.getParam("arm_ip", arm_ip)) {
     ROS_INFO("Got param: %s", arm_ip.c_str());
@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
 
   uint8_t axis = 6;
   int no_update = 0;
-  utra_msg::RobotMsg robotMsg;
+  ut_msg::RobotMsg robotMsg;
   arm_report_status_t rx_data;
   UtraReportStatus10Hz *utra_report;
   UtraApiTcp *utra = new UtraApiTcp(cstr);

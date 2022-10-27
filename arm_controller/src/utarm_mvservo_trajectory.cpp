@@ -23,9 +23,9 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <sstream>
-#include "utra_msg/GetFloat32A.h"
-#include "utra_msg/GetInt16.h"
-#include "utra_msg/Mservojoint.h"
+#include "ut_msg/GetFloat32A.h"
+#include "ut_msg/GetInt16.h"
+#include "ut_msg/Mservojoint.h"
 
 int axis;
 ros::ServiceClient Mservojoint_client;
@@ -39,7 +39,7 @@ float sample_duration = 0.03;
 
 void execute(const control_msgs::FollowJointTrajectoryGoalConstPtr& goal, Server* as) {
   // Detecting the gap between the first point and the start position, too large, will not allow the planning to run
-  utra_msg::GetFloat32A srv2;
+  ut_msg::GetFloat32A srv2;
   if (!joint_actual_pos_client.call(srv2)) {
     ROS_ERROR("[ArmMvSeT] Failed to call service : get_joint_actual_pos");
     as->setAborted();
@@ -79,7 +79,7 @@ void execute(const control_msgs::FollowJointTrajectoryGoalConstPtr& goal, Server
   }
 
   // Start sending data
-  utra_msg::Mservojoint srv;
+  ut_msg::Mservojoint srv;
   srv.request.axiz = axis;
   float sample_duration, plan_delay;
   int CON;
@@ -140,7 +140,7 @@ void execute(const control_msgs::FollowJointTrajectoryGoalConstPtr& goal, Server
 
   // check utra moveing state, and update the return
   ros::Duration(0.1).sleep();
-  utra_msg::GetInt16 srv1;
+  ut_msg::GetInt16 srv1;
   int error_count = 0;
   bool isStart = false;
   int sleep_time = 0;
@@ -205,9 +205,9 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  Mservojoint_client = nh.serviceClient<utra_msg::Mservojoint>("utra/mv_servo_joint");
-  status_get_client = nh.serviceClient<utra_msg::GetInt16>("utra/status_get");
-  joint_actual_pos_client = nh.serviceClient<utra_msg::GetFloat32A>("utra/get_joint_actual_pos");
+  Mservojoint_client = nh.serviceClient<ut_msg::Mservojoint>("utra/mv_servo_joint");
+  status_get_client = nh.serviceClient<ut_msg::GetInt16>("utra/status_get");
+  joint_actual_pos_client = nh.serviceClient<ut_msg::GetFloat32A>("utra/get_joint_actual_pos");
 
   char* cstr = new char[utra_ns.length() + 1];
   std::strcpy(cstr, utra_ns.c_str());

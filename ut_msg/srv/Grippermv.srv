@@ -1,0 +1,7 @@
+#Service name: utsrv/gripper_mv
+# request:  pos is gripper value( 0-80 unit is cm)
+
+float32 pos
+---
+int16 ret
+string message

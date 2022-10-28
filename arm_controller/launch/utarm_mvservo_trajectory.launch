@@ -1,0 +1,17 @@
+<launch>
+
+  <arg name="utra_ns" />
+  <arg name="axis" />
+  <rosparam command="load" file="$(find arm_controller)/config/ompl.yaml"/> 
+  <node
+    name="utarm_mvservo_trajectory"
+    pkg="arm_controller"
+    type="utarm_mvservo_trajectory"
+    respawn="false"
+    output="screen">
+    
+    <param name="utra_ns" type="str" value="$(arg utra_ns)"/>
+    <param name="axis" type="str" value="$(arg axis)"/>
+    </node>
+    
+</launch>

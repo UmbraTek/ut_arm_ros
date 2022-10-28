@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="utra6_1000">
+
+  <xacro:arg name="prefix" default=""/>
+  <xacro:arg name="ros_namespace" default="utra6_1000"/>
+  <xacro:arg name="limited" default="false"/>
+  <xacro:arg name="effort_control" default="false"/>
+  <xacro:arg name="attach_to_world" default="true"/>
+  <xacro:arg name="add_gripper" default="true"/>
+
+    <!-- utra6_1000 -->
+    <xacro:include filename="$(find arm_description)/urdf/utra6_1000.urdf.xacro" />
+    
+   
+    <xacro:if value="$(arg attach_to_world)">
+      <link name="world" />
+    </xacro:if>
+
+    <joint name="$(arg prefix)world_joint" type="fixed">
+      <parent link="world" />
+      <child link = "$(arg prefix)base_link" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <xacro:if value="$(arg limited)">
+      <xacro:utra6_1000_urdf prefix="$(arg prefix)"
+        joint1_lower_limit="${-2.0*pi+0.02}" joint1_upper_limit="${2.0*pi-0.02}"
+        joint2_lower_limit="${-2.0*pi+0.02}" joint2_upper_limit="${2.0*pi-0.02}"
+        joint3_lower_limit="${-2.9011+0.02}" joint3_upper_limit="${2.9011-0.02}"
+        joint4_lower_limit="${-2.0*pi+0.02}" joint4_upper_limit="${2.0*pi-0.02}"
+        joint5_lower_limit="${-2.0*pi+0.02}" joint5_upper_limit="${2.0*pi-0.02}"
+        joint6_lower_limit="${-2.0*pi+0.02}" joint6_upper_limit="${2.0*pi-0.02}"/>
+    </xacro:if>
+    <xacro:unless value="$(arg limited)">
+      <xacro:utra6_1000_urdf prefix="$(arg prefix)"/>
+    </xacro:unless>
+
+
+  <xacro:include filename="$(find arm_description)/urdf/transmission.xacro" /> 
+  
+  <xacro:transmission_block joint_name="$(arg prefix)joint1"/>
+  <xacro:transmission_block joint_name="$(arg prefix)joint2"/>
+  <xacro:transmission_block joint_name="$(arg prefix)joint3"/>
+  <xacro:transmission_block joint_name="$(arg prefix)joint4"/>
+  <xacro:transmission_block joint_name="$(arg prefix)joint5"/>
+  <xacro:transmission_block joint_name="$(arg prefix)joint6"/>
+
+  <xacro:include filename="$(find arm_description)/urdf/utra6_1000_common.gazebo.xacro" /> 
+
+  <xacro:include filename="$(find utra_vacuum_gripper)/urdf/vacuum_gripper.urdf.xacro" />
+  <xacro:vacuum_gripper prefix="$(arg prefix)" parent="$(arg prefix)link_6" >
+      <origin xyz="0 0 -0.008" rpy="0 0 0"/>
+  </xacro:vacuum_gripper>
+
+</robot>

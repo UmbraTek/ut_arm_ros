@@ -20,10 +20,10 @@
   </include>
 
   <!-- Load the URDF into the ROS Parameter Server   utra6_550_robot.urdf.xacro utra550.xacro-->
-  <param if="$(arg gripper)" name="robot_description" command="$(find xacro)/xacro --inorder '$(find utra_description)/urdf/utra6_550_robot_gripper.urdf.xacro'" /> 
-  <param if="$(arg vacuum_gripper)" name="robot_description" command="$(find xacro)/xacro --inorder '$(find utra_description)/urdf/utra6_550_robot_vacuum_gripper.urdf.xacro'" /> 
+  <param if="$(arg gripper)" name="robot_description" command="$(find xacro)/xacro --inorder '$(find arm_description)/urdf/utra6_550_robot_gripper.urdf.xacro'" /> 
+  <param if="$(arg vacuum_gripper)" name="robot_description" command="$(find xacro)/xacro --inorder '$(find arm_description)/urdf/utra6_550_robot_vacuum_gripper.urdf.xacro'" /> 
   
-  <param unless="$(eval arg('gripper') or arg('vacuum_gripper'))" name="robot_description" command="$(find xacro)/xacro --inorder '$(find utra_description)/urdf/utra6_550_robot.urdf.xacro'" /> 
+  <param unless="$(eval arg('gripper') or arg('vacuum_gripper'))" name="robot_description" command="$(find xacro)/xacro --inorder '$(find arm_description)/urdf/utra6_550_robot.urdf.xacro'" /> 
 
 
   <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->

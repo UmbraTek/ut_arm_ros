@@ -1,6 +1,7 @@
 <launch>
 
   <!-- This file makes it easy to include the settings for trajectory execution  -->
+  <arg name="fake_execution_type" default="interpolate" />
 
   <!-- Flag indicating whether MoveIt! is allowed to load/unload  or switch controllers -->
   <arg name="moveit_manage_controllers" default="true"/>
@@ -14,7 +15,9 @@
   <param name="trajectory_execution/allowed_start_tolerance" value="0.01"/> <!-- default 0.01 -->
 
   <!-- Load the robot specific controller manager; this sets the moveit_controller_manager ROS parameter -->
-  <arg name="moveit_controller_manager" default="opti6" />
-  <include file="$(find opti6_800_moveit_config)/launch/$(arg moveit_controller_manager)_moveit_controller_manager.launch.xml" />
+  <arg name="moveit_controller_manager" default="opti6_800" />
+  <!-- We use pass_all_args=true here to pass execution_type, which is required by fake controllers, but not by real-robot controllers.
+       As real-robot controller_manager.launch files shouldn't be required to define this argument, we use the trick of passing all args. -->
+  <include file="$(find opti6_800_moveit_config)/launch/$(arg moveit_controller_manager)_moveit_controller_manager.launch.xml" pass_all_args="true" />
 
 </launch>

@@ -1,6 +1,0 @@
-#Service name: utra/connect
-
-string ip_address
----
-int16 ret
-string message

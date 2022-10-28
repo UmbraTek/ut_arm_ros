@@ -1,5 +1,5 @@
 rosrun rqt_joint_trajectory_controller rqt_joint_trajectory_controller  --force-discover
-utra_api
+ut_api
 1.
 // #ifdef linux
 #include <sys/prctl.h>

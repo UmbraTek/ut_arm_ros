@@ -1,0 +1,16 @@
+# Service name: utsrv/moveto_joint_p2p
+# Move to position (linear in joint-space) When using this command
+# request: 
+#            joints (list): target joint positions [rad]
+#            speed (float): joint speed of leading axis [rad/s]
+#            acc (float): joint acceleration of leading axis [rad/sˆ2]
+
+
+float32[] joints
+float32  speed
+float32  acc
+---
+# response: get gripper state
+#        ret -3 is disconnect
+
+int16 ret

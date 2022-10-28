@@ -1,0 +1,19 @@
+
+---
+# ret is 0: successful  -3:disconnect  other:have error
+# Service name: utsrv/get_error_code
+# response: get arm error code  
+#        data[0]: error code 
+#        data[1]: warn code
+
+
+# Service name: utsrv/get_servo_msg
+# response: get arm servos error code  
+#       msg (list): Servo motor communication status and operation error code
+#        msg[0:Axis] Servo communication status
+#        msg[Axis:2*Axis] Servo error code
+
+
+
+int16 ret
+uint16[] data

@@ -1,0 +1,19 @@
+# Service name: utsrv/moveto_cartesian_lineb
+# Blend circular (in tool-space) and move linear (in tool-space) to position.Accelerates to and moves with constant tool speed v.
+# request: 
+#            pose (list): cartesian position [mm mm mm rad rad rad]
+#            speed (float): tool speed [mm/s]
+#            acc (float): tool acceleration [mm/sˆ2]
+#            radii (float): blend radius [mm]
+
+
+
+float32[] pose
+float32  speed
+float32  acc
+float32  radii
+---
+# response: get gripper state
+#        ret -3 is disconnect
+
+int16 ret

@@ -1,0 +1,12 @@
+#Service name: utsrv/gripper_state_get
+
+---
+# response: get gripper state
+#        ret -3 is disconnect
+#        enable 0 is disable, 1 is enable
+#        pos is gripper value(unit cm)
+
+int16 ret
+int16 enable
+float32 pos
+string message

@@ -1,0 +1,6 @@
+#Service name: utsrv/check_connect
+
+---
+int16 ret
+string ip_address
+string message

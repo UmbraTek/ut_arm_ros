@@ -1,12 +1,12 @@
 <launch>
-    <rosparam file="$(find opti6_800_gazebo)/config/opti6_gazebo_joint_states.yaml" command="load"/>
+    <rosparam file="$(find opti6_800_gazebo)/config/opti6_800_gazebo_joint_states.yaml" command="load"/>
 
     <node name="joint_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
-          output="screen" ns="/opti6" args="joint_state_controller" />
+          output="screen" ns="/opti6_800" args="joint_state_controller" />
 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
         respawn="false" output="screen">
-        <remap from="/joint_states" to="/opti6/joint_states" />
+        <remap from="/joint_states" to="/opti6_800/joint_states" />
     </node>
 
 </launch>

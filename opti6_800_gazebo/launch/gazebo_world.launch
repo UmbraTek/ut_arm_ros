@@ -1,6 +1,6 @@
 <launch>
 
-    <!-- <rosparam file="$(find opti6_800_gazebo)/config/ut_pid_control.yaml" command="load"/> -->
+  <!--<rosparam file="$(find opti6_800_gazebo)/config/opti6_800_pid_control.yaml" command="load"/>-->
   <arg name="gripper" default="false"/>
   <arg name="vacuum_gripper" default="false"/>
   <!-- these are the arguments you can pass this launch file, for example paused:=true -->
@@ -19,16 +19,16 @@
     <arg name="headless" value="$(arg headless)"/>
   </include>
 
-  <!-- Load the URDF into the ROS Parameter Server   opti6_800_robot.urdf.xacro utra550.xacro-->
-  <param if="$(arg gripper)" name="robot_description" command="$(find xacro)/xacro --inorder '$(find utra_description)/urdf/opti6_800_robot_gripper.urdf.xacro'" /> 
-  <param if="$(arg vacuum_gripper)" name="robot_description" command="$(find xacro)/xacro --inorder '$(find utra_description)/urdf/opti6_800_robot_vacuum_gripper.urdf.xacro'" /> 
+  <!-- Load the URDF into the ROS Parameter Server   opti6_800_robot.urdf.xacro opti6_800.xacro-->
+  <param if="$(arg gripper)" name="robot_description" command="$(find xacro)/xacro --inorder '$(find arm_description)/urdf/opti6_800_robot_gripper.urdf.xacro'" /> 
+  <param if="$(arg vacuum_gripper)" name="robot_description" command="$(find xacro)/xacro --inorder '$(find arm_description)/urdf/opti6_800_robot_vacuum_gripper.urdf.xacro'" /> 
   
-  <param unless="$(eval arg('gripper') or arg('vacuum_gripper'))" name="robot_description" command="$(find xacro)/xacro --inorder '$(find utra_description)/urdf/opti6_800_robot.urdf.xacro'" /> 
+  <param unless="$(eval arg('gripper') or arg('vacuum_gripper'))" name="robot_description" command="$(find xacro)/xacro --inorder '$(find arm_description)/urdf/opti6_800_robot.urdf.xacro'" /> 
 
 
   <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-	args="-urdf -model opti6 -param robot_description"/> 
+	args="-urdf -model opti6_800 -param robot_description"/> 
 
 
 </launch>

@@ -1,0 +1,24 @@
+# Service name: utsrv/status_set
+# request: set arm status 0:nomal 3:pause 4:stop
+
+# Service name: utsrv/mode_set
+# request: set arm mode 
+#        0: position control mode
+#        1: servo motion mode, users must set to this mode first before using the moveto_servoj interface.
+#        2: joint teaching mode
+#        3: cartesian teaching mode (NOT used in current version)
+
+# Service name: utsrv/gripper_unlock
+# request: gripper unlock
+#       1 Unlock the manipulator stuck in the limit position
+#       2 Unlock the manipulator clamp is too tight
+
+
+int16 data
+
+---
+
+# response: 
+#	ret is 0: successful  -3:disconnect  other:have error
+
+int16 ret

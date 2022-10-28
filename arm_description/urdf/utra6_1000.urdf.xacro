@@ -1,0 +1,263 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!--
+    Author: Jimy Zhang <jimy.zhang@umbratek.com> <jimy92@163.com>
+    Contributers:
+  -->
+
+  <xacro:macro name="utra6_1000_urdf" params="prefix
+    joint1_lower_limit:=${-2.0*pi+0.02} joint1_upper_limit:=${2.0*pi-0.02}
+    joint2_lower_limit:=${-2.0*pi+0.02} joint2_upper_limit:=${2.0*pi-0.02}
+    joint3_lower_limit:=${-2.9011+0.02} joint3_upper_limit:=${2.9011-0.02}
+    joint4_lower_limit:=${-2.0*pi+0.02} joint4_upper_limit:=${2.0*pi-0.02}
+    joint5_lower_limit:=${-2.0*pi+0.02} joint5_upper_limit:=${2.0*pi-0.02}
+    joint6_lower_limit:=${-2.0*pi+0.02} joint6_upper_limit:=${2.0*pi-0.02}">
+
+    <material name="Black">  <color rgba="0.0 0.0 0.0 1.0"/> </material>
+    <material name="Red">    <color rgba="0.8 0.0 0.0 1.0"/> </material>
+    <material name="White">  <color rgba="1.0 1.0 1.0 1.0"/> </material>
+    <material name="Silver"> <color rgba="0.7 0.7 0.7 1.0"/> </material>
+
+    <xacro:macro name="origin_joint1"> <origin xyz="0 0 0" rpy="0 0 0" /> </xacro:macro>
+    <xacro:macro name="origin_joint2"> <origin xyz="0 0 0.1175" rpy="0 0 0" /> </xacro:macro>
+    <xacro:macro name="origin_joint3"> <origin xyz="0 0 0.463" rpy="0 0 0" /> </xacro:macro>
+    <xacro:macro name="origin_joint4"> <origin xyz="0 0 0.4325" rpy="0 0 0" /> </xacro:macro>
+    <xacro:macro name="origin_joint5"> <origin xyz="0 -0.1405 0.1045" rpy="0 0 0" /> </xacro:macro>
+    <xacro:macro name="origin_joint6"> <origin xyz="0 -0.0745 0" rpy="${0.5*pi} 0 0" /> </xacro:macro>
+
+    <xacro:macro name="origin_visual_base">   <origin xyz="0 0 0" rpy="0 0 0" /> </xacro:macro>
+    <xacro:macro name="origin_visual_link_1"> <origin xyz="0 0 0" rpy="0 0 0" /> </xacro:macro>
+    <xacro:macro name="origin_visual_link_2"> <origin xyz="0 0 0" rpy="0 0 0" /> </xacro:macro>
+    <xacro:macro name="origin_visual_link_3"> <origin xyz="0 0 0" rpy="0 0 0" /> </xacro:macro>
+    <xacro:macro name="origin_visual_link_4"> <origin xyz="0 0 0" rpy="0 0 0" /> </xacro:macro>
+    <xacro:macro name="origin_visual_link_5"> <origin xyz="0 0 0" rpy="0 0 0" /> </xacro:macro>
+    <xacro:macro name="origin_visual_link_6"> <origin xyz="0 0 0" rpy="0 0 0" /> </xacro:macro>
+
+    <xacro:macro name="origin_inertial_base">   <origin xyz="0 0 0" rpy="0 0 0" /> </xacro:macro>
+    <xacro:macro name="origin_inertial_link_1"> <origin xyz="0 0 0" rpy="0 0 0" /> </xacro:macro>
+    <xacro:macro name="origin_inertial_link_2"> <origin xyz="0 0 0" rpy="0 0 0" /> </xacro:macro>
+    <xacro:macro name="origin_inertial_link_3"> <origin xyz="0 0 0" rpy="0 0 0" /> </xacro:macro>
+    <xacro:macro name="origin_inertial_link_4"> <origin xyz="0 0 0" rpy="0 0 0" /> </xacro:macro>
+    <xacro:macro name="origin_inertial_link_5"> <origin xyz="0 0 0" rpy="0 0 0" /> </xacro:macro>
+    <xacro:macro name="origin_inertial_link_6"> <origin xyz="0 0 0" rpy="0 0 0" /> </xacro:macro>
+
+    <xacro:macro name="inertia_base">   <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" /> </xacro:macro>
+    <xacro:macro name="inertia_link_1"> <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" /> </xacro:macro>
+    <xacro:macro name="inertia_link_2"> <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" /> </xacro:macro>
+    <xacro:macro name="inertia_link_3"> <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" /> </xacro:macro>
+    <xacro:macro name="inertia_link_4"> <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" /> </xacro:macro>
+    <xacro:macro name="inertia_link_5"> <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" /> </xacro:macro>
+    <xacro:macro name="inertia_link_6"> <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" /> </xacro:macro>
+
+    <xacro:property name="mass_base"   value="2.0000000" />
+    <xacro:property name="mass_link_1" value="4.1512941" />
+    <xacro:property name="mass_link_2" value="7.6876298" />
+    <xacro:property name="mass_link_3" value="3.3014994" />
+    <xacro:property name="mass_link_4" value="1.5211471" />
+    <xacro:property name="mass_link_5" value="1.5211471" />
+    <xacro:property name="mass_link_6" value="0.1885225" />
+
+    <xacro:property name="effort_joint1" value="217" />
+    <xacro:property name="effort_joint2" value="217" />
+    <xacro:property name="effort_joint3" value="110" />
+    <xacro:property name="effort_joint4" value="70" />
+    <xacro:property name="effort_joint5" value="70" />
+    <xacro:property name="effort_joint6" value="70" />
+
+    <xacro:property name="speed_joint1" value="2.0" />
+    <xacro:property name="speed_joint2" value="2.0" />
+    <xacro:property name="speed_joint3" value="2.1" />
+    <xacro:property name="speed_joint4" value="3.0" />
+    <xacro:property name="speed_joint5" value="3.0" />
+    <xacro:property name="speed_joint6" value="3.0" />
+
+    <xacro:property name="damping_joint1" value="3" />
+    <xacro:property name="damping_joint2" value="3" />
+    <xacro:property name="damping_joint3" value="3" />
+    <xacro:property name="damping_joint4" value="3" />
+    <xacro:property name="damping_joint5" value="3" />
+    <xacro:property name="damping_joint6" value="3" />
+
+    <xacro:property name="friction_joint1" value="2" />
+    <xacro:property name="friction_joint2" value="2" />
+    <xacro:property name="friction_joint3" value="2" />
+    <xacro:property name="friction_joint4" value="2" />
+    <xacro:property name="friction_joint5" value="2" />
+    <xacro:property name="friction_joint6" value="2" />
+
+    <link name="${prefix}base_link">
+      <inertial>
+        <xacro:origin_inertial_base/>
+        <mass value="${mass_base}" />
+        <xacro:inertia_base/>
+      </inertial>
+      <visual>
+        <xacro:origin_visual_base/>
+        <geometry> <mesh filename="package://arm_description/meshes/utra6_1000/visual/base.STL" /> </geometry>
+        <material name="Silver" />
+      </visual>
+      <collision>
+        <xacro:origin_visual_base/>
+        <geometry> <mesh filename="package://arm_description/meshes/utra6_1000/visual/base.STL" /> </geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}joint1" type="revolute">
+      <xacro:origin_joint1/>
+      <parent link="${prefix}base_link" />
+      <child link="${prefix}link_1" />
+      <axis xyz="0 0 1" />
+      <limit lower="${joint1_lower_limit}" upper="${joint1_upper_limit}" effort="${effort_joint1}" velocity="${speed_joint1}" />
+      <dynamics damping="${damping_joint1}" friction="${friction_joint1}" />
+    </joint>
+
+    <link name="${prefix}link_1">
+      <inertial>
+        <xacro:origin_inertial_link_1/>
+        <mass value="${mass_link_1}" />
+        <xacro:inertia_link_1/>
+      </inertial>
+      <visual>
+        <xacro:origin_visual_link_1/>
+        <geometry> <mesh filename="package://arm_description/meshes/utra6_1000/visual/link1.STL" /> </geometry>
+        <material name="Silver" />
+      </visual>
+      <collision>
+        <xacro:origin_visual_link_1/>
+        <geometry> <mesh filename="package://arm_description/meshes/utra6_1000/visual/link1.STL" /> </geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}joint2" type="revolute">
+      <xacro:origin_joint2/>
+      <parent link="${prefix}link_1" />
+      <child link="${prefix}link_2" />
+      <axis xyz="0 -1 0" />
+      <limit lower="${joint2_lower_limit}" upper="${joint2_upper_limit}" effort="${effort_joint2}" velocity="${speed_joint2}" />
+      <dynamics damping="${damping_joint2}" friction="${friction_joint2}" />
+    </joint>
+
+    <link name="${prefix}link_2">
+      <inertial>
+        <xacro:origin_inertial_link_2/>
+        <mass value="${mass_link_2}" />
+        <xacro:inertia_link_2/>
+      </inertial>
+      <visual>
+        <xacro:origin_visual_link_2/>
+        <geometry> <mesh filename="package://arm_description/meshes/utra6_1000/visual/link2.STL" /> </geometry>
+        <material name="Silver" />
+      </visual>
+      <collision>
+        <xacro:origin_visual_link_2/>
+        <geometry> <mesh filename="package://arm_description/meshes/utra6_1000/visual/link2.STL" /> </geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}joint3" type="revolute">
+      <xacro:origin_joint3/>
+      <parent link="${prefix}link_2" />
+      <child link="${prefix}link_3" />
+      <axis xyz="0 1 0" />
+      <limit lower="${joint3_lower_limit}" upper="${joint3_upper_limit}" effort="${effort_joint3}" velocity="${speed_joint3}" />
+      <dynamics damping="${damping_joint3}" friction="${friction_joint3}" />
+    </joint>
+
+    <link name="${prefix}link_3">
+      <inertial>
+        <xacro:origin_inertial_link_3/>
+        <mass value="${mass_link_3}" />
+        <xacro:inertia_link_3/>
+      </inertial>
+      <visual>
+        <xacro:origin_visual_link_3/>
+        <geometry> <mesh filename="package://arm_description/meshes/utra6_1000/visual/link3.STL" /> </geometry>
+        <material name="Silver" />
+      </visual>
+      <collision>
+        <xacro:origin_visual_link_3/>
+        <geometry> <mesh filename="package://arm_description/meshes/utra6_1000/visual/link3.STL" /> </geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}joint4" type="revolute">
+      <xacro:origin_joint4/>
+      <parent link="${prefix}link_3" />
+      <child link="${prefix}link_4" />
+      <axis xyz="0 -1 0" />
+      <limit lower="${joint4_lower_limit}" upper="${joint4_upper_limit}" effort="${effort_joint4}" velocity="${speed_joint4}" />
+      <dynamics damping="${damping_joint4}" friction="${friction_joint4}" />
+    </joint>
+
+    <link name="${prefix}link_4">
+      <inertial>
+        <xacro:origin_inertial_link_4/>
+        <mass value="${mass_link_4}" />
+        <xacro:inertia_link_4/>
+      </inertial>
+      <visual>
+        <xacro:origin_visual_link_4/>
+        <geometry> <mesh filename="package://arm_description/meshes/utra6_1000/visual/link4.STL" /> </geometry>
+        <material name="Silver" />
+      </visual>
+      <collision>
+        <xacro:origin_visual_link_4/>
+        <geometry> <mesh filename="package://arm_description/meshes/utra6_1000/visual/link4.STL" /> </geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}joint5" type="revolute">
+      <xacro:origin_joint5/>
+      <parent link="${prefix}link_4" />
+      <child link="${prefix}link_5" />
+      <axis xyz="0 0 1" />
+      <limit lower="${joint5_lower_limit}" upper="${joint5_upper_limit}" effort="${effort_joint5}" velocity="${speed_joint5}" />
+      <dynamics damping="${damping_joint5}" friction="${friction_joint5}" />
+    </joint>
+
+    <link name="${prefix}link_5">
+      <inertial>
+        <mass value="${mass_link_5}" />
+        <xacro:origin_inertial_link_5/>
+        <xacro:inertia_link_5/>
+      </inertial>
+      <visual>
+        <xacro:origin_visual_link_5/>
+        <geometry> <mesh filename="package://arm_description/meshes/utra6_1000/visual/link5.STL" /> </geometry>
+        <material name="Silver" />
+      </visual>
+      <collision>
+        <xacro:origin_visual_link_5/>
+        <geometry> <mesh filename="package://arm_description/meshes/utra6_1000/visual/link5.STL" /> </geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}joint6" type="revolute">
+      <xacro:origin_joint6/>
+      <parent link="${prefix}link_5" />
+      <child link="${prefix}link_6" />
+      <axis xyz="0 0 1" />
+      <limit lower="${joint6_lower_limit}" upper="${joint6_upper_limit}" effort="${effort_joint6}" velocity="${speed_joint6}" />
+      <dynamics damping="${damping_joint6}" friction="${friction_joint6}" />
+    </joint>
+
+    <link name="${prefix}link_6">
+      <inertial>
+        <mass value="${mass_link_6}" />
+        <xacro:origin_inertial_link_6/>
+        <xacro:inertia_link_6/>
+      </inertial>
+      <visual>
+        <xacro:origin_visual_link_6/>
+        <geometry> <mesh filename="package://arm_description/meshes/utra6_1000/visual/link6.STL" /> </geometry>
+        <material name="Silver" />
+      </visual>
+      <collision>
+        <xacro:origin_visual_link_6/>
+        <geometry> <mesh filename="package://arm_description/meshes/utra6_1000/visual/link6.STL" /> </geometry>
+      </collision>
+    </link>
+
+  </xacro:macro>
+</robot>

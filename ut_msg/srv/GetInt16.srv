@@ -1,0 +1,22 @@
+
+---
+# ret is 0: successful  -3:disconnect  other:have error
+# Service name: utsrv/mode_get
+# response: get arm mode 
+#        0: position control mode
+#        1: servo motion mode, users must set to this mode first before using the moveto_servoj interface.
+#        2: joint teaching mode
+#        3: cartesian teaching mode (NOT used in current version)
+
+# Service name: utsrv/status_get
+# response: get arm status  1:moveing 2:sleep 3:pause 4:stop
+
+# Service name: utsrv/enable_get
+# response: get arm enable 
+#       value (int): There are a total of 32 bits, the 0th bit represents the enable state of the first joint brake, and so on. 
+#		0xFFFF means all enable 
+#		0x0000 means all disable 
+#		0x0001 means only the first joint is enabled
+
+int16 ret
+int16 data

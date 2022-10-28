@@ -1,0 +1,19 @@
+<launch>
+    <include file="$(find arm_controller)/launch/utarm_mvservo_trajectory.launch">
+        <arg name="utra_ns" value="utra6_550/arm_joint_controller/follow_joint_trajectory" />
+        <arg name="axis" value="6" />
+    </include>
+    <include file="$(find utra_gripper)/launch/gripper_trajectory.launch">
+        <arg name="utra_ns" value="utra6_550/gripper_controller/follow_joint_trajectory" />
+    </include> 
+    
+    <include file="$(find arm_controller)/launch/utarm_status_transmit.launch">
+        <arg name="gripper" value="true" />
+        <arg name="utra_ns" value="utra6_550/joint_states_550" />
+        <arg name="axis" value="6" />
+    </include>
+
+    <include file="$(find utra6_550_moveit_gripper_config)/launch/demo.launch">
+    </include>
+    
+</launch>

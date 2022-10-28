@@ -8,13 +8,13 @@
 
  # The visualization component of MoveIt!
  <include file="$(find opti6_800_moveit_gripper_config)/launch/moveit_rviz.launch">
-  <arg name="config" value="true" />
+  <arg name="rviz_config" value="$(find opti6_800_moveit_gripper_config)/launch/moveit.rviz" />
  </include>
 
   <!-- We do not have a robot connected, so publish fake joint states -->
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
     <param name="/use_gui" value="false"/> 
-    <rosparam param="/source_list">[/opti6/joint_states]</rosparam>
+    <rosparam param="/source_list">[/opti6_800/joint_states]</rosparam>
   </node>
 
 </launch>

@@ -1,0 +1,18 @@
+<launch>
+
+  <arg  name="utra_ns" />
+  <arg  name="axis" />
+  <arg  name="gripper" default="false"/>
+  <param name = "gripper" type="bool" value = "$(arg gripper)"/>
+  <node
+    name="utarm_status_transmit"
+    pkg="arm_controller"
+    type="utarm_status_transmit"
+    respawn="false"
+    output="screen">
+    
+    <param name="utra_ns" type="str" value="$(arg utra_ns)"/>
+    <param name="axis" type="str" value="$(arg axis)"/>
+    </node>
+    
+</launch>

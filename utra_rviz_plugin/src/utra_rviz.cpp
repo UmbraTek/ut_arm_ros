@@ -1,315 +1,284 @@
 #include "utra_rviz.h"
 #include <stdio.h>
-#include "ros/ros.h"
-#include <QPainter>
-#include <QLineEdit>
+#include <QDoubleValidator>
 #include <QGroupBox>
-#include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QLineEdit>
+#include <QPainter>
 #include <QTimer>
-#include <QDoubleValidator>
+#include <QVBoxLayout>
+#include "ros/ros.h"
 
 #include <geometry_msgs/Twist.h>
+#include <ut_msg/RobotMsg.h>
 #include <QDebug>
-#include "utra_msg/GripperStateGet.h"
-#include "utra_msg/GripperStateSet.h"
-#include "utra_msg/Grippermv.h"
-#include "utra_msg/EnableSet.h"
-#include "utra_msg/Checkconnect.h"
-#include <utra_msg/RobotMsg.h>
-#include "utra_msg/SetInt16.h"
-#include "utra_msg/GetInt16.h"
-#include "utra_msg/SetFloat32.h"
-#include "utra_msg/GetFloat32.h"
-
-
+#include "ut_msg/CheckConnect.h"
+#include "ut_msg/GetFloat32.h"
+#include "ut_msg/GetGripperState.h"
+#include "ut_msg/GetInt16.h"
+#include "ut_msg/Grippermv.h"
+#include "ut_msg/SetEnable.h"
+#include "ut_msg/SetFloat32.h"
+#include "ut_msg/SetGripperState.h"
+#include "ut_msg/SetInt16.h"
 
 namespace utra_rviz_space {
-utra_rviz::utra_rviz(QWidget* parent)
-    :rviz::Panel (parent)
-{
+utra_rviz::utra_rviz(QWidget *parent) : rviz::Panel(parent) {
+  //初始化ui
+  QVBoxLayout *mainlayout = new QVBoxLayout;
+  ip_lable = new QLabel;
+  ip_lable->setText("IP: ");
+  ip_addrees = new QLabel;
+  ip_addrees->setText("disconnect!!!");
 
+  checkConnect = new QPushButton;
+  checkConnect->setText("check");
+  checkConnect->setStyleSheet("QPushButton#connectButton:pressed{background-color:rgb(239, 41, 41)}");
 
-    //初始化ui
-    QVBoxLayout *mainlayout=new QVBoxLayout;
-    ip_lable=new QLabel;
-    ip_lable->setText("IP: ");
-    ip_addrees=new QLabel;
-    ip_addrees->setText("disconnect!!!");
+  QHBoxLayout *first = new QHBoxLayout;
+  first->addWidget(ip_lable);
+  first->addWidget(ip_addrees);
+  first->addWidget(checkConnect);
+  mainlayout->addLayout(first);
 
-    checkConnect=new QPushButton;
-    checkConnect->setText("check");
-    checkConnect->setStyleSheet("QPushButton#connectButton:pressed{background-color:rgb(239, 41, 41)}");
+  utraStatus = new QLabel;
+  utraStatus->setText("nomal");
 
-    QHBoxLayout *first=new QHBoxLayout;
-    first->addWidget(ip_lable);
-    first->addWidget(ip_addrees);
-    first->addWidget(checkConnect);
-    mainlayout->addLayout(first);
+  resume = new QPushButton;
+  resume->setText("resume");
+  resume->setStyleSheet("QPushButton#resume:pressed{background-color:rgb(239, 41, 41)}");
+  resume->setVisible(false);
 
-    utraStatus=new QLabel;
-    utraStatus->setText("nomal");
+  utraEnable = new QCheckBox;
+  utraEnable->setText("Enable");
 
-    resume=new QPushButton;
-    resume->setText("resume");
-    resume->setStyleSheet("QPushButton#resume:pressed{background-color:rgb(239, 41, 41)}");
-    resume->setVisible(false);
+  eStop = new QPushButton;
+  eStop->setText("E-STOP");
+  eStop->setStyleSheet("QPushButton#eStop:pressed{background-color:rgb(239, 41, 41)}");
 
-    utraEnable=new QCheckBox;
-    utraEnable->setText("Enable");
+  QGroupBox *utra_status_label = new QGroupBox("UTRA STATUS:");
+  QHBoxLayout *second = new QHBoxLayout;
+  second->addWidget(utraEnable);
+  second->addWidget(resume);
+  second->addWidget(utraStatus);
+  second->addWidget(eStop);
+  utra_status_label->setLayout(second);
+  mainlayout->addWidget(utra_status_label);
 
-    eStop=new QPushButton;
-    eStop->setText("E-STOP");
-    eStop->setStyleSheet("QPushButton#eStop:pressed{background-color:rgb(239, 41, 41)}");
+  QGroupBox *gripperLabel = new QGroupBox("Gripper:");
+  gripperEnable = new QCheckBox;
+  gripperEnable->setText("Enable");
+  gripperEdit = new QLineEdit;
+  QDoubleValidator *vali = new QDoubleValidator;
+  vali->setRange(0, 80, 2);
+  gripperEdit->setValidator(vali);
+  gripperEdit->setPlaceholderText("0-80");
+  gripperButton = new QPushButton;
+  gripperButton->setText("set");
+  gripperButton->setStyleSheet("QPushButton#gripperButton:pressed{background-color:rgb(239, 41, 41)}");
 
-    QGroupBox *utra_status_label=new QGroupBox("UTRA STATUS:");
-    QHBoxLayout *second=new QHBoxLayout;
-    second->addWidget(utraEnable);
-    second->addWidget(resume);
-    second->addWidget(utraStatus);
-    second->addWidget(eStop);
-    utra_status_label->setLayout(second);
-    mainlayout->addWidget(utra_status_label);
+  QLabel *gripper_vel_l = new QLabel;
+  gripper_vel_l->setText("vel");
+  gripper_vel = new QLineEdit;
+  QDoubleValidator *vali1 = new QDoubleValidator;
+  vali1->setRange(0, 300, 2);
+  gripper_vel->setValidator(vali1);
+  gripper_vel->setPlaceholderText("0-300");
+  gripper_velButton = new QPushButton;
+  gripper_velButton->setText("set");
 
-    
-    QGroupBox *gripperLabel=new QGroupBox("Gripper:");
-    gripperEnable=new QCheckBox;
-    gripperEnable->setText("Enable");
-    gripperEdit=new QLineEdit;
-    QDoubleValidator* vali = new QDoubleValidator;
-    vali->setRange(0, 80,2);
-    gripperEdit->setValidator(vali);
-    gripperEdit->setPlaceholderText("0-80");
-    gripperButton=new QPushButton;
-    gripperButton->setText("set");
-    gripperButton->setStyleSheet("QPushButton#gripperButton:pressed{background-color:rgb(239, 41, 41)}");
+  QHBoxLayout *third = new QHBoxLayout;
+  third->addWidget(gripperEnable);
+  third->addWidget(gripperEdit);
+  third->addWidget(gripperButton);
+  third->addWidget(gripper_vel_l);
+  third->addWidget(gripper_vel);
+  third->addWidget(gripper_velButton);
+  gripperLabel->setLayout(third);
+  mainlayout->addWidget(gripperLabel);
 
-    QLabel *gripper_vel_l=new QLabel;
-    gripper_vel_l->setText("vel");
-    gripper_vel=new QLineEdit;
-    QDoubleValidator* vali1 = new QDoubleValidator;
-    vali1->setRange(0, 300,2);
-    gripper_vel->setValidator(vali1);
-    gripper_vel->setPlaceholderText("0-300");
-    gripper_velButton=new QPushButton;
-    gripper_velButton->setText("set");
+  setLayout(mainlayout);
 
-    QHBoxLayout *third=new QHBoxLayout;
-    third->addWidget(gripperEnable);
-    third->addWidget(gripperEdit);
-    third->addWidget(gripperButton);
-    third->addWidget(gripper_vel_l);
-    third->addWidget(gripper_vel);
-    third->addWidget(gripper_velButton);
-    gripperLabel->setLayout(third);
-    mainlayout->addWidget(gripperLabel);
+  //绑定信号
+  connect(gripperButton, SIGNAL(clicked()), this, SLOT(set_gripper_pos()));
+  connect(gripperEnable, SIGNAL(clicked()), this, SLOT(enable_gripper()));
+  connect(resume, SIGNAL(clicked()), this, SLOT(resumeState()));
+  connect(utraEnable, SIGNAL(clicked()), this, SLOT(enable()));
+  connect(eStop, SIGNAL(clicked()), this, SLOT(e_stop()));
+  connect(checkConnect, SIGNAL(clicked()), this, SLOT(check_connect()));
+  connect(gripper_velButton, SIGNAL(clicked()), this, SLOT(set_gripper_vel()));
 
+  Grippermv_client = nh_.serviceClient<ut_msg::Grippermv>("utsrv/gripper_mv");
+  Gripperstate_get = nh_.serviceClient<ut_msg::GetGripperState>("utsrv/gripper_state_get");
+  Gripperstate_set = nh_.serviceClient<ut_msg::SetGripperState>("utsrv/gripper_state_set");
+  status_set_client = nh_.serviceClient<ut_msg::SetInt16>("utsrv/status_set");
+  mode_set_client = nh_.serviceClient<ut_msg::SetInt16>("utsrv/mode_set");
+  enable_set_client = nh_.serviceClient<ut_msg::SetEnable>("utsrv/enable_set");
+  checkconnect_client = nh_.serviceClient<ut_msg::CheckConnect>("utsrv/check_connect");
 
-    setLayout(mainlayout);
+  Grippervel_get = nh_.serviceClient<ut_msg::GetFloat32>("utsrv/gripper_vel_get");
+  Grippervel_set = nh_.serviceClient<ut_msg::SetFloat32>("utsrv/gripper_vel_set");
 
-    //绑定信号
-    connect(gripperButton,SIGNAL(clicked()),this,SLOT(set_gripper_pos()));
-    connect(gripperEnable,SIGNAL(clicked()),this,SLOT(enable_gripper()));
-    connect(resume,SIGNAL(clicked()),this,SLOT(resumeState()));
-    connect(utraEnable,SIGNAL(clicked()),this,SLOT(enable()));
-    connect(eStop,SIGNAL(clicked()),this,SLOT(e_stop()));
-    connect(checkConnect,SIGNAL(clicked()),this,SLOT(check_connect()));
-    connect(gripper_velButton,SIGNAL(clicked()),this,SLOT(set_gripper_vel()));
-    
-
-
-    Grippermv_client = nh_.serviceClient<utra_msg::Grippermv>("utra/gripper_mv");
-    Gripperstate_get = nh_.serviceClient<utra_msg::GripperStateGet>("utra/gripper_state_get");
-    Gripperstate_set = nh_.serviceClient<utra_msg::GripperStateSet>("utra/gripper_state_set");
-    status_set_client = nh_.serviceClient<utra_msg::SetInt16>("utra/status_set");
-    mode_set_client = nh_.serviceClient<utra_msg::SetInt16>("utra/mode_set");
-    enable_set_client = nh_.serviceClient<utra_msg::EnableSet>("utra/enable_set");
-    checkconnect_client = nh_.serviceClient<utra_msg::Checkconnect>("utra/check_connect");
-
-    Grippervel_get = nh_.serviceClient<utra_msg::GetFloat32>("utra/gripper_vel_get");
-    Grippervel_set = nh_.serviceClient<utra_msg::SetFloat32>("utra/gripper_vel_set");
-
-    utra_states_sub = nh_.subscribe("utra/states", 1000, &utra_rviz::statesCallback,this);
-    refreshUI();
+  utra_states_sub = nh_.subscribe("utsrv/states", 1000, &utra_rviz::statesCallback, this);
+  refreshUI();
 }
-void utra_rviz::check_connect(){
-    refreshUI();
-}
+void utra_rviz::check_connect() { refreshUI(); }
 
-void utra_rviz::refreshUI()
-{
-    utra_msg::Checkconnect srv1;
-    if(checkconnect_client.call(srv1))
-    {
-        if(srv1.response.ret != -3){
-            ip_addrees->setText(QString::fromStdString(srv1.response.ip_address));
-        }
-        else{
-            ROS_INFO("can not connect the device");
-        }
+void utra_rviz::refreshUI() {
+  ut_msg::CheckConnect srv1;
+  if (checkconnect_client.call(srv1)) {
+    if (srv1.response.ret != -3) {
+      ip_addrees->setText(QString::fromStdString(srv1.response.ip_address));
+    } else {
+      ROS_INFO("can not connect the device");
     }
+  }
 
-    utra_msg::GripperStateGet srv;
-    if(Gripperstate_get.call(srv))
-    {
-        ROS_INFO("ret %d, pos %f",srv.response.ret,srv.response.pos);
-        if(srv.response.enable == 1){
-            gripperEnable->setCheckState(Qt::Checked);
-            gripperEdit->setText(QString().setNum(srv.response.pos));
-        }else{
-            gripperEnable->setCheckState(Qt::Unchecked);
-            gripperEdit->setPlaceholderText("0-80");
-        }
+  ut_msg::GetGripperState srv;
+  if (Gripperstate_get.call(srv)) {
+    ROS_INFO("ret %d, pos %f", srv.response.ret, srv.response.pos);
+    if (srv.response.enable == 1) {
+      gripperEnable->setCheckState(Qt::Checked);
+      gripperEdit->setText(QString().setNum(srv.response.pos));
+    } else {
+      gripperEnable->setCheckState(Qt::Unchecked);
+      gripperEdit->setPlaceholderText("0-80");
     }
+  }
 
-    utra_msg::GetFloat32 srv2;
-    if(Grippervel_get.call(srv2))
-    {
-        ROS_INFO("ret %d, data %f",srv.response.ret,srv2.response.data);
-        if(srv2.response.ret != -3){
-            gripper_vel->setText(QString().setNum(srv2.response.data));
-        }else{
-            gripper_vel->setPlaceholderText("0-300");
-        }
+  ut_msg::GetFloat32 srv2;
+  if (Grippervel_get.call(srv2)) {
+    ROS_INFO("ret %d, data %f", srv.response.ret, srv2.response.data);
+    if (srv2.response.ret != -3) {
+      gripper_vel->setText(QString().setNum(srv2.response.data));
+    } else {
+      gripper_vel->setPlaceholderText("0-300");
     }
+  }
 }
 
-void utra_rviz::statesCallback(const utra_msg::RobotMsg& msg)
-{
-    // ROS_INFO("motion_status %d",msg.motion_status);
-    switch (msg.motion_status)
-    {
+void utra_rviz::statesCallback(const ut_msg::RobotMsg &msg) {
+  // ROS_INFO("motion_status %d",msg.motion_status);
+  switch (msg.motion_status) {
     case 0:
-        utraStatus->setText("nomal");
-        resume->setVisible(false);
-        break;
+      utraStatus->setText("nomal");
+      resume->setVisible(false);
+      break;
     case 1:
-        utraStatus->setText("moveing");
-        resume->setVisible(false);
-        break;
+      utraStatus->setText("moveing");
+      resume->setVisible(false);
+      break;
     case 2:
-        utraStatus->setText("sleep");
-        resume->setVisible(false);
-        break;
+      utraStatus->setText("sleep");
+      resume->setVisible(false);
+      break;
     case 3:
-        utraStatus->setText("pause");
-        resume->setVisible(false);
-        break;
+      utraStatus->setText("pause");
+      resume->setVisible(false);
+      break;
     case 4:
-        utraStatus->setText("stop");
-        resume->setVisible(true);
-        break;
-    
+      utraStatus->setText("stop");
+      resume->setVisible(true);
+      break;
+
     default:
-        break;
-    }
-    // ROS_INFO("mt_able %d",msg.mt_able);
-    int enable = 0;
-    if(msg.axis == 4){
-        enable = 15;
-    }
-    else if (msg.axis == 6)
-    {
-        enable = 63;
-    }
-    if(msg.mt_able == enable){
-        utraEnable->setCheckState(Qt::Checked);
-    }else{
-        utraEnable->setCheckState(Qt::Unchecked);
-    }
-    
+      break;
+  }
+  // ROS_INFO("mt_able %d",msg.mt_able);
+  int enable = 0;
+  if (msg.axis == 4) {
+    enable = 15;
+  } else if (msg.axis == 6) {
+    enable = 63;
+  }
+  if (msg.mt_able == enable) {
+    utraEnable->setCheckState(Qt::Checked);
+  } else {
+    utraEnable->setCheckState(Qt::Unchecked);
+  }
 }
 
-void utra_rviz::set_gripper_pos()
-{
-    float value=gripperEdit->text().toFloat();
-    ROS_INFO("value %f",value);
-    utra_msg::Grippermv srv;
-    srv.request.pos = value;
-    Grippermv_client.call(srv);
+void utra_rviz::set_gripper_pos() {
+  float value = gripperEdit->text().toFloat();
+  ROS_INFO("value %f", value);
+  ut_msg::Grippermv srv;
+  srv.request.pos = value;
+  Grippermv_client.call(srv);
 }
 
-void utra_rviz::set_gripper_vel()
-{
-    float value=gripper_vel->text().toFloat();
-    ROS_INFO("value %f",value);
-    utra_msg::SetFloat32 srv;
-    srv.request.data = value;
-    Grippervel_set.call(srv);
+void utra_rviz::set_gripper_vel() {
+  float value = gripper_vel->text().toFloat();
+  ROS_INFO("value %f", value);
+  ut_msg::SetFloat32 srv;
+  srv.request.data = value;
+  Grippervel_set.call(srv);
 }
 
-void utra_rviz::enable_gripper(){
-    Qt::CheckState state= gripperEnable->checkState();
-    utra_msg::GripperStateSet srv;
-    switch (state)
-    {
+void utra_rviz::enable_gripper() {
+  Qt::CheckState state = gripperEnable->checkState();
+  ut_msg::SetGripperState srv;
+  switch (state) {
     case Qt::Unchecked:
-        srv.request.state = 0;
-        Gripperstate_set.call(srv);
-        break;
+      srv.request.state = 0;
+      Gripperstate_set.call(srv);
+      break;
     case Qt::Checked:
-        srv.request.state = 1;
-        Gripperstate_set.call(srv);
-        break;
-    }
+      srv.request.state = 1;
+      Gripperstate_set.call(srv);
+      break;
+  }
 }
-void utra_rviz::resumeState(){
-    utra_msg::SetInt16 srv1;
-    srv1.request.data = 0;
-    if(mode_set_client.call(srv1))
-    {
-        ROS_INFO("mode_set ret %d,",srv1.response.ret);
-    }
+void utra_rviz::resumeState() {
+  ut_msg::SetInt16 srv1;
+  srv1.request.data = 0;
+  if (mode_set_client.call(srv1)) {
+    ROS_INFO("mode_set ret %d,", srv1.response.ret);
+  }
 
-    utra_msg::SetInt16 srv;
-    srv.request.data = 0;
-    if(status_set_client.call(srv))
-    {
-        ROS_INFO("status_set ret %d,",srv.response.ret);
-    }
+  ut_msg::SetInt16 srv;
+  srv.request.data = 0;
+  if (status_set_client.call(srv)) {
+    ROS_INFO("status_set ret %d,", srv.response.ret);
+  }
 }
-void utra_rviz::enable(){
-    Qt::CheckState state= utraEnable->checkState();
-    utra_msg::EnableSet srv;
-    switch (state)
-    {
+void utra_rviz::enable() {
+  Qt::CheckState state = utraEnable->checkState();
+  ut_msg::SetEnable srv;
+  switch (state) {
     case Qt::Unchecked:
-        srv.request.axis = 100;
-        srv.request.enable = 0;
-        enable_set_client.call(srv);
-        break;
+      srv.request.axis = 100;
+      srv.request.enable = 0;
+      enable_set_client.call(srv);
+      break;
     case Qt::Checked:
-        srv.request.axis = 100;
-        srv.request.enable = 1;
-        enable_set_client.call(srv);
-        break;
-    }
+      srv.request.axis = 100;
+      srv.request.enable = 1;
+      enable_set_client.call(srv);
+      break;
+  }
 }
-void utra_rviz::e_stop(){
-    utra_msg::SetInt16 srv1;
-    srv1.request.data = 0;
-    if(mode_set_client.call(srv1))
-    {
-        ROS_INFO("mode_set ret %d,",srv1.response.ret);
-    }
+void utra_rviz::e_stop() {
+  ut_msg::SetInt16 srv1;
+  srv1.request.data = 0;
+  if (mode_set_client.call(srv1)) {
+    ROS_INFO("mode_set ret %d,", srv1.response.ret);
+  }
 
-    utra_msg::SetInt16 srv;
-    srv.request.data = 4;
-    if(status_set_client.call(srv))
-    {
-        ROS_INFO("status_set ret %d,",srv.response.ret);
-    }
+  ut_msg::SetInt16 srv;
+  srv.request.data = 4;
+  if (status_set_client.call(srv)) {
+    ROS_INFO("status_set ret %d,", srv.response.ret);
+  }
 }
-// 重载父类的功能
-void utra_rviz::save( rviz::Config config ) const
-{
-  rviz::Panel::save( config );
-//   config.mapSetValue( "Topic", output_topic_ );
+// Overrides the functionality of the parent class
+void utra_rviz::save(rviz::Config config) const {
+  rviz::Panel::save(config);
+  //   config.mapSetValue( "Topic", output_topic_ );
 }
 
-//// 重载父类的功能，加载配置数据
-//void utra_rviz::load( const rviz::Config& config )
+//// Override superclass functionality to load configuration data
+// void utra_rviz::load( const rviz::Config& config )
 //{
 //  rviz::Panel::load( config );
 //  QString topic;
@@ -320,10 +289,9 @@ void utra_rviz::save( rviz::Config config ) const
 //  }
 //}
 
+}  // namespace utra_rviz_space
 
-}
-
-// 声明此类是一个rviz的插件
+// Declare that this class is a plug-in for rviz
 #include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(utra_rviz_space::utra_rviz,rviz::Panel )
+PLUGINLIB_EXPORT_CLASS(utra_rviz_space::utra_rviz, rviz::Panel)
 // END_TUTORIAL

@@ -1,7 +1,7 @@
 There have two demos : moveit demo, visual demo with this project <https://github.com/umbratek-application>.
 
 # 1. Introduction
-This repository contains the 3D models of utra series and demo packages for ROS development and simulations.Developing and testing environment: Ubuntu 18.04 + ROS melodic + Gazebo 9.  
+This repository contains the 3D models of arm series and demo packages for ROS development and simulations.Developing and testing environment: Ubuntu 18.04 + ROS melodic + Gazebo 9.  
 
 
 # 2. Preparations before using this package
@@ -58,17 +58,17 @@ Skip above operation if you already have that inside your ~/.bashrc. Then do:
 source ~/.bashrc
 ```
 # 4. Run in Rviz (Opti series refer to [opti.md](./opti.md))
-Launch utra 550 rviz :
+Launch utra 6-550 rviz :
 ```bash
-roslaunch utra_description utra6_550_view.launch [gripper:=true] [vacuum_gripper:=true]
+roslaunch arm_description utra6_550_view.launch [gripper:=true] [vacuum_gripper:=true]
 ```
-Launch utra 850 rviz :
+Launch utra 6-850 rviz :
 ```bash
-roslaunch utra_description utra6_850_view.launch [gripper:=true] [vacuum_gripper:=true]
+roslaunch arm_description utra6_850_view.launch [gripper:=true] [vacuum_gripper:=true]
 ```
-Launch utra 1000 rviz :
+Launch utra 6-1000 rviz :
 ```bash
-roslaunch utra_description utra6_1000_view.launch [gripper:=true] [vacuum_gripper:=true]
+roslaunch arm_description utra6_1000_view.launch [gripper:=true] [vacuum_gripper:=true]
 ```
 
 
@@ -76,7 +76,7 @@ roslaunch utra_description utra6_1000_view.launch [gripper:=true] [vacuum_grippe
 You can launch Rviz and gazebo, and controll the arm in Rviz. When in first launch time, the arm is in vertical posture, it hard to plan trajectory, you can select the **init** posture in **MotionPlanning->Planning->Goal state** and click the **Plan & Execute** button to make arm go to the good posture.
 
 ## 5.1 Launch Utra Series
-Launch utra 850 rviz and gazebo:
+Launch utra 6-850 rviz and gazebo:
 1. Run gazebo first:
 ```bash
 roslaunch utra6_850_gazebo gazebo.launch
@@ -96,87 +96,87 @@ roslaunch utra6_850_moveit_gripper_config moveit_planning_execution.launch
 ```
 
 
-# 6. Run Rviz and connect with utra
-You can connect with utra and controll it in rviz.
-**Pay Attention** you need to very be careful the **Trajectory planning** in rviz , you must **Play** before the **Excute** every time to make sure that the generated trajectory is not **Collision**. We suggest that make utra with a good posture by select the **init** posture in **MotionPlanning->Planning->Goal state**. For Safe on Execute, we suggest you set the Velocity and Accel smaller first.
+# 6. Run Rviz and connect with arm
+You can connect with arm and controll it in rviz.
+**Pay Attention** you need to very be careful the **Trajectory planning** in rviz , you must **Play** before the **Excute** every time to make sure that the generated trajectory is not **Collision**. We suggest that make arm with a good posture by select the **init** posture in **MotionPlanning->Planning->Goal state**. For Safe on Execute, we suggest you set the Velocity and Accel smaller first.
 ![init](./doc/init.png) 
 
-## 6.1 Launch the server to connect the utra
+## 6.1 Launch the server to connect the arm
 
 ```bash
-roslaunch utra_controller utra_server.launch utra_ip:="utra_ip_address"   //utra_ip_address like 192.168.1.234
+roslaunch arm_controller utarm_api_server.launch arm_ip:="arm_ip_address"   //arm_ip_address like 192.168.1.234
 ```
-## 6.2 Enable the utra
+## 6.2 Enable the arm
 
-you need open the utra studio to enable the utra 
+you need open the studio to enable the arm 
 
 ## 6.3 Open the Rviz
 
 please install the ros_industrial: <https://github.com/ros-industrial/industrial_core>(remember to select your correct ROS distribution) 
 
-Launch the Rviz and connect the utra 550
+Launch the Rviz and connect the utra 6-550
 ```bash
-roslaunch utra6_550_moveit_config run_with_utra.launch 
+roslaunch utra6_550_moveit_config run_with_utra6_550.launch 
 ```
-Launch the Rviz and connect the utra 850
+Launch the Rviz and connect the utra 6-850
 ```bash
-roslaunch utra6_850_moveit_config run_with_utra.launch 
+roslaunch utra6_850_moveit_config run_with_utra6_850.launch 
 ```
 
-Launch the Rviz and connect the utra 1000
+Launch the Rviz and connect the utra 6-1000
 ```bash
-roslaunch utra6_1000_moveit_config run_with_utra.launch 
+roslaunch utra6_1000_moveit_config run_with_utra6_1000.launch 
 ```
 
 ## 6.4 Open the Rviz with gripper
 
 please install the ros_industrial: <https://github.com/ros-industrial/industrial_core>(remember to select your correct ROS distribution) , *Notice, do not excute 6.3 command at the same time*
 
-Launch the Rviz with gripper and connect the utra 550
+Launch the Rviz with gripper and connect the utra 6-550
 ```bash
-roslaunch utra6_550_moveit_gripper_config run_with_utra.launch 
+roslaunch utra6_550_moveit_gripper_config run_with_utra6_550.launch 
 ```
-Launch the Rviz with gripper and connect the utra 850
+Launch the Rviz with gripper and connect the utra 6-850
 ```bash
-roslaunch utra6_850_moveit_gripper_config run_with_utra.launch 
+roslaunch utra6_850_moveit_gripper_config run_with_utra6_850.launch 
 ```
 
-Launch the Rviz with gripper and connect the utra 1000
+Launch the Rviz with gripper and connect the utra 6-1000
 ```bash
-roslaunch utra6_1000_moveit_gripper_config run_with_utra.launch 
+roslaunch utra6_1000_moveit_gripper_config run_with_utra6_1000.launch 
 ```
 
 # 7. Excute the command to communicate with server 
-All servers are implemented in utra_server.cpp of utra_controller package.
+All servers are implemented in utarm_api_server.cpp of arm_controller package.
 
-All msg are in utra_msg package.
+All msg are in ut_msg package.
 
-## 7.1 Communication with utra through the rosservice command
+## 7.1 Communication with arm through the rosservice command
 
 
-Connect service, refer to [Connect.srv](/utra_msg/srv/Connect.srv),[Disconnect.srv](/utra_msg/srv/Disconnect.srv),[Checkconnect.srv](/utra_msg/srv/Checkconnect.srv)
-
-```
-rosservice call /utra/connect "192.168.1.234" 
-rosservice call /utra/disconnect 
-rosservice call /utra/check_connect 
-```
-
-Gripper service, refer to [GripperStateSet.srv](/utra_msg/srv/GripperStateSet.srv),[GripperStateGet.srv](/utra_msg/srv/GripperStateGet.srv),[Grippermv.srv](/utra_msg/srv/Grippermv.srv)
+Connect service, refer to [Connect.srv](/ut_msg/srv/Connect.srv),[Disconnect.srv](/ut_msg/srv/Disconnect.srv),[CheckConnect.srv](/ut_msg/srv/CheckConnect.srv)
 
 ```
-rosservice call /utra/gripper_state_set 1  
-rosservice call /utra/gripper_state_get 
-rosservice call /utra/gripper_mv 20
+rosservice call /utsrv/connect "192.168.1.234" 
+rosservice call /utsrv/disconnect 
+rosservice call /utsrv/check_connect 
 ```
-more service introduction [service.md](/utra_controller/readme.md)
+
+Gripper service, refer to [SetGripperState.srv](/ut_msg/srv/SetGripperState.srv),[GetGripperState.srv](/ut_msg/srv/GetGripperState.srv),[Grippermv.srv](/ut_msg/srv/Grippermv.srv)
+
+```
+rosservice call /utsrv/gripper_state_set 1  
+rosservice call /utsrv/gripper_state_get 
+rosservice call /utsrv/gripper_mv 20
+```
+more service introduction [service.md](/arm_controller/readme.md)
 
 # 8. Utra Rviz plugin
 
-You can open the utra rviz plugin by select Menu->Panels->utra_rviz->utra_panel
+You can open the arm rviz plugin by select Menu->Panels->utra_rviz->utra_panel
 ![RVIZ1](./doc/rviz1.png)  
 
-In this panel, you can enable the utra and set the gripper more easy.
+In this panel, you can enable the arm and set the gripper more easy.
 ![RVIZ2](./doc/rviz2.png)  
 
 # 9. Adding RealSense D435i model

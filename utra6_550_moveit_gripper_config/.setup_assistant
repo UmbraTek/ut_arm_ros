@@ -1,6 +1,6 @@
 moveit_setup_assistant_config:
   URDF:
-    package: utra_description
+    package: arm_description
     relative_path: urdf/utra6_550_robot_gripper.urdf.xacro
     xacro_args: "--inorder "
   SRDF:
@@ -8,4 +8,4 @@ moveit_setup_assistant_config:
   CONFIG:
     author_name: johnson
     author_email: johnson@umbratek.com
-    generated_timestamp: 1637896932
+    generated_timestamp: 1666944246

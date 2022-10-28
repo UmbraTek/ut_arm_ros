@@ -39,4 +39,4 @@ controller_list:
     default: True
     type: FollowJointTrajectory
     joints:
-      left_knuckle_joint
+      []

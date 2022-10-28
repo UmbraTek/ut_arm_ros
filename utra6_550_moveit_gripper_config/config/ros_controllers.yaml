@@ -34,9 +34,9 @@ controller_list:
       - joint4
       - joint5
       - joint6
-
   - name: utra6_550/gripper_controller
     action_ns: follow_joint_trajectory
+    default: True
     type: FollowJointTrajectory
     joints:
-     - left_knuckle_joint
+      left_knuckle_joint

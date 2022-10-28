@@ -8,4 +8,4 @@ moveit_setup_assistant_config:
   CONFIG:
     author_name: hsp
     author_email: johnson@umbratek.com
-    generated_timestamp: 1666753208
+    generated_timestamp: 1666941543

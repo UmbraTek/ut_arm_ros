@@ -1,7 +1,7 @@
 <launch>
     <include file="$(find arm_controller)/launch/utarm_mvservo_trajectory.launch">
         <arg name="utra_ns" value="opti7_800/arm_joint_controller/follow_joint_trajectory" />
-        <arg name="axis" type="str" value="7" />
+        <arg name="axis" value="7" />
     </include>
     <include file="$(find utra_gripper)/launch/gripper_trajectory.launch">
         <arg name="utra_ns" value="opti7_800/gripper_controller/follow_joint_trajectory" />
@@ -10,11 +10,10 @@
     <include file="$(find arm_controller)/launch/utarm_status_transmit.launch">
         <arg name="gripper" value="true" />
         <arg name="utra_ns" value="opti7_800/joint_states_800" />
-        <arg name="axis" type="str" value="7" />
+        <arg name="axis" value="7" />
     </include>
 
     <include file="$(find opti7_800_moveit_gripper_config)/launch/demo.launch">
-        <arg name="ompl" value="ompl_s"/>
     </include>
     
 </launch>

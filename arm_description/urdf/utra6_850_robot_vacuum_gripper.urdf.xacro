@@ -24,12 +24,12 @@
 
     <xacro:if value="$(arg limited)">
       <xacro:utra6_850_urdf prefix="$(arg prefix)"
-        joint1_lower_limit="${-2.0*pi}" joint1_upper_limit="${2.0*pi}"
-        joint2_lower_limit="${-2.0*pi}" joint2_upper_limit="${2.0*pi}"
-        joint3_lower_limit="${-2.0*pi}" joint3_upper_limit="${2.0*pi}"
-        joint4_lower_limit="${-2.0*pi}" joint4_upper_limit="${2.0*pi}"
-        joint5_lower_limit="${-2.0*pi}" joint5_upper_limit="${2.0*pi}"
-        joint6_lower_limit="${-2.0*pi}" joint6_upper_limit="${2.0*pi}"/>
+        joint1_lower_limit="${-2.0*pi+0.02}" joint1_upper_limit="${2.0*pi-0.02}"
+        joint2_lower_limit="${-2.0*pi+0.02}" joint2_upper_limit="${2.0*pi-0.02}"
+        joint3_lower_limit="${-2.8819+0.02}" joint3_upper_limit="${2.8819-0.02}"
+        joint4_lower_limit="${-2.0*pi+0.02}" joint4_upper_limit="${2.0*pi-0.02}"
+        joint5_lower_limit="${-2.0*pi+0.02}" joint5_upper_limit="${2.0*pi-0.02}"
+        joint6_lower_limit="${-2.0*pi+0.02}" joint6_upper_limit="${2.0*pi-0.02}"/>
     </xacro:if>
     <xacro:unless value="$(arg limited)">
       <xacro:utra6_850_urdf prefix="$(arg prefix)"/>

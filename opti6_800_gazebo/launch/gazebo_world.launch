@@ -1,6 +1,6 @@
 <launch>
 
-    <!-- <rosparam file="$(find opti6_800_gazebo)/config/ut_pid_control.yaml" command="load"/> -->
+  <!--<rosparam file="$(find opti6_800_gazebo)/config/opti6_800_pid_control.yaml" command="load"/>-->
   <arg name="gripper" default="false"/>
   <arg name="vacuum_gripper" default="false"/>
   <!-- these are the arguments you can pass this launch file, for example paused:=true -->

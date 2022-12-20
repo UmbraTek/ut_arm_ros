@@ -303,6 +303,27 @@ bool get_joint_actual_pos(ut_msg::GetFloat32A::Request &req, ut_msg::GetFloat32A
   return true;
 }
 
+
+bool set_limit_angle_enable(ut_msg::SetInt16::Request &req, ut_msg::SetInt16::Response &res) {
+  CHECK_ARM_CONNECT()
+
+  int ret = armapi->set_limit_angle_enable(req.data);
+  if (ret != 0) ROS_ERROR("[ArmContr] set_limit_angle_enable failed %d", ret);
+  res.ret = ret;
+  return true;
+}
+
+
+bool set_limit_geometry_enable(ut_msg::SetInt16::Request &req, ut_msg::SetInt16::Response &res) {
+  CHECK_ARM_CONNECT()
+
+  int ret = armapi->set_limit_geometry_enable(req.data);
+  if (ret != 0) ROS_ERROR("[ArmContr] set_limit_geometry_enable failed %d", ret);
+  res.ret = ret;
+  return true;
+}
+
+
 //------------------------------------------------------------------------------------
 //                                      FLXIE
 //------------------------------------------------------------------------------------
@@ -507,6 +528,9 @@ int main(int argc, char **argv) {
   ros::ServiceServer modeget = nh.advertiseService("utsrv/mode_get", mode_get);
   ros::ServiceServer enableset = nh.advertiseService("utsrv/enable_set", enable_set);
   ros::ServiceServer enableget = nh.advertiseService("utsrv/enable_get", enable_get);
+
+  ros::ServiceServer setlimitangleenable = nh.advertiseService("utsrv/set_limit_angle_enable", set_limit_angle_enable);
+  ros::ServiceServer setlimitgeometryenable = nh.advertiseService("utsrv/set_limit_geometry_enable", set_limit_geometry_enable);
 
   ros::ServiceServer grippermv = nh.advertiseService("utsrv/gripper_mv", gripper_mv);
   ros::ServiceServer gripperstateset = nh.advertiseService("utsrv/gripper_state_set", gripper_state_set);
